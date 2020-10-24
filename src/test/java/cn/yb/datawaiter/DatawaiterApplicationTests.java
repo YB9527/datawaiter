@@ -17,12 +17,15 @@ class DatawaiterApplicationTests {
 
 
     static Connection conn = Connect.getSQLConnection(new DatabaseConnect("127.0.0.1",DatabaseEnum.mysql,"datawaiter","root","1234"));
+    static Connection connsys = Connect.getSQLConnection(new DatabaseConnect("127.0.0.1",DatabaseEnum.mysql,"datawaitersystem","root","1234"));
     //static Connection postgressconno = Connect.getSQLConnection(new DatabaseConnect("192.168.30.12:5432",DatabaseEnum.postgress,"lqdb","postgres","1"));
 
     @Test
     void contextLoads() {
-     /*   long start = System.currentTimeMillis();
-        List<JSONObject> datas = new ArrayList<>();
+        DatabaseConnect datawaiter = new DatabaseConnect("127.0.0.1",DatabaseEnum.mysql,"datawaiter","root","1234");
+        datawaiter.setId(UUID.randomUUID().toString());
+        long start = System.currentTimeMillis();
+        /*List<JSONObject> datas = new ArrayList<>();
 
         for (int i = 0; i < 60000; i++) {
             JSONObject jsonObject = new JSONObject();
@@ -30,18 +33,20 @@ class DatawaiterApplicationTests {
                 jsonObject.put("t",77);
                 jsonObject.put("name","77");
             }else{
-                jsonObject.put("name","n"+i);
+                jsonObject.put("name","name"+i);
             }
             jsonObject.put("id",UUID.randomUUID().toString());
-            jsonObject.put("password","p"+i);
+            jsonObject.put("password","password"+i);
             datas.add(jsonObject);
         }
-        int insertcount = Insert.insertManyDatas(conn,"user",datas);
-        long total = System.currentTimeMillis()- start;*/
+        List<DatabaseConnect> connects = new ArrayList<>();
+        connects.add(datawaiter);
+
+        int insertcount = Insert.insertManyPos(connsys,connects);*/
         //加载MySql驱动
-        String sql = "select * from user";
+        /*String sql = "select * from user";
         List<JSONObject> datas = Select.findDataBySQL(conn, sql);
-         int count =Delete.deleteDataByPri(conn,"user",datas);
+         int count =Delete.deleteDataByPri(conn,"user",datas);*/
         //String sql = "select * from nav_xian";
         //int count = Update.updateManyDatas(conn, "user", datas);
         //int count = Insert.insertManyDatas(conn,"user",datas);
@@ -63,6 +68,6 @@ class DatawaiterApplicationTests {
         }
         int count = Update.updateManyDatas(conn, "user", jsonObjects);*/
 
-
+        long total = System.currentTimeMillis()- start;
     }
 }

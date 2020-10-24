@@ -6,6 +6,7 @@ import java.util.Objects;
 
 @Data
 public class DatabaseConnect {
+    private String id;
     private DatabaseEnum databaseEnum;
     private  String ip;
     private  String databaseName;
@@ -24,7 +25,9 @@ public class DatabaseConnect {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         DatabaseConnect that = (DatabaseConnect) o;
-        return databaseEnum == that.databaseEnum &&
+        return Objects.equals(id, that.id) &&
+                databaseEnum == that.databaseEnum &&
+                Objects.equals(ip, that.ip) &&
                 Objects.equals(databaseName, that.databaseName) &&
                 Objects.equals(username, that.username) &&
                 Objects.equals(password, that.password);
@@ -32,6 +35,6 @@ public class DatabaseConnect {
 
     @Override
     public int hashCode() {
-        return Objects.hash(databaseEnum, databaseName, username, password);
+        return Objects.hash(id, databaseEnum, ip, databaseName, username, password);
     }
 }

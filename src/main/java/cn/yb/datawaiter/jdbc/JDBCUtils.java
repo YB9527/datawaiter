@@ -54,6 +54,7 @@ public class JDBCUtils {
                     }
 
                     break;
+                case ENUM:
                 case String:
                     /*Double svalue = jsonObject.getDouble(tableColumn.getColumnName());
                     if(svalue == null){
@@ -87,6 +88,9 @@ public class JDBCUtils {
                 sqlvalue = ""+jsonObject.getDouble(tableColumn.getColumnName());
                 break;
             case String:
+                sqlvalue = "'"+jsonObject.getString(tableColumn.getColumnName())+"'";
+                break;
+            case ENUM:
                 sqlvalue = "'"+jsonObject.getString(tableColumn.getColumnName())+"'";
                 break;
             default:

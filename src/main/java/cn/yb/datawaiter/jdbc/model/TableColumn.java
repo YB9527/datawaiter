@@ -47,6 +47,9 @@ public class TableColumn {
                 case "blob":
                     filedEnum = FiledEnum.Blob;
                     break;
+                case "enum":
+                    filedEnum = FiledEnum.ENUM;
+                    break;
                 default:
                     throw new RuntimeException("无法识别的类型："+columntype);
             }

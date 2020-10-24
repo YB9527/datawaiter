@@ -5,5 +5,5 @@ public enum FiledEnum {
     Double,
     String,
     Blob,
-
+    ENUM,
 }
