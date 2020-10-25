@@ -1,23 +1,27 @@
 package cn.yb.datawaiter.jdbc;
 
 import cn.yb.datawaiter.jdbc.model.*;
-import javafx.print.Collation;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.sql.*;
 import java.util.*;
 
 public class Connect {
 
-    //public static Connection conn = Connect.getSQLConnection(new DatabaseConnect(DatabaseEnum.mysql,"datawaiter","root","1234"));
-    static Map<DatabaseConnect,Connection> poolMap = new HashMap<>();
-    static Map<String,Connection> userMap = new HashMap<>();
+
+
+
+    static Map<DatabaseConnect, Connection> poolMap = new HashMap<>();
+    static Map<String, Connection> userMap = new HashMap<>();
     private static final String PRI = "PRI";
+
     public static Connection getSQLConnection(DatabaseConnect databaseConnect) {
-        poolMap = poolMap != null?poolMap:new HashMap<>();
+        poolMap = poolMap != null ? poolMap : new HashMap<>();
         Connection connection = poolMap.get(databaseConnect);
-        if(connection == null){
+        if (connection == null) {
             String databasename = databaseConnect.getDatabaseName();
-            String username = databaseConnect.getUsername();
+            String username = databaseConnect.getName();
             String password = databaseConnect.getPassword();
             try {
                 switch (databaseConnect.getDatabaseEnum()) {
@@ -30,9 +34,9 @@ public class Connect {
                     default:
                         throw new RuntimeException("暂不支持改数据库");
                 }
-                if(connection != null){
-                   // userMap.put(UUID.randomUUID().toString(),connection);
-                    poolMap.put(databaseConnect,connection);
+                if (connection != null) {
+                    // userMap.put(UUID.randomUUID().toString(),connection);
+                    poolMap.put(databaseConnect, connection);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -43,14 +47,16 @@ public class Connect {
 
     public static Connection getMySQLConnection(DatabaseConnect databaseConnect) throws ClassNotFoundException, SQLException {
         Class.forName("com.mysql.jdbc.Driver");
-        Connection conn = DriverManager.getConnection("jdbc:mysql://"+databaseConnect.getIp()+"/" + databaseConnect.getDatabaseName() + "?serverTimezone=UTC", databaseConnect.getUsername(), databaseConnect.getPassword());
+        Connection conn = DriverManager.getConnection("jdbc:mysql://" + databaseConnect.getIp() + "/" + databaseConnect.getDatabaseName() + "?serverTimezone=UTC", databaseConnect.getName(), databaseConnect.getPassword());
         return conn;
     }
+
     public static Connection getPostgressConnection(DatabaseConnect databaseConnect) throws ClassNotFoundException, SQLException {
         Class.forName("org.postgresql.Driver");
-        Connection conn = DriverManager.getConnection("jdbc:postgresql://"+databaseConnect.getIp()+"/" + databaseConnect.getDatabaseName() ,databaseConnect.getUsername(), databaseConnect.getPassword());
+        Connection conn = DriverManager.getConnection("jdbc:postgresql://" + databaseConnect.getIp() + "/" + databaseConnect.getDatabaseName(), databaseConnect.getName(), databaseConnect.getPassword());
         return conn;
     }
+
     /**
      * 获取当前数据库下的所有表名称
      *
@@ -128,4 +134,5 @@ public class Connect {
         }
         return null;
     }
+
 }

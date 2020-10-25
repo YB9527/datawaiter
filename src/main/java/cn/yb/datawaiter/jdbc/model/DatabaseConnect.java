@@ -10,12 +10,12 @@ public class DatabaseConnect {
     private DatabaseEnum databaseEnum;
     private  String ip;
     private  String databaseName;
-    private  String username;
+    private  String name;
     private  String password;
-    public DatabaseConnect(String ip,DatabaseEnum databaseEnum,String databasename,String user, String password ) {
+    public DatabaseConnect(String ip,DatabaseEnum databaseEnum,String databasename,String name, String password ) {
         this.ip = ip;
         this.databaseEnum =databaseEnum;
-        this.username = user;
+        this.name = name;
         this.password = password;
         this.databaseName = databasename;
     }
@@ -29,12 +29,12 @@ public class DatabaseConnect {
                 databaseEnum == that.databaseEnum &&
                 Objects.equals(ip, that.ip) &&
                 Objects.equals(databaseName, that.databaseName) &&
-                Objects.equals(username, that.username) &&
+                Objects.equals(name, that.name) &&
                 Objects.equals(password, that.password);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, databaseEnum, ip, databaseName, username, password);
+        return Objects.hash(id, databaseEnum, ip, databaseName, name, password);
     }
 }

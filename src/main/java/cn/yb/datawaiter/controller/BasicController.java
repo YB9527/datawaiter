@@ -28,8 +28,8 @@ public class BasicController {
         return respon;
     }
 
-    public Respon responOk(List<JSONObject> jsonObjectList) {
-        return  respon(true,RESPON_OK,jsonObjectList);
+    public Respon responOk(Object object) {
+        return  respon(true,RESPON_OK,object);
     }
     public Respon respon(Boolean isOk, String message, Object object) {
         int resultcode=CODE_ERROR;

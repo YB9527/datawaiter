@@ -22,7 +22,7 @@ public class AskManager {
     /**
      * 开始使用时间
      */
-    private Date starTime;
+    private Date startTime;
     /**
      * 停止使用时间
      */

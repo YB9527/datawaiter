@@ -19,7 +19,7 @@ public class LevelManager {
     /**
      * 描述
      */
-    private  String describe;
+    private  String des;
     /**
      * 父节点id
      */

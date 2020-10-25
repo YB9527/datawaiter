@@ -1,0 +1,14 @@
+server:
+  max-http-header-size: 4048576
+  tomcat:
+    max-http-form-post-size: 1000MB
+    max-connections: 500
+    threads:
+      max: 200
+  port: 3333
+SystemDatabase:
+  ip: 127.0.0.1
+  databaseEnum: mysql
+  databaseName: datawaiter
+  name: root
+  password: 1234
