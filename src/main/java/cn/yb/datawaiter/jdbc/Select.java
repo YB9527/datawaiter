@@ -1,6 +1,7 @@
 package cn.yb.datawaiter.jdbc;
 
 import cn.yb.datawaiter.jdbc.model.Column;
+import cn.yb.datawaiter.jdbc.model.DatabaseConnect;
 import com.alibaba.fastjson.JSONObject;
 
 import java.sql.Connection;
@@ -31,5 +32,21 @@ public class Select {
             e.printStackTrace();
         }
         return jsonObjects;
+    }
+
+    /**
+     * 查找表中所有对象
+     * @param sysConn
+     * @param clazz
+     * @return
+     */
+    public static List<JSONObject> findDataAllByPoName(Connection sysConn, Class clazz) {
+
+        String className = clazz.getSimpleName();
+        return findDataBySQL(sysConn,"select * from "+ className);
+    }
+
+    public static List<JSONObject> findDataAllByTableName(Connection sysConn, String tablename) {
+       return findDataBySQL(sysConn,"select * from "+ tablename);
     }
 }

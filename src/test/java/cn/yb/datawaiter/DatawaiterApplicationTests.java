@@ -16,8 +16,29 @@ import java.util.UUID;
 class DatawaiterApplicationTests {
 
 
-    static Connection conn = Connect.getSQLConnection(new DatabaseConnect("127.0.0.1",DatabaseEnum.mysql,"datawaiter","root","1234"));
-    static Connection connsys = Connect.getSQLConnection(new DatabaseConnect("127.0.0.1",DatabaseEnum.mysql,"datawaitersystem","root","1234"));
+    static Connection conn;
+
+    static {
+        try {
+            conn = Connect.getSQLConnection(new DatabaseConnect("127.0.0.1",DatabaseEnum.mysql,"datawaiter","root","1234"));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    static Connection connsys;
+
+    static {
+        try {
+            connsys = Connect.getSQLConnection(new DatabaseConnect("127.0.0.1",DatabaseEnum.mysql,"datawaitersystem","root","1234"));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
     //static Connection postgressconno = Connect.getSQLConnection(new DatabaseConnect("192.168.30.12:5432",DatabaseEnum.postgress,"lqdb","postgres","1"));
 
     @Test

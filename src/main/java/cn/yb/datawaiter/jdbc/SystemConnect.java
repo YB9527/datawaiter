@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
+import java.sql.SQLException;
+
 @Component
 public class SystemConnect {
     private static String ip;
@@ -44,7 +46,15 @@ public class SystemConnect {
      */
     public static Connection getConn() {
         if (systemConn == null){
-            systemConn = Connect.getSQLConnection(new DatabaseConnect(ip,databaseEnum,databaseName,name,password));
+            try {
+                DatabaseConnect dc = new DatabaseConnect(ip,databaseEnum,databaseName,name,password);
+                dc.setLabel("系统数据库");
+                systemConn = Connect.getSQLConnection(dc);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
         }
         return systemConn;
     }

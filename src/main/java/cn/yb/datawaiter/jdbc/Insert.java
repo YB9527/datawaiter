@@ -4,12 +4,14 @@ import cn.yb.datawaiter.jdbc.model.CRUDEnum;
 import cn.yb.datawaiter.jdbc.model.DatabaseConnect;
 import cn.yb.datawaiter.jdbc.model.FiledEnum;
 import cn.yb.datawaiter.jdbc.model.TableColumn;
+import cn.yb.datawaiter.model.Level;
 import cn.yb.datawaiter.tools.JSONTool;
 import cn.yb.datawaiter.tools.ReflectTool;
 import cn.yb.datawaiter.tools.Tool;
 import com.alibaba.fastjson.JSONObject;
 
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Insert {
@@ -39,6 +41,8 @@ public class Insert {
         String sql = sb.toString();
         return JDBCUtils.executeBatch(conn, CRUDEnum.INSERT, sql, objects, tableColumns);
     }
+
+
 
     /**
      * 插入 java对象
@@ -71,5 +75,18 @@ public class Insert {
         List<JSONObject> jsonObjects =  JSONTool.objectToJSON(list);
         return insertManyDatas(conn,className,jsonObjects);
 
+    }
+
+    /**
+     * 实际上调用的 也是 insertManyPos
+     * @param sysConn
+     * @param obj
+     * @param <T>
+     * @return
+     */
+    public static <T> int insertPo(Connection sysConn, T obj) {
+        List<T> list = new ArrayList<>();
+        list.add(obj);
+        return insertManyPos(sysConn,list);
     }
 }

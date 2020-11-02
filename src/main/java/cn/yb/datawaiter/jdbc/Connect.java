@@ -10,50 +10,45 @@ import java.util.*;
 public class Connect {
 
 
-
-
     static Map<DatabaseConnect, Connection> poolMap = new HashMap<>();
     static Map<String, Connection> userMap = new HashMap<>();
     private static final String PRI = "PRI";
 
-    public static Connection getSQLConnection(DatabaseConnect databaseConnect) {
+    public static Connection getSQLConnection(DatabaseConnect databaseConnect) throws SQLException, ClassNotFoundException {
         poolMap = poolMap != null ? poolMap : new HashMap<>();
         Connection connection = poolMap.get(databaseConnect);
         if (connection == null) {
             String databasename = databaseConnect.getDatabaseName();
-            String username = databaseConnect.getName();
+            String username = databaseConnect.getUsername();
             String password = databaseConnect.getPassword();
-            try {
-                switch (databaseConnect.getDatabaseEnum()) {
-                    case mysql:
-                        connection = getMySQLConnection(databaseConnect);
-                        break;
-                    case postgress:
-                        connection = getPostgressConnection(databaseConnect);
-                        break;
-                    default:
-                        throw new RuntimeException("暂不支持改数据库");
-                }
-                if (connection != null) {
-                    // userMap.put(UUID.randomUUID().toString(),connection);
-                    poolMap.put(databaseConnect, connection);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+            switch (databaseConnect.getDatabaseEnum()) {
+                case mysql:
+                    connection = getMySQLConnection(databaseConnect);
+                    break;
+                case postgress:
+                    connection = getPostgressConnection(databaseConnect);
+                    break;
+                default:
+                    throw new RuntimeException("暂不支持改数据库");
             }
+            if (connection != null) {
+                // userMap.put(UUID.randomUUID().toString(),connection);
+                poolMap.put(databaseConnect, connection);
+            }
+
         }
         return connection;
     }
 
     public static Connection getMySQLConnection(DatabaseConnect databaseConnect) throws ClassNotFoundException, SQLException {
         Class.forName("com.mysql.jdbc.Driver");
-        Connection conn = DriverManager.getConnection("jdbc:mysql://" + databaseConnect.getIp() + "/" + databaseConnect.getDatabaseName() + "?serverTimezone=UTC", databaseConnect.getName(), databaseConnect.getPassword());
+        Connection conn = DriverManager.getConnection("jdbc:mysql://" + databaseConnect.getIp() + "/" + databaseConnect.getDatabaseName() + "?serverTimezone=UTC", databaseConnect.getUsername(), databaseConnect.getPassword());
         return conn;
     }
 
     public static Connection getPostgressConnection(DatabaseConnect databaseConnect) throws ClassNotFoundException, SQLException {
         Class.forName("org.postgresql.Driver");
-        Connection conn = DriverManager.getConnection("jdbc:postgresql://" + databaseConnect.getIp() + "/" + databaseConnect.getDatabaseName(), databaseConnect.getName(), databaseConnect.getPassword());
+        Connection conn = DriverManager.getConnection("jdbc:postgresql://" + databaseConnect.getIp() + "/" + databaseConnect.getDatabaseName(), databaseConnect.getUsername(), databaseConnect.getPassword());
         return conn;
     }
 

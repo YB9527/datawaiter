@@ -9,6 +9,6 @@ server:
 SystemDatabase:
   ip: 127.0.0.1
   databaseEnum: mysql
-  databaseName: datawaiter
+  databaseName: datawaitersystem
   name: root
   password: 1234

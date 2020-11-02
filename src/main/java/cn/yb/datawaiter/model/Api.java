@@ -14,7 +14,7 @@ public class Api {
      */
     private String askManagerId;
     /**
-     * 请求类型 get、post、、
+     * 请求方式 get、post、、
      */
     private QuestMethod questMethod;
     /**

@@ -1,9 +1,12 @@
 package cn.yb.datawaiter.jdbc;
 
 import cn.yb.datawaiter.jdbc.model.CRUDEnum;
+import cn.yb.datawaiter.jdbc.model.DatabaseConnect;
 import cn.yb.datawaiter.jdbc.model.FiledEnum;
 import cn.yb.datawaiter.jdbc.model.TableColumn;
+import cn.yb.datawaiter.tools.JSONTool;
 import cn.yb.datawaiter.tools.ReflectTool;
+import cn.yb.datawaiter.tools.Tool;
 import com.alibaba.fastjson.JSONObject;
 
 import java.sql.Connection;
@@ -64,4 +67,26 @@ public class Update {
         return sql;
     }
 
+    public static <T> int updateDataPo(Connection conn, T t) {
+        List<T> list = new ArrayList<>();
+        list.add(t);
+        return updateManyDataPos(conn,list);
+    }
+
+    public static <T> int updateManyDataPos(Connection conn, List<T> list) {
+        if (Tool.isEmpty(list)) {
+            return 0;
+        }
+        Class aClass = list.get(0).getClass();
+        String className = aClass.getSimpleName();
+        return  updateManyDataPos(conn,className,list);
+    }
+
+    public static <T> int updateManyDataPos(Connection conn, String className, List<T> list) {
+        if (Tool.isEmpty(list)) {
+            return 0;
+        }
+        List<JSONObject> jsonObjects =  JSONTool.objectToJSON(list);
+        return updateManyDatas(conn,className,jsonObjects);
+    }
 }

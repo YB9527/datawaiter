@@ -83,4 +83,11 @@ public class Delete {
         }
         return deleteByColoumnAndValues(conn, tablename, columnName, values);
     }
+    public static int deleteDataByPri(Connection conn, String tablename, String id) {
+        List<TableColumn> columns = Connect.getColumnCommentByTableName(conn, tablename);
+        TableColumn columnByPRI = Connect.findColumnByPRI(columns);
+        Object[] values = new Object[]{id};
+        return deleteByColoumnAndValues(conn, tablename, columnByPRI.getColumnName(), values);
+    }
+
 }
