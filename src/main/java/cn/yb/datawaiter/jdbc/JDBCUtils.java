@@ -1,6 +1,7 @@
 package cn.yb.datawaiter.jdbc;
 
 import cn.yb.datawaiter.exception.CommonException;
+import cn.yb.datawaiter.exception.GlobRuntimeException;
 import cn.yb.datawaiter.jdbc.model.CRUDEnum;
 import cn.yb.datawaiter.jdbc.model.TableColumn;
 import cn.yb.datawaiter.tools.ReflectTool;
@@ -152,14 +153,14 @@ public class JDBCUtils {
             conn.setAutoCommit(true);
             return countTotal;
         } catch (SQLException e) {
-            e.printStackTrace();
+
             try {
                 conn.rollback();//回滚事务
+                throw new GlobRuntimeException(e.getMessage());
             } catch (SQLException ex) {
-                ex.printStackTrace();
+                throw new GlobRuntimeException(ex.getMessage());
             }
         }
-        return 0;
     }
     public static String  sqlStr(String str){
         return  "'"+str+"'";

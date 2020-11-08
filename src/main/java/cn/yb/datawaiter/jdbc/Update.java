@@ -1,5 +1,6 @@
 package cn.yb.datawaiter.jdbc;
 
+import cn.yb.datawaiter.exception.GlobRuntimeException;
 import cn.yb.datawaiter.jdbc.model.CRUDEnum;
 import cn.yb.datawaiter.jdbc.model.DatabaseConnect;
 import cn.yb.datawaiter.jdbc.model.FiledEnum;
@@ -43,9 +44,9 @@ public class Update {
             conn.setAutoCommit(true);
             return statement.getUpdateCount();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new GlobRuntimeException("SQL有问题："+e.getMessage());
         }
-        return 0;
+
     }
     /**
      * 得到修改的sql 语句

@@ -1,5 +1,6 @@
 package cn.yb.datawaiter.jdbc;
 
+import cn.yb.datawaiter.exception.GlobRuntimeException;
 import cn.yb.datawaiter.jdbc.model.Column;
 import cn.yb.datawaiter.jdbc.model.TableColumn;
 import cn.yb.datawaiter.tools.Tool;
@@ -49,9 +50,8 @@ public class Delete {
             conn.setAutoCommit(true);
             return countTotal;
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new GlobRuntimeException(e.getMessage());
         }
-        return 0;
     }
 
     /**

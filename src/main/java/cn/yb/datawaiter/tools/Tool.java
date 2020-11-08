@@ -1,6 +1,12 @@
 package cn.yb.datawaiter.tools;
 
+import cn.yb.datawaiter.model.Param;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.sun.org.apache.regexp.internal.RE;
+
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -91,4 +97,11 @@ public class Tool {
     }
 
 
+    public static<T> List<JSONObject> list2JSON(List<T> list) {
+        List<JSONObject> jsons = new ArrayList<>();
+        for (T t : list){
+            jsons.add((JSONObject) JSONObject.toJSON(t));
+        }
+        return  jsons;
+    }
 }

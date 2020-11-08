@@ -11,7 +11,17 @@ import java.util.Map;
 public interface IDatawaiterService {
 
 
-
-
+    /**
+     * 查找数据
+     * @param api
+     * @return
+     */
     List<JSONObject> findDataByApi(Api api);
+
+    /**
+     * 增删改 操作
+     * @param api
+     * @return
+     */
+    int handleData(Api api);
 }

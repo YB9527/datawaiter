@@ -2,9 +2,6 @@ package cn.yb.datawaiter.jdbc;
 
 import cn.yb.datawaiter.exception.GlobRuntimeException;
 import cn.yb.datawaiter.jdbc.model.Column;
-import cn.yb.datawaiter.jdbc.model.DatabaseConnect;
-import cn.yb.datawaiter.model.Level;
-import cn.yb.datawaiter.model.Param;
 import cn.yb.datawaiter.tools.Tool;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -59,10 +56,10 @@ public class Select {
 
     public static JSONObject findDataById(Connection conn, Class clazz, String id) {
         String className = clazz.getSimpleName();
-        return findByTableNameAndId(conn, className, id);
+        return findDataById(conn, className, id);
     }
 
-    public static JSONObject findByTableNameAndId(Connection conn, String tableName, String id) {
+    public static JSONObject findDataById(Connection conn, String tableName, String id) {
         List<JSONObject> jsons = findDataBySQL(conn, "select * from " + tableName + " where id =" + JDBCUtils.sqlStr(id));
         if (Tool.isEmpty(jsons)) {
             return null;
@@ -83,7 +80,7 @@ public class Select {
     }
 
     public static<T> T findPoById(Connection conn, Class<T> clazz , String id) {
-        JSON json = findByTableNameAndId(conn,clazz.getSimpleName(),id);
+        JSON json = findDataById(conn,clazz.getSimpleName(),id);
         if(json != null){
             return  json.toJavaObject(clazz);
         }

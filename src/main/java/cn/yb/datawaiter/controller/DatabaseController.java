@@ -62,7 +62,10 @@ public class DatabaseController extends  BasicController {
 
     @RequestMapping(value = "/findAll")
     public Respon findAll() {
-        return responOk(Select.findDataAllByPoName(SysConn,DatabaseConnect.class));
+        return responOk(Select.findDataBySQL(SysConn,"SELECT * FROM databaseconnect\n" +
+                "left JOIN " +
+                "(SELECT databaseConnectId,count(*) as apiCount from api GROUP BY databaseConnectId) as api\n" +
+                "on databaseconnect.id = api.databaseConnectId  "));
     }
 
 }

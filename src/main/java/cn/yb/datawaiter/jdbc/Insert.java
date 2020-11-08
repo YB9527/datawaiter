@@ -10,6 +10,7 @@ import com.alibaba.fastjson.JSONObject;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class Insert {
     /***
@@ -94,4 +95,5 @@ public class Insert {
         jsons.add(json);
         return  insertManyJSONs(conn,tablename,jsons);
     }
+
 }

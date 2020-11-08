@@ -22,6 +22,11 @@ public class Param {
     public Param(){
 
     }
-    public Param(String paramName, String value) {
+
+    public Param(String paramName, String testValue) {
+        this.paramName = paramName;
+        this.testValue = testValue;
     }
+
+
 }

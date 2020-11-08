@@ -2,6 +2,8 @@ package cn.yb.datawaiter.controller;
 
 import cn.yb.datawaiter.exception.GlobRuntimeException;
 import cn.yb.datawaiter.jdbc.*;
+import cn.yb.datawaiter.jdbc.model.Column;
+import cn.yb.datawaiter.jdbc.model.TableColumn;
 import cn.yb.datawaiter.model.Api;
 import cn.yb.datawaiter.model.Param;
 import cn.yb.datawaiter.model.Respon;
@@ -72,7 +74,9 @@ public class ApiController extends BasicController {
      */
     @PostMapping("/editApi")
     public Respon editApi(@RequestBody JSONObject json) {
-        JSONObject dbPo = Select.findDataById(SysConn, Api.class, json.getString("id"));
+        String tableName = Api.class.getSimpleName();
+        TableColumn pri = Connect.findColumnByPRI(SysConn,tableName);
+        JSONObject dbPo = Select.findDataById(SysConn,tableName, json.getString(pri.getColumnName()));
         List<JSONObject> params = null;
 
         JSONArray paramsJSON = json.getJSONArray("params");

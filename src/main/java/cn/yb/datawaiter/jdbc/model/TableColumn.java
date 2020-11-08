@@ -20,14 +20,14 @@ public class TableColumn {
     public static TableColumn newInstance(ResultSet rs) {
         TableColumn tableColumn = new TableColumn();
         try {
-            tableColumn.collation = rs.getString("Collation");
-            tableColumn.comment = rs.getString("Comment");
-            tableColumn.defaultValue = rs.getString("Default");
-            tableColumn.extra = rs.getString("Extra");
+            //tableColumn.collation = rs.getString("Collation");
+            //tableColumn.comment = rs.getString("Comment");
+            //tableColumn.defaultValue = rs.getString("Default");
+           // tableColumn.extra = rs.getString("Extra");
             tableColumn.columnName = rs.getString("Field");
             tableColumn.key = rs.getString("Key");
-            tableColumn.isNull = rs.getString("Null") == "YES" ? true : false;
-            tableColumn.privileges = rs.getString("Privileges");
+            //tableColumn.isNull = rs.getString("Null") == "YES" ? true : false;
+            //tableColumn.privileges = rs.getString("Privileges");
             String columntype = rs.getString("Type").toLowerCase();
             FiledEnum filedEnum;
             int i = columntype.indexOf("(");
@@ -35,6 +35,7 @@ public class TableColumn {
                 columntype = columntype.substring(0, i );
             }
             switch (columntype) {
+                case "integer":
                 case "int":
                     filedEnum = FiledEnum.Integer;
                     break;

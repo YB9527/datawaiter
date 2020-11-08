@@ -87,7 +87,24 @@ public class Connect {
     public static List<TableColumn> getColumnCommentByTableName(Connection conn, String tableName) {
         try {
             Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery("show full columns from " + tableName);
+            String sql;
+            if(conn.getClientInfo().getProperty("ApplicationName").equals("PostgreSQL JDBC Driver")){
+                       sql ="select a.attname as Field,format_type(a.atttypid,a.atttypmod) as Type, " +
+                               "(case " +
+                               "when (select count(*) from pg_constraint where conrelid = a.attrelid and conkey[1]=attnum and contype='p')>0 then 'PRI' \n" +
+                               "else '' " +
+                               "end) as KEY, " +
+                               "(case " +
+                               "when a.attnotnull=true then 'Y' " +
+                               "else 'N' " +
+                               "end) as nullable, " +
+                               "col_description(a.attrelid,a.attnum) as comment " +
+                               "from pg_attribute a  "+
+                               "where attstattarget=-1 and attrelid = (select oid from pg_class where relname ='"+tableName+"')" ;
+            }else{
+              sql = "show full columns from " + tableName;
+            }
+            ResultSet rs = stmt.executeQuery(sql);
             List<TableColumn> tableColumns = new ArrayList<>();
             while (rs.next()) {
                 tableColumns.add(TableColumn.newInstance(rs));
@@ -122,7 +139,10 @@ public class Connect {
         }
         return null;
     }
-
+    public static TableColumn findColumnByPRI(Connection conn,String tablename) {
+        List<TableColumn> columns = Connect.getColumnCommentByTableName(conn, tablename);
+        return Connect.findColumnByPRI(columns);
+    }
     public static Connection getSQLConnection(String connId) {
         Connection connect = connMap.get(connId);
         if (connect == null) {
@@ -138,5 +158,7 @@ public class Connect {
         }
         return  connect;
     }
+
+
 
 }

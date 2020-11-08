@@ -1,5 +1,6 @@
 package cn.yb.datawaiter.model;
 
+import cn.yb.datawaiter.jdbc.model.CRUDEnum;
 import lombok.Data;
 
 import java.util.List;
@@ -19,6 +20,10 @@ public class Api {
      * 请求方式 get、post、、
      */
     private QuestMethod questMethod;
+    /**
+     * 数据操作
+     */
+    private CRUDEnum crud;
     /**
      * 访问路径的层级 api
      */
