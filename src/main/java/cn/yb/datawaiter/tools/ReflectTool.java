@@ -108,7 +108,7 @@ public class ReflectTool {
         }
     }
 
-    enum MethodNameEnum {
+   public enum MethodNameEnum {
         set,
         get,
     }
@@ -169,32 +169,37 @@ public class ReflectTool {
         private static MethodCustom methodCustom = null;
 
         public static <T> MethodCustom getInstance(Class<T> tClass) {
-            methodCustom = methodCustomMap.get(tClass.getName());
-            if (methodCustom != null) {
+            synchronized(ReflectTool.class) {
+                //methodCustom = methodCustomMap.get(tClass.getName());
+                methodCustom= null;
+                if (methodCustom != null) {
+                    return methodCustom;
+                }
+                methodCustom = new MethodCustom();
+                methodCustomMap.put(tClass.getName(), methodCustom);
+                methodCustom.getMethods = new ArrayList<>();
+                methodCustom.setMehods = new ArrayList<>();
+                methodCustom.getMethodMap = new HashMap<>();
+                methodCustom.setetMethodMap = new HashMap<>();
+                Method[] ms = tClass.getMethods();
+                for (Method m :
+                        ms) {
+                    String name = m.getName();
+                    if (name.equals("getDeclaringClass") || name.equals("setDeclaringClass") || name.equals("getClass") || name.equals("setClass")) {
+                        continue;
+                    }
+                    if (name.startsWith("get")) {
+                        methodCustom.getMethods.add(m);
+                        methodCustom.getMethodMap.put(name, m);
+                    } else if (name.startsWith("set")) {
+                        methodCustom.setMehods.add(m);
+                        methodCustom.setetMethodMap.put(name, m);
+                    }
+                }
+
                 return methodCustom;
             }
-            methodCustom = new MethodCustom();
-            methodCustom.getMethods = new ArrayList<>();
-            methodCustom.setMehods = new ArrayList<>();
-            methodCustom.getMethodMap = new HashMap<>();
-            methodCustom.setetMethodMap = new HashMap<>();
-            Method[] ms = tClass.getMethods();
-            for (Method m :
-                    ms) {
-                String name = m.getName();
-                if (name.equals("getId") || name.equals("setId") || name.equals("getClass") || name.equals("setClass")) {
-                    continue;
-                }
-                if (name.startsWith("get")) {
-                    methodCustom.getMethods.add(m);
-                    methodCustom.getMethodMap.put(name, m);
-                } else if (name.startsWith("set")) {
-                    methodCustom.setMehods.add(m);
-                    methodCustom.setetMethodMap.put(name, m);
-                }
-            }
-            methodCustomMap.put(tClass.getName(), methodCustom);
-            return methodCustom;
+
         }
 
         private MethodCustom() {
@@ -260,6 +265,7 @@ public class ReflectTool {
     public static <T> Map<String, Method> getMethod(MethodNameEnum methodNameEnum, Class<T> tClass) {
 
         //T t = getInstanceOfT(tClass);
+
         MethodCustom methodCustom = MethodCustom.getInstance(tClass);
         List<Method> methods = null;
         switch (methodNameEnum) {

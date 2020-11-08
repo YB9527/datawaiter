@@ -5,7 +5,7 @@ import lombok.Data;
 import java.sql.Date;
 
 @Data
-public class AskManager {
+public class Access {
     private String id;
     /**
      * 是否需要token访问
@@ -18,7 +18,7 @@ public class AskManager {
     /**
      * 是否开始使用
      */
-    private Boolean isStartUse;
+    private AccessState accessState;
     /**
      * 开始使用时间
      */

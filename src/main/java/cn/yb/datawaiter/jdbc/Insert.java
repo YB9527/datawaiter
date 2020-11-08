@@ -1,12 +1,9 @@
 package cn.yb.datawaiter.jdbc;
 
 import cn.yb.datawaiter.jdbc.model.CRUDEnum;
-import cn.yb.datawaiter.jdbc.model.DatabaseConnect;
 import cn.yb.datawaiter.jdbc.model.FiledEnum;
 import cn.yb.datawaiter.jdbc.model.TableColumn;
-import cn.yb.datawaiter.model.Level;
 import cn.yb.datawaiter.tools.JSONTool;
-import cn.yb.datawaiter.tools.ReflectTool;
 import cn.yb.datawaiter.tools.Tool;
 import com.alibaba.fastjson.JSONObject;
 
@@ -22,7 +19,10 @@ public class Insert {
      * @param objects
      * @return
      */
-    public static int insertManyDatas(Connection conn, String tablename, List<JSONObject> objects) {
+    public static int insertManyJSONs(Connection conn, String tablename, List<JSONObject> objects) {
+        if(Tool.isEmpty(objects)){
+            return  0;
+        }
         List<TableColumn> tableColumns = Connect.getColumnCommentByTableName(conn, tablename);
         StringBuilder sb = new StringBuilder("insert into " + tablename + "(");
         FiledEnum[] filelds = new FiledEnum[tableColumns.size()];
@@ -73,7 +73,7 @@ public class Insert {
             return 0;
         }
         List<JSONObject> jsonObjects =  JSONTool.objectToJSON(list);
-        return insertManyDatas(conn,className,jsonObjects);
+        return insertManyJSONs(conn,className,jsonObjects);
 
     }
 
@@ -88,5 +88,10 @@ public class Insert {
         List<T> list = new ArrayList<>();
         list.add(obj);
         return insertManyPos(sysConn,list);
+    }
+    public static int insertJSON(Connection conn, String tablename, JSONObject json){
+        List<JSONObject> jsons = new ArrayList<>();
+        jsons.add(json);
+        return  insertManyJSONs(conn,tablename,jsons);
     }
 }

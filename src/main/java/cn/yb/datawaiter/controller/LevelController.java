@@ -3,10 +3,11 @@ package cn.yb.datawaiter.controller;
 import cn.yb.datawaiter.jdbc.Delete;
 import cn.yb.datawaiter.jdbc.Insert;
 import cn.yb.datawaiter.jdbc.Select;
-import cn.yb.datawaiter.jdbc.SystemConnect;
 import cn.yb.datawaiter.model.Level;
 import cn.yb.datawaiter.model.Respon;
+import cn.yb.datawaiter.service.impl.ILevelService;
 import com.alibaba.fastjson.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +18,8 @@ import java.util.List;
 @RequestMapping(value = "/level")
 public class LevelController extends  BasicController {
 
+    @Autowired
+    private ILevelService levelService;
     @RequestMapping(value = "/findapilevel")
     public Respon findApiLevel() {
         String sql = "select * from level where typename = '"+ Level.API_LEVEL_TYPENAME+"'";
@@ -37,4 +40,13 @@ public class LevelController extends  BasicController {
         int count = Delete.deleteDataByPri(SysConn,"level", id);
         return responOk(count);
     }
+
+    @RequestMapping(value = "/findLevelAndParentId")
+    public Respon findLevelAndParentId(String id) {
+        JSONObject json = levelService.findDataById(id);
+        levelService.findParent(json);
+
+        return responOk(json);
+    }
+
 }

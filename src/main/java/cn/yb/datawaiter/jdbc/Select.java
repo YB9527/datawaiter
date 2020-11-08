@@ -1,7 +1,12 @@
 package cn.yb.datawaiter.jdbc;
 
+import cn.yb.datawaiter.exception.GlobRuntimeException;
 import cn.yb.datawaiter.jdbc.model.Column;
 import cn.yb.datawaiter.jdbc.model.DatabaseConnect;
+import cn.yb.datawaiter.model.Level;
+import cn.yb.datawaiter.model.Param;
+import cn.yb.datawaiter.tools.Tool;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 import java.sql.Connection;
@@ -29,13 +34,14 @@ public class Select {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+           throw  new GlobRuntimeException(e.getMessage());
         }
         return jsonObjects;
     }
 
     /**
      * 查找表中所有对象
+     *
      * @param sysConn
      * @param clazz
      * @return
@@ -43,10 +49,44 @@ public class Select {
     public static List<JSONObject> findDataAllByPoName(Connection sysConn, Class clazz) {
 
         String className = clazz.getSimpleName();
-        return findDataBySQL(sysConn,"select * from "+ className);
+        return findDataBySQL(sysConn, "select * from " + className);
     }
 
     public static List<JSONObject> findDataAllByTableName(Connection sysConn, String tablename) {
-       return findDataBySQL(sysConn,"select * from "+ tablename);
+        return findDataBySQL(sysConn, "select * from " + tablename);
+    }
+
+
+    public static JSONObject findDataById(Connection conn, Class clazz, String id) {
+        String className = clazz.getSimpleName();
+        return findByTableNameAndId(conn, className, id);
+    }
+
+    public static JSONObject findByTableNameAndId(Connection conn, String tableName, String id) {
+        List<JSONObject> jsons = findDataBySQL(conn, "select * from " + tableName + " where id =" + JDBCUtils.sqlStr(id));
+        if (Tool.isEmpty(jsons)) {
+            return null;
+        }
+        return jsons.get(0);
+    }
+
+    public static <T> List<T> findDataBySQL(Connection sysConn, String sql, Class<T> clazz) {
+        List<JSONObject> jsons = findDataBySQL(sysConn, sql);
+        if (!Tool.isEmpty(jsons)) {
+            List<T> list = new ArrayList<>();
+            for (JSONObject json : jsons) {
+                list.add(json.toJavaObject(clazz));
+            }
+            return list;
+        }
+        return null;
+    }
+
+    public static<T> T findPoById(Connection conn, Class<T> clazz , String id) {
+        JSON json = findByTableNameAndId(conn,clazz.getSimpleName(),id);
+        if(json != null){
+            return  json.toJavaObject(clazz);
+        }
+        return  null;
     }
 }

@@ -161,4 +161,7 @@ public class JDBCUtils {
         }
         return 0;
     }
+    public static String  sqlStr(String str){
+        return  "'"+str+"'";
+    }
 }

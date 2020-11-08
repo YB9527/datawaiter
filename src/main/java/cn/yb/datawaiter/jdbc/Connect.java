@@ -1,5 +1,6 @@
 package cn.yb.datawaiter.jdbc;
 
+import cn.yb.datawaiter.exception.GlobRuntimeException;
 import cn.yb.datawaiter.jdbc.model.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -9,36 +10,28 @@ import java.util.*;
 
 public class Connect {
 
-
-    static Map<DatabaseConnect, Connection> poolMap = new HashMap<>();
+    private static Map<String, Connection> connMap = new HashMap<>();
     static Map<String, Connection> userMap = new HashMap<>();
     private static final String PRI = "PRI";
 
     public static Connection getSQLConnection(DatabaseConnect databaseConnect) throws SQLException, ClassNotFoundException {
-        poolMap = poolMap != null ? poolMap : new HashMap<>();
-        Connection connection = poolMap.get(databaseConnect);
-        if (connection == null) {
-            String databasename = databaseConnect.getDatabaseName();
-            String username = databaseConnect.getUsername();
-            String password = databaseConnect.getPassword();
-            switch (databaseConnect.getDatabaseEnum()) {
-                case mysql:
-                    connection = getMySQLConnection(databaseConnect);
-                    break;
-                case postgress:
-                    connection = getPostgressConnection(databaseConnect);
-                    break;
-                default:
-                    throw new RuntimeException("暂不支持改数据库");
-            }
-            if (connection != null) {
-                // userMap.put(UUID.randomUUID().toString(),connection);
-                poolMap.put(databaseConnect, connection);
-            }
 
+        Connection connection = null;
+        String databasename = databaseConnect.getDatabaseName();
+        String username = databaseConnect.getUsername();
+        String password = databaseConnect.getPassword();
+        switch (databaseConnect.getDatabaseEnum()) {
+            case mysql:
+                connection = getMySQLConnection(databaseConnect);
+                break;
+            case postgress:
+                connection = getPostgressConnection(databaseConnect);
+                break;
+            default:
+                throw new RuntimeException("暂不支持改数据库");
         }
         return connection;
-    }
+}
 
     public static Connection getMySQLConnection(DatabaseConnect databaseConnect) throws ClassNotFoundException, SQLException {
         Class.forName("com.mysql.jdbc.Driver");
@@ -128,6 +121,22 @@ public class Connect {
             }
         }
         return null;
+    }
+
+    public static Connection getSQLConnection(String connId) {
+        Connection connect = connMap.get(connId);
+        if (connect == null) {
+            DatabaseConnect databaseConnect = Select.findPoById(SystemConnect.getConn(), DatabaseConnect.class, connId);
+            if (databaseConnect != null) {
+                try {
+                    connect = Connect.getSQLConnection(databaseConnect);
+                    connMap.put(connId, connect);
+                } catch (Exception e) {
+                    throw  new GlobRuntimeException("连接数据库异常"+e.getMessage());
+                }
+            }
+        }
+        return  connect;
     }
 
 }

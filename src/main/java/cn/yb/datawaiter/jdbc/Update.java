@@ -89,4 +89,10 @@ public class Update {
         List<JSONObject> jsonObjects =  JSONTool.objectToJSON(list);
         return updateManyDatas(conn,className,jsonObjects);
     }
+
+    public static void updateDataJSON(Connection conn, String simpleName, JSONObject json) {
+        List<JSONObject> list = new ArrayList<>();
+        list.add(json);
+        updateManyDatas( conn,simpleName, list);
+    }
 }

@@ -10,5 +10,5 @@ public class User {
     /**
      * 用户权限
      */
-    private  String askManagerId;
+    private  String accessId;
 }

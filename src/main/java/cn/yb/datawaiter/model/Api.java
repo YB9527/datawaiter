@@ -2,6 +2,8 @@ package cn.yb.datawaiter.model;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class Api {
     private String id;
@@ -12,7 +14,7 @@ public class Api {
     /**
      * 访问控制的id
      */
-    private String askManagerId;
+    private String accessId;
     /**
      * 请求方式 get、post、、
      */
@@ -20,5 +22,23 @@ public class Api {
     /**
      * 访问路径的层级 api
      */
-    private  String levelManagerId;
+    private  String levelId;
+    /**
+     * 本级URL
+     */
+    private String selfURL;
+    /**
+     *  URL 根路径
+     */
+    private  String rootURL;
+    /**
+     * api 名字
+     */
+    private String label;
+    /**
+     * sql 语句
+     */
+    private String sql_;
+
+    private List<Param> params;
 }

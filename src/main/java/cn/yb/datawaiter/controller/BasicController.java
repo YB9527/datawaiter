@@ -1,8 +1,10 @@
 package cn.yb.datawaiter.controller;
 
+import cn.yb.datawaiter.exception.GlobRuntimeException;
 import cn.yb.datawaiter.jdbc.Connect;
 import cn.yb.datawaiter.jdbc.SystemConnect;
 import cn.yb.datawaiter.model.Respon;
+import cn.yb.datawaiter.service.impl.ISysService;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,6 +14,10 @@ import java.sql.Connection;
 import java.util.List;
 
 public class BasicController {
+
+    @Autowired
+    protected ISysService sysService;
+
     public  Connection SysConn;
     protected final static int CODE_SUCCESS=1000;
     protected final static int CODE_ERROR=1001;
@@ -49,6 +55,7 @@ public class BasicController {
     }
 
     public Respon responOk(Object object) {
+
         return  respon(true,RESPON_OK,object);
     }
     public Respon respon(Boolean isOk, String message, Object object) {
