@@ -29,6 +29,17 @@ public class ApiController extends BasicController {
     @Autowired
     private IDatawaiterService datawaiterService;
 
+
+    @PostMapping("/testPostApi")
+    public Respon testPostApi(@RequestBody Api api) {
+        try {
+            return responOk(datawaiterService.handleData(api)) ;
+        }catch (GlobRuntimeException e){
+            return responError(e.getMessage()) ;
+        }
+
+    }
+
     @RequestMapping(value = "/findbylevelid")
     public Respon findbylevelid(String id) {
 

@@ -88,7 +88,7 @@ public class Connect {
         try {
             Statement stmt = conn.createStatement();
             String sql;
-            if(conn.getClientInfo().getProperty("ApplicationName").equals("PostgreSQL JDBC Driver")){
+            if(conn.getClientInfo().size() > 0 && conn.getClientInfo().getProperty("ApplicationName").equals("PostgreSQL JDBC Driver")){
                        sql ="select a.attname as Field,format_type(a.atttypid,a.atttypmod) as Type, " +
                                "(case " +
                                "when (select count(*) from pg_constraint where conrelid = a.attrelid and conkey[1]=attnum and contype='p')>0 then 'PRI' \n" +
@@ -111,6 +111,9 @@ public class Connect {
             }
             rs.close();
             stmt.close();
+            if(tableColumns.size() == 0){
+                throw  new GlobRuntimeException(tableName+" :数据库没有这张表，或者表内没有字段");
+            }
             return tableColumns;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -137,7 +140,7 @@ public class Connect {
                 return tableColumn;
             }
         }
-        return null;
+        throw  new GlobRuntimeException("此表没有主键");
     }
     public static TableColumn findColumnByPRI(Connection conn,String tablename) {
         List<TableColumn> columns = Connect.getColumnCommentByTableName(conn, tablename);
@@ -159,6 +162,12 @@ public class Connect {
         return  connect;
     }
 
+
+    public static void removeSQLConnection(String id) {
+        if(id != null){
+            connMap.remove(id);
+        }
+    }
 
 
 }

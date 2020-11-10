@@ -52,12 +52,13 @@ public class DatabaseController extends  BasicController {
                 Connection sqlConnection = Connect.getSQLConnection(connect);
                 if(sqlConnection != null){
                     count = Update.updateDataPo(SysConn,connect);
+                    Connect.removeSQLConnection(connect.getId());
                 }
             }catch (Exception e){
                 e.printStackTrace();
             }
         }
-        return  count == 0 ? responError("删除失败"):responOk("");
+        return  count == 0 ? responError("操作失败"):responOk("");
     }
 
     @RequestMapping(value = "/findAll")
