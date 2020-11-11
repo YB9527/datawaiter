@@ -1,5 +1,6 @@
 package cn.yb.datawaiter.service;
 
+import cn.yb.datawaiter.exception.GlobRuntimeException;
 import cn.yb.datawaiter.jdbc.*;
 import cn.yb.datawaiter.model.Api;
 import cn.yb.datawaiter.model.Param;
@@ -112,10 +113,15 @@ public class DatawaiterService implements IDatawaiterService {
                         }
                     }
                 }else{
-                    JSONObject jsonObject = JSONObject.parseObject(param.getTestValue());
-                    if(jsonObject != null ){
-                        jsons.add(jsonObject);
+                    try {
+                        JSONObject jsonObject = JSONObject.parseObject(param.getTestValue());
+                        if(jsonObject != null ){
+                            jsons.add(jsonObject);
+                        }
+                    }catch (Exception e){
+                        throw  new GlobRuntimeException("上传的不是 JSON 对象："+param.getTestValue());
                     }
+
                 }
                 List<JSONObject> jj = jsonMap.get(tableName);
                 if(jj == null){
