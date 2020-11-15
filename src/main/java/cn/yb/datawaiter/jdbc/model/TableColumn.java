@@ -39,9 +39,11 @@ public class TableColumn {
                 case "int":
                     filedEnum = FiledEnum.Integer;
                     break;
+                case "double":
                 case "float":
                     filedEnum = FiledEnum.Double;
                     break;
+                case "text":
                 case "varchar":
                     filedEnum = FiledEnum.String;
                     break;
@@ -51,6 +53,10 @@ public class TableColumn {
                 case "enum":
                     filedEnum = FiledEnum.ENUM;
                     break;
+                case "datetime":
+                    filedEnum = FiledEnum.DateTime;
+                    break;
+
                 default:
                     throw new RuntimeException("无法识别的类型："+columntype);
             }

@@ -38,7 +38,7 @@ public class BasicController {
     }
 
     public String  sqlStr(String str){
-        return  "'"+str+"'";
+        return  "\""+str+"\"";
     }
     protected Respon responBasicError() {
         Respon respon = new Respon(false, CODE_ERROR, "失败", "{}");

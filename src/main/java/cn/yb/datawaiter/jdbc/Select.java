@@ -27,7 +27,7 @@ public class Select {
                 jsonObject = new JSONObject();
                 jsonObjects.add(jsonObject);
                 for (Column column : cols) {
-                    jsonObject.put(column.getColumnLabel(), rs.getObject(column.getColumnName()));
+                    jsonObject.put(column.getColumnLabel(), rs.getObject(column.getColumnLabel()));
                 }
             }
         } catch (Exception e) {
@@ -59,6 +59,11 @@ public class Select {
         return findDataById(conn, className, id);
     }
 
+    public static<T> T findDataById2Po(Connection conn, Class<T> clazz, String id) {
+        String className = clazz.getSimpleName();
+        return findDataById(conn, className, id).toJavaObject(clazz);
+    }
+
     public static JSONObject findDataById(Connection conn, String tableName, String id) {
         List<JSONObject> jsons = findDataBySQL(conn, "select * from " + tableName + " where id =" + JDBCUtils.sqlStr(id));
         if (Tool.isEmpty(jsons)) {
@@ -69,14 +74,13 @@ public class Select {
 
     public static <T> List<T> findDataBySQL(Connection sysConn, String sql, Class<T> clazz) {
         List<JSONObject> jsons = findDataBySQL(sysConn, sql);
+        List<T> list = new ArrayList<>();
         if (!Tool.isEmpty(jsons)) {
-            List<T> list = new ArrayList<>();
             for (JSONObject json : jsons) {
                 list.add(json.toJavaObject(clazz));
             }
-            return list;
         }
-        return null;
+        return list;
     }
 
     public static<T> T findPoById(Connection conn, Class<T> clazz , String id) {

@@ -33,6 +33,8 @@ public class Update {
         TableColumn columnByPRI = Connect.findColumnByPRI(tableColumns);
         for (JSONObject jsonObject : objects) {
             String sql = getUpdateSQL(tableColumnMap, tablename, columnByPRI, jsonObject);
+            //sql =  sql.replace("","\"");
+
             sqls.add(sql);
         }
         try {

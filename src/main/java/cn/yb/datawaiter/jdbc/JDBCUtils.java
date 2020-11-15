@@ -4,6 +4,7 @@ import cn.yb.datawaiter.exception.CommonException;
 import cn.yb.datawaiter.exception.GlobRuntimeException;
 import cn.yb.datawaiter.jdbc.model.CRUDEnum;
 import cn.yb.datawaiter.jdbc.model.TableColumn;
+import cn.yb.datawaiter.model.ResultColumn;
 import cn.yb.datawaiter.tools.ReflectTool;
 import com.alibaba.fastjson.JSONObject;
 
@@ -11,6 +12,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -89,10 +91,10 @@ public class JDBCUtils {
                 sqlvalue = ""+jsonObject.getDouble(tableColumn.getColumnName());
                 break;
             case String:
-                sqlvalue = "'"+jsonObject.getString(tableColumn.getColumnName())+"'";
+                sqlvalue = "\""+jsonObject.getString(tableColumn.getColumnName())+"\"";
                 break;
             case ENUM:
-                sqlvalue = "'"+jsonObject.getString(tableColumn.getColumnName())+"'";
+                sqlvalue = "\""+jsonObject.getString(tableColumn.getColumnName())+"\"";
                 break;
             default:
              break;
@@ -163,6 +165,24 @@ public class JDBCUtils {
         }
     }
     public static String  sqlStr(String str){
-        return  "'"+str+"'";
+        return  "\""+str+"\"";
+    }
+
+    public static String getColumnAppend(List<TableColumn> columns) {
+        StringBuilder sb = new StringBuilder(" ");
+        for(TableColumn column : columns){
+            sb.append( column.getColumnName()+" ,");
+        }
+        return  sb.substring(0,sb.length()-1);
+    }
+
+    public static List<ResultColumn> getResultColumn(String mapperId, List<TableColumn> columns) {
+        List<ResultColumn> rcs = new ArrayList<>();
+        for (TableColumn tc : columns){
+            ResultColumn rc = new ResultColumn(mapperId,tc);
+            rc.setMapperId(mapperId);
+            rcs.add(rc);
+        }
+        return  rcs;
     }
 }

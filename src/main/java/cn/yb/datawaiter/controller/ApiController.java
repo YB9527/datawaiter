@@ -8,6 +8,7 @@ import cn.yb.datawaiter.model.Api;
 import cn.yb.datawaiter.model.Param;
 import cn.yb.datawaiter.model.Respon;
 import cn.yb.datawaiter.service.impl.IDatawaiterService;
+import cn.yb.datawaiter.tools.Tool;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,15 @@ public class ApiController extends BasicController {
             return responError(e.getMessage()) ;
         }
 
+    }
+
+    @RequestMapping(value = "/findApiById")
+    public Respon findApiById(String id) {
+
+        if(Tool.isEmpty(id)){
+            return responError("无id");
+        }
+        return responOk( Select.findPoById(SysConn,Api.class, id));
     }
 
     @RequestMapping(value = "/findbylevelid")
@@ -80,31 +90,27 @@ public class ApiController extends BasicController {
     /**
      * 修改 或者 保存 api
      *
-     * @param json
+     * @param api
      * @return
      */
     @PostMapping("/editApi")
-    public Respon editApi(@RequestBody JSONObject json) {
+    public Respon editApi(@RequestBody Api api) {
         String tableName = Api.class.getSimpleName();
-        TableColumn pri = Connect.findColumnByPRI(SysConn,tableName);
-        JSONObject dbPo = Select.findDataById(SysConn,tableName, json.getString(pri.getColumnName()));
-        List<JSONObject> params = null;
+        String sql = api.getSql_().replace("\"","'");
 
-        JSONArray paramsJSON = json.getJSONArray("params");
-        if (paramsJSON != null && paramsJSON.size() > 0) {
-            params = paramsJSON.toJavaList(JSONObject.class);
-        }
+        api.setSql_(sql);
+        JSONObject dbPo = Select.findDataById(SysConn,tableName, api.getId());
+        List<Param> paramList = api.getParams();
         if (dbPo == null) {
             //保存
-            int count = Insert.insertJSON(SysConn, Api.class.getSimpleName(), json);
-            int count2 = Insert.insertManyJSONs(SysConn, Param.class.getSimpleName(), params);
+            int count = Insert.insertPo(SysConn, api);
+            int count2 = Insert.insertManyPos(SysConn,  paramList);
             return responOk(count);
         } else {
             //编辑
-
-            Update.updateDataJSON(SysConn, Api.class.getSimpleName(), json);
-            Delete.deleteByColoumnAndValues(SysConn, Param.class.getSimpleName(), "apiId", new String[]{json.getString("id")});
-            int count2 = Insert.insertManyJSONs(SysConn, Param.class.getSimpleName(), params);
+            Update.updateDataPo(SysConn,  api);
+            Delete.deleteByColoumnAndValues(SysConn, Param.class.getSimpleName(), "apiId", new String[]{api.getId()});
+            int count2 = Insert.insertManyPos(SysConn,  paramList);
         }
         return responOk(1);
     }

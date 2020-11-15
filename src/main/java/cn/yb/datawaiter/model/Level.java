@@ -7,7 +7,8 @@ import lombok.Data;
  */
 @Data
 public class Level {
-    public static String API_LEVEL_TYPENAME = "项目树";
+    public static String LEVEL_TYPENAME_API = "项目树";
+    public static String LEVEL_TYPENAME_BEAN = "Bean配置树";
     private  String id;
 
     /**

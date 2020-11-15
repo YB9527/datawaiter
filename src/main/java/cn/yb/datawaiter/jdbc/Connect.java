@@ -170,4 +170,13 @@ public class Connect {
     }
 
 
+    public static Table getTable(Connection coon, String tableName) {
+        List<Table> tables = getAllTableName(coon);
+        for (Table table : tables){
+            if(table.getName().equals(tableName)){
+                return  table;
+            }
+        }
+        return  null;
+    }
 }

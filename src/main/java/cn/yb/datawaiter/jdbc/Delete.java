@@ -3,6 +3,8 @@ package cn.yb.datawaiter.jdbc;
 import cn.yb.datawaiter.exception.GlobRuntimeException;
 import cn.yb.datawaiter.jdbc.model.Column;
 import cn.yb.datawaiter.jdbc.model.TableColumn;
+import cn.yb.datawaiter.model.ResultColumn;
+import cn.yb.datawaiter.tools.JSONTool;
 import cn.yb.datawaiter.tools.Tool;
 import com.alibaba.fastjson.JSONObject;
 
@@ -90,4 +92,10 @@ public class Delete {
         return deleteByColoumnAndValues(conn, tablename, columnByPRI.getColumnName(), values);
     }
 
+    public static<T> int deleteDataByPri(Connection conn,  List<T> deleteList) {
+        if(Tool.isEmpty(deleteList)){
+            return  0;
+        }
+        return  deleteDataByPri(conn,deleteList.get(0).getClass().getSimpleName(), JSONTool.objectToJSON(deleteList));
+    }
 }

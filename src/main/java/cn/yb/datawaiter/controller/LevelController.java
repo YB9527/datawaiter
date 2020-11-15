@@ -22,15 +22,32 @@ public class LevelController extends  BasicController {
     private ILevelService levelService;
     @RequestMapping(value = "/findapilevel")
     public Respon findApiLevel() {
-        String sql = "select * from level where typename = '"+ Level.API_LEVEL_TYPENAME+"'";
+        String sql = "select * from level where typename = '"+ Level.LEVEL_TYPENAME_API+"'";
         List<JSONObject> domain = Select.findDataBySQL(SysConn, sql);
         return responOk(domain);
     }
+    @RequestMapping(value = "/findBeanLevel")
+    public Respon findBeanLevel() {
+        String sql = "select * from level where typename = '"+ Level.LEVEL_TYPENAME_BEAN+"'";
+        List<JSONObject> domain = Select.findDataBySQL(SysConn, sql);
+        return responOk(domain);
+    }
+
+    @PostMapping("/addBeanLevel")
+    public Respon addBeanLevel(@RequestBody Level level) {
+        int insertCount = 0;
+        if(level.getId() != null){
+            level.setTypeName(Level.LEVEL_TYPENAME_BEAN);
+            insertCount = Insert.insertPo(SysConn,level);
+        }
+        return  insertCount == 0 ? responBasicError():responOk("");
+    }
+
     @PostMapping("/addapilevel")
     public Respon saveAppversion(@RequestBody Level level) {
         int insertCount = 0;
         if(level.getId() != null){
-            level.setTypeName(Level.API_LEVEL_TYPENAME);
+            level.setTypeName(Level.LEVEL_TYPENAME_API);
             insertCount = Insert.insertPo(SysConn,level);
         }
         return  insertCount == 0 ? responBasicError():responOk("");

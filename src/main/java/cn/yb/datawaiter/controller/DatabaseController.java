@@ -3,8 +3,10 @@ package cn.yb.datawaiter.controller;
 import cn.yb.datawaiter.jdbc.*;
 import cn.yb.datawaiter.jdbc.model.DatabaseConnect;
 import cn.yb.datawaiter.jdbc.model.DatabaseEnum;
+import cn.yb.datawaiter.jdbc.model.Table;
 import cn.yb.datawaiter.model.Level;
 import cn.yb.datawaiter.model.Respon;
+import cn.yb.datawaiter.tools.Tool;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -67,6 +69,16 @@ public class DatabaseController extends  BasicController {
                 "left JOIN " +
                 "(SELECT databaseConnectId,count(*) as apiCount from api GROUP BY databaseConnectId) as api\n" +
                 "on databaseconnect.id = api.databaseConnectId  "));
+    }
+
+    @RequestMapping(value = "/findTableAllByDatabaseId")
+    public Respon findTableAllByDatabaseId(String id) {
+        if(Tool.isEmpty(id)){
+            return  responError("id无效");
+        }
+        Connection coon = Connect.getSQLConnection(id);
+        List<Table> tables =  Connect.getAllTableName(coon);
+        return responOk(tables);
     }
 
 }
