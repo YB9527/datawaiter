@@ -1,5 +1,6 @@
 package cn.yb.datawaiter.jdbc;
 
+import cn.yb.datawaiter.exception.GlobRuntimeException;
 import cn.yb.datawaiter.jdbc.model.CRUDEnum;
 import cn.yb.datawaiter.jdbc.model.FiledEnum;
 import cn.yb.datawaiter.jdbc.model.TableColumn;
@@ -8,6 +9,7 @@ import cn.yb.datawaiter.tools.Tool;
 import com.alibaba.fastjson.JSONObject;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +30,7 @@ public class Insert {
         StringBuilder sb = new StringBuilder("insert into " + tablename + "(");
         FiledEnum[] filelds = new FiledEnum[tableColumns.size()];
         for (int i = 0; i < tableColumns.size(); i++) {
+
             TableColumn tableColumn = tableColumns.get(i);
             String columnname = tableColumn.getColumnName();
             sb.append(columnname + ",");
@@ -88,7 +91,13 @@ public class Insert {
     public static <T> int insertPo(Connection sysConn, T obj) {
         List<T> list = new ArrayList<>();
         list.add(obj);
-        return insertManyPos(sysConn,list);
+        int count =  insertManyPos(sysConn,list);
+        try {
+            sysConn.commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return  count;
     }
     public static int insertJSON(Connection conn, String tablename, JSONObject json){
         List<JSONObject> jsons = new ArrayList<>();
@@ -96,4 +105,12 @@ public class Insert {
         return  insertManyJSONs(conn,tablename,jsons);
     }
 
+    public static int insertManyJSONs(Connection connection, Map<String, List<JSONObject>> tableMap) {
+        int count = 0;
+        for (String tableName : tableMap.keySet()){
+            count +=  insertManyJSONs(connection,tableName,tableMap.get(tableName));
+            //throw  new GlobRuntimeException("aa");
+        }
+        return  count;
+    }
 }

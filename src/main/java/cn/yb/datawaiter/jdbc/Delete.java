@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+import java.util.Map;
 
 public class Delete {
     public static int deleteByColoumnAndValues(Connection conn, String tablename, String column, Object[] values) {
@@ -49,7 +50,7 @@ public class Delete {
                 countTotal += stmt.executeUpdate(sql);
                 stmt.close();
             }
-            conn.setAutoCommit(true);
+            //conn.commit();
             return countTotal;
         } catch (SQLException e) {
             throw new GlobRuntimeException(e.getMessage());
@@ -97,5 +98,14 @@ public class Delete {
             return  0;
         }
         return  deleteDataByPri(conn,deleteList.get(0).getClass().getSimpleName(), JSONTool.objectToJSON(deleteList));
+    }
+
+    public static int deleteDataByPri(Connection connection, Map<String, List<JSONObject>> tableMap) {
+        int count = 0;
+        for (String tableName : tableMap.keySet()){
+            count +=  deleteDataByPri(connection,tableName,tableMap.get(tableName));
+            //throw  new GlobRuntimeException("123");
+        }
+        return  count;
     }
 }

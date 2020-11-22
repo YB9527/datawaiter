@@ -21,7 +21,6 @@ import java.util.List;
 public class FileTool {
 
 
-
     /**
      * @param path
      * @return 获取文件的名字 包含文件后缀名
@@ -298,29 +297,28 @@ public class FileTool {
         File dirFile = new File(dir);
         List<File> dirs = new ArrayList<>();
         for (File tem : dirFile.listFiles()) {
-            if(tem.isFile()){
+            if (tem.isFile()) {
                 String name = tem.getName();
-                if ( name.contains(".")) {
+                if (name.contains(".")) {
                     if (name.endsWith(flag)) {
                         return tem.getAbsolutePath();
                     }
                 }
-            }
-            else {
+            } else {
                 dirs.add(tem);
             }
         }
-        for (File tem : dirs){
-            String path = findFile(tem.getAbsolutePath(),flag);
-            if(path != null){
-                return  path;
+        for (File tem : dirs) {
+            String path = findFile(tem.getAbsolutePath(), flag);
+            if (path != null) {
+                return path;
             }
         }
         return null;
     }
 
     public static void downFile(HttpServletResponse res, String saveZip) throws IOException {
-        if (saveZip == null || !new File(saveZip).exists()){
+        if (saveZip == null || !new File(saveZip).exists()) {
             return;
         }
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
@@ -328,7 +326,7 @@ public class FileTool {
         // 设置信息给客户端不解析
         String type = new MimetypesFileTypeMap().getContentType(saveZip);
         // 设置contenttype，即告诉客户端所发送的数据属于什么类型
-        response.setHeader("Content-type",type);
+        response.setHeader("Content-type", type);
         // 设置编码
         String hehe = new String("VR.zip".getBytes("utf-8"), "iso-8859-1");
         // 设置扩展头，当Content-Type 的类型为要下载的类型时 , 这个信息头会告诉浏览器这个文件的名字和类型。
@@ -349,6 +347,7 @@ public class FileTool {
 
     /**
      * 查出相对路劲
+     *
      * @param basePath
      * @param path
      * @return
@@ -358,5 +357,23 @@ public class FileTool {
         Path pathBase = Paths.get(basePath);
         Path pathRelative = pathBase.relativize(pathAbsolute);
         return pathRelative.toString();
+    }
+
+    public static boolean writeStrs(List<String> strs, String path) {
+        File text = new File(path);
+        try {
+            text.createNewFile();
+            FileWriter fileWriter = null;
+            fileWriter = new FileWriter(text, false);
+            for (String str : strs) {
+                fileWriter.write(str + "\r\n");
+            }
+            fileWriter.flush();
+            fileWriter.close();
+            return  true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return  false;
+        }
     }
 }

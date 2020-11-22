@@ -16,6 +16,7 @@ public class TableColumn {
     private Boolean isNull;
     private String privileges;
     private FiledEnum filedEnum;
+    private int paramType;
 
     public static TableColumn newInstance(ResultSet rs) {
         TableColumn tableColumn = new TableColumn();
@@ -29,31 +30,45 @@ public class TableColumn {
             //tableColumn.isNull = rs.getString("Null") == "YES" ? true : false;
             //tableColumn.privileges = rs.getString("Privileges");
             String columntype = rs.getString("Type").toLowerCase();
+
             FiledEnum filedEnum;
             int i = columntype.indexOf("(");
             if (i != -1) {
                 columntype = columntype.substring(0, i );
             }
             switch (columntype) {
+                case "bit":
                 case "integer":
                 case "int":
+                case "smallint":
+                case "bigint":
                     filedEnum = FiledEnum.Integer;
                     break;
                 case "double":
                 case "float":
+                case "real":
+                case "numeric":
                     filedEnum = FiledEnum.Double;
                     break;
                 case "text":
+                case "character varying":
                 case "varchar":
+                case "character":
+                case "longtext":
                     filedEnum = FiledEnum.String;
                     break;
                 case "blob":
-                    filedEnum = FiledEnum.Blob;
+                case "bool":
+                case "boolean":
+                    filedEnum = FiledEnum.Boolean;
                     break;
                 case "enum":
                     filedEnum = FiledEnum.ENUM;
                     break;
                 case "datetime":
+                case "date":
+                case "timestamp":
+                case "time":
                     filedEnum = FiledEnum.DateTime;
                     break;
 
@@ -61,6 +76,7 @@ public class TableColumn {
                     throw new RuntimeException("无法识别的类型："+columntype);
             }
             tableColumn.filedEnum = filedEnum;
+            tableColumn.paramType = rs.getType();
         } catch (SQLException e) {
             e.printStackTrace();
         }

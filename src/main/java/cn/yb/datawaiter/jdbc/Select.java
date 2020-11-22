@@ -2,6 +2,7 @@ package cn.yb.datawaiter.jdbc;
 
 import cn.yb.datawaiter.exception.GlobRuntimeException;
 import cn.yb.datawaiter.jdbc.model.Column;
+import cn.yb.datawaiter.model.Mapper;
 import cn.yb.datawaiter.tools.Tool;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -31,7 +32,7 @@ public class Select {
                 }
             }
         } catch (Exception e) {
-           throw  new GlobRuntimeException(e.getMessage());
+            throw new GlobRuntimeException(e.getMessage());
         }
         return jsonObjects;
     }
@@ -59,7 +60,7 @@ public class Select {
         return findDataById(conn, className, id);
     }
 
-    public static<T> T findDataById2Po(Connection conn, Class<T> clazz, String id) {
+    public static <T> T findDataById2Po(Connection conn, Class<T> clazz, String id) {
         String className = clazz.getSimpleName();
         return findDataById(conn, className, id).toJavaObject(clazz);
     }
@@ -83,11 +84,16 @@ public class Select {
         return list;
     }
 
-    public static<T> T findPoById(Connection conn, Class<T> clazz , String id) {
-        JSON json = findDataById(conn,clazz.getSimpleName(),id);
-        if(json != null){
-            return  json.toJavaObject(clazz);
+    public static <T> T findPoById(Connection conn, Class<T> clazz, String id) {
+        JSON json = findDataById(conn, clazz.getSimpleName(), id);
+        if (json != null) {
+            return json.toJavaObject(clazz);
         }
-        return  null;
+        return null;
+    }
+
+    public static <T> T findOneDataBySQL(Connection conn, String sql, Class<T> mapperClass) {
+        List<T> list = findDataBySQL(conn, sql, mapperClass);
+        return list.size() > 0 ? list.get(0) : null;
     }
 }

@@ -22,48 +22,53 @@ public class LevelController extends  BasicController {
     private ILevelService levelService;
     @RequestMapping(value = "/findapilevel")
     public Respon findApiLevel() {
+        Respon respon = startRespon();
         String sql = "select * from level where typename = '"+ Level.LEVEL_TYPENAME_API+"'";
         List<JSONObject> domain = Select.findDataBySQL(SysConn, sql);
-        return responOk(domain);
+        return respon.ok(domain);
     }
     @RequestMapping(value = "/findBeanLevel")
     public Respon findBeanLevel() {
+        Respon respon = startRespon();
         String sql = "select * from level where typename = '"+ Level.LEVEL_TYPENAME_BEAN+"'";
         List<JSONObject> domain = Select.findDataBySQL(SysConn, sql);
-        return responOk(domain);
+        return respon.ok(domain);
     }
 
     @PostMapping("/addBeanLevel")
     public Respon addBeanLevel(@RequestBody Level level) {
         int insertCount = 0;
+        Respon respon = startRespon();
         if(level.getId() != null){
             level.setTypeName(Level.LEVEL_TYPENAME_BEAN);
             insertCount = Insert.insertPo(SysConn,level);
         }
-        return  insertCount == 0 ? responBasicError():responOk("");
+        return  insertCount == 0 ? respon.responBasicError():respon.ok(insertCount);
     }
 
     @PostMapping("/addapilevel")
     public Respon saveAppversion(@RequestBody Level level) {
         int insertCount = 0;
+        Respon respon = startRespon();
         if(level.getId() != null){
             level.setTypeName(Level.LEVEL_TYPENAME_API);
             insertCount = Insert.insertPo(SysConn,level);
         }
-        return  insertCount == 0 ? responBasicError():responOk("");
+        return  insertCount == 0 ? respon.responBasicError():respon.ok(insertCount);
     }
     @RequestMapping(value = "/deletelevelbyid")
     public Respon deleteLevelById(String id) {
-        int count = Delete.deleteDataByPri(SysConn,"level", id);
-        return responOk(count);
+        Respon respon = startRespon();
+        int count = Delete.deleteDataByPri(SysConn,Level.class.getSimpleName(), id);
+        return  count == 0 ? respon.responBasicError():respon.ok(count);
     }
 
     @RequestMapping(value = "/findLevelAndParentId")
     public Respon findLevelAndParentId(String id) {
+        Respon respon = startRespon();
         JSONObject json = levelService.findDataById(id);
         levelService.findParent(json);
-
-        return responOk(json);
+        return respon.ok(json);
     }
 
 }

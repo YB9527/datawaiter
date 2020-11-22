@@ -13,7 +13,9 @@ public class ResultColumn {
     private String column_;
     private PoRelation poRelation;
     private String mapperId;
-
+    /**
+     * 级联关联时，column_ 对应的 mapper
+     */
     private String column_MapperId;
     /**
      * 测试值

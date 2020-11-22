@@ -3,13 +3,12 @@ package cn.yb.datawaiter.controller;
 import cn.yb.datawaiter.exception.GlobRuntimeException;
 import cn.yb.datawaiter.jdbc.Connect;
 import cn.yb.datawaiter.jdbc.Select;
+import cn.yb.datawaiter.jdbc.model.CRUDEnum;
 import cn.yb.datawaiter.jdbc.model.DatabaseConnect;
-import cn.yb.datawaiter.model.Api;
-import cn.yb.datawaiter.model.Param;
-import cn.yb.datawaiter.model.QuestMethod;
-import cn.yb.datawaiter.model.Respon;
+import cn.yb.datawaiter.model.*;
 import cn.yb.datawaiter.service.impl.IDatawaiterService;
 import cn.yb.datawaiter.service.impl.ILevelService;
+import cn.yb.datawaiter.service.impl.IMapperService;
 import com.alibaba.fastjson.JSONObject;
 import com.sun.deploy.net.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +26,6 @@ import java.util.*;
 @RestController
 @RequestMapping(value = "/datawaiter")
 public class DatawaiterController extends BasicController {
-
 
 
     public String baseURL = "/datawaiter";
@@ -80,7 +78,11 @@ public class DatawaiterController extends BasicController {
     @Autowired
     private IDatawaiterService datawaiterService;
 
+    @Autowired
+    private IMapperService mapperService;
+
     public Respon handel(HttpServletRequest request, HttpServletResponse response) {
+        Respon respon = startRespon();
         try {
             String url = request.getRequestURI();
             String relative = url.replace(baseURL, "");
@@ -89,26 +91,46 @@ public class DatawaiterController extends BasicController {
             if (api != null) {
                 Map<String, String> paramMap = getAllRequestParam(request);
                 List<Param> params = new ArrayList<>();
-                for (String paramName : paramMap.keySet()){
-                    if(paramName != null){
-                        String  value = paramMap.get(paramName);
-                        value = value == null ?"":value;
-                       params.add(new Param("["+paramName+"]",value));
+                for (String paramName : paramMap.keySet()) {
+                    if (paramName != null) {
+                        String value = paramMap.get(paramName);
+                        value = value == null ? "" : value;
+                        params.add(new Param("[" + paramName + "]", value));
                     }
                 }
-                api.setParams(params);
-                if(api.getQuestMethod() == QuestMethod.GET){
-                    List<JSONObject> jsons = datawaiterService.findDataByApi(api);
+                //api.setParams(params);
+                if (api.getQuestMethod() == QuestMethod.GET) {
+                    List<JSONObject> jsons = datawaiterService.findDataByMapper(api);
                     if (jsons != null) {
-                        return responOk(jsons);
+                        return respon.ok(jsons);
                     }
-                }else{
-                   return responOk(datawaiterService.handleData(api)) ;
+                } else {
+
+                    return respon.ok(datawaiterService.handleData(api,paramMap));
                 }
             }
-            return responError("URL地址有问题：" + url);
+            return respon.responError("URL地址有问题：" + url);
         } catch (GlobRuntimeException e) {
-            return responError(e.getMessage());
+            return  respon.responError(e.getMessage());
+        }
+    }
+
+    public Respon mapperTesthandel(HttpServletRequest request, HttpServletResponse response) {
+        Respon respon = startRespon();
+        try {
+            Map<String, String> paramMap = getAllRequestParam(request);
+            Mapper mapper = mapperService.findMapperById(paramMap.get("mapperId"));
+            paramMap.remove("mapperId");
+            if(mapper != null){
+                if(mapper.getCrud() != MapperCreateEnum.SELECT){
+                    int count =  mapperService.handelData(CRUDEnum.SELECT ,mapper,paramMap);
+                    return respon.ok(count);
+                }
+            }
+
+            return respon.responError("URL地址有问题：");
+        } catch (GlobRuntimeException e) {
+            return respon.responError(e.getMessage());
         }
     }
 
@@ -126,47 +148,47 @@ public class DatawaiterController extends BasicController {
     }
 
 
-    @RequestMapping(value="/{a}",method=RequestMethod.POST)
+    @RequestMapping(value = "/{a}", method = RequestMethod.POST)
     public Respon postdatawaiter(HttpServletRequest request, HttpServletResponse response) {
         return handel(request, response);
     }
 
-    @RequestMapping(value="/{a}/{a}",method=RequestMethod.POST)
+    @RequestMapping(value = "/{a}/{a}", method = RequestMethod.POST)
     public Respon postdatawaiter1(HttpServletRequest request, HttpServletResponse response) {
         return handel(request, response);
     }
 
-    @RequestMapping(value="/{a}/{a}/{b}",method=RequestMethod.POST)
+    @RequestMapping(value = "/{a}/{a}/{b}", method = RequestMethod.POST)
     public Respon postdatawaiter2(HttpServletRequest request, HttpServletResponse response) {
         return handel(request, response);
     }
 
-    @RequestMapping(value="/{a}/{a}/{b}/{c}",method=RequestMethod.POST)
+    @RequestMapping(value = "/{a}/{a}/{b}/{c}", method = RequestMethod.POST)
     public Respon postdatawaiter3(HttpServletRequest request, HttpServletResponse response) {
         return handel(request, response);
     }
 
-    @RequestMapping(value="/{a}/{a}/{b}/{c}/{d}",method=RequestMethod.POST)
+    @RequestMapping(value = "/{a}/{a}/{b}/{c}/{d}", method = RequestMethod.POST)
     public Respon postdatawaiter4(HttpServletRequest request, HttpServletResponse response) {
         return handel(request, response);
     }
 
-    @RequestMapping(value="/{a}/{a}/{b}/{c}/{d}/{e}",method=RequestMethod.POST)
+    @RequestMapping(value = "/{a}/{a}/{b}/{c}/{d}/{e}", method = RequestMethod.POST)
     public Respon postdatawaiter5(HttpServletRequest request, HttpServletResponse response) {
         return handel(request, response);
     }
 
-    @RequestMapping(value="/{a}/{a}/{b}/{c}/{d}/{e}/{e}",method=RequestMethod.POST)
+    @RequestMapping(value = "/{a}/{a}/{b}/{c}/{d}/{e}/{e}", method = RequestMethod.POST)
     public Respon postdatawaiter6(HttpServletRequest request, HttpServletResponse response) {
         return handel(request, response);
     }
 
-    @RequestMapping(value="/{a}/{a}/{b}/{c}/{d}/{e}/{d}/{a}",method=RequestMethod.POST)
+    @RequestMapping(value = "/{a}/{a}/{b}/{c}/{d}/{e}/{d}/{a}", method = RequestMethod.POST)
     public Respon postdatawaiter7(HttpServletRequest request, HttpServletResponse response) {
         return handel(request, response);
     }
 
-    @RequestMapping(value="/{a}/{a}/{b}/{c}/{d}/{e}/{d}/{d}/{a}",method=RequestMethod.POST)
+    @RequestMapping(value = "/{a}/{a}/{b}/{c}/{d}/{e}/{d}/{d}/{a}", method = RequestMethod.POST)
     public Respon postdatawaiter8(HttpServletRequest request, HttpServletResponse response) {
         return handel(request, response);
     }

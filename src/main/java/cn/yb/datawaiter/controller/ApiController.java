@@ -5,8 +5,10 @@ import cn.yb.datawaiter.jdbc.*;
 import cn.yb.datawaiter.jdbc.model.Column;
 import cn.yb.datawaiter.jdbc.model.TableColumn;
 import cn.yb.datawaiter.model.Api;
+import cn.yb.datawaiter.model.Mapper;
 import cn.yb.datawaiter.model.Param;
 import cn.yb.datawaiter.model.Respon;
+import cn.yb.datawaiter.service.impl.IApiService;
 import cn.yb.datawaiter.service.impl.IDatawaiterService;
 import cn.yb.datawaiter.tools.Tool;
 import com.alibaba.fastjson.JSONArray;
@@ -29,30 +31,34 @@ import java.util.Map;
 public class ApiController extends BasicController {
     @Autowired
     private IDatawaiterService datawaiterService;
-
+    @Autowired
+    private IApiService apiService;
 
     @PostMapping("/testPostApi")
     public Respon testPostApi(@RequestBody Api api) {
+        Respon respon = startRespon();
         try {
-            return responOk(datawaiterService.handleData(api)) ;
+
+            //return responOk(datawaiterService.handleData(api)) ;
+            return respon.ok("") ;
         }catch (GlobRuntimeException e){
-            return responError(e.getMessage()) ;
+            return respon.responError(e.getMessage()) ;
         }
 
     }
 
     @RequestMapping(value = "/findApiById")
     public Respon findApiById(String id) {
-
+        Respon respon = startRespon();
         if(Tool.isEmpty(id)){
-            return responError("无id");
+            return respon.responError("无id");
         }
-        return responOk( Select.findPoById(SysConn,Api.class, id));
+        return respon.ok( Select.findPoById(SysConn,Api.class, id));
     }
 
     @RequestMapping(value = "/findbylevelid")
     public Respon findbylevelid(String id) {
-
+        Respon respon = startRespon();
         String sql = "select * from  api where levelId = " + sqlStr(id);
         List<JSONObject> domain = Select.findDataBySQL(SysConn, sql);
         /*for (JSONObject json : domain){
@@ -61,32 +67,38 @@ public class ApiController extends BasicController {
             List<JSONObject> paramas = Select.findDataBySQL(SysConn, sql);
 
         }*/
-        return responOk(domain);
+        return respon.ok(domain);
     }
 
     @RequestMapping(value = "/findParamsByApiId")
     public Respon findParamsByApiId(String apiId) {
+        Respon respon = startRespon();
         List<Param> params = sysService.findParamsByApiId(apiId);
-        return responOk(params);
+        return respon.ok(params);
     }
 
     @RequestMapping(value = "/deleteByTableNameAndId")
     public Respon get(String tablename, String id) {
+        Respon respon = startRespon();
         if (tablename == null || id == null) {
-            return responBasicError();
+            return respon.responBasicError();
         }
         int count = Delete.deleteDataByPri(SysConn, tablename, id);
-        return responOk(count);
+        return respon.ok(count);
     }
 
-    @PostMapping("/saveApi")
+   /* @PostMapping("/saveApi")
     public Respon saveApi(@RequestBody JSONObject json) {
         int count = Insert.insertJSON(SysConn, Api.class.getSimpleName(), json);
         List<Param> params = json.getJSONArray("params").toJavaList(Param.class);
         int count2 = Insert.insertManyPos(SysConn, params);
         return responOk(count);
-    }
+    }*/
 
+    @PostMapping("/saveApi")
+    public Respon saveApi(@RequestBody Api api) {
+      return  editApi(api);
+    }
     /**
      * 修改 或者 保存 api
      *
@@ -95,32 +107,32 @@ public class ApiController extends BasicController {
      */
     @PostMapping("/editApi")
     public Respon editApi(@RequestBody Api api) {
-        String tableName = Api.class.getSimpleName();
-        String sql = api.getSql_().replace("\"","'");
-
-        api.setSql_(sql);
+        Respon respon = startRespon();
+       int count = JDBCUtils.editPo(SysConn,api);
+       /* String tableName = Api.class.getSimpleName();
         JSONObject dbPo = Select.findDataById(SysConn,tableName, api.getId());
-        List<Param> paramList = api.getParams();
         if (dbPo == null) {
             //保存
             int count = Insert.insertPo(SysConn, api);
-            int count2 = Insert.insertManyPos(SysConn,  paramList);
+            //int count2 = Insert.insertManyPos(SysConn,  paramList);
             return responOk(count);
         } else {
             //编辑
             Update.updateDataPo(SysConn,  api);
             Delete.deleteByColoumnAndValues(SysConn, Param.class.getSimpleName(), "apiId", new String[]{api.getId()});
-            int count2 = Insert.insertManyPos(SysConn,  paramList);
-        }
-        return responOk(1);
+            //int count2 = Insert.insertManyPos(SysConn,  paramList);
+        }*/
+        return respon.ok(count);
     }
 
     @PostMapping("/findDataByAPI")
     public Respon findDataByAPI(@RequestBody Api api) {
+        Respon respon = startRespon();
         try {
-            return responOk(datawaiterService.findDataByApi(api));
+
+            return respon.ok(datawaiterService.findDataByMapper(api));
         } catch (GlobRuntimeException e) {
-            return responError(e.getMessage());
+            return respon.responError(e.getMessage());
         }
     }
 }

@@ -64,7 +64,7 @@ public class Tool {
 
 
     public static boolean isEmpty(String str) {
-        return str == null ? true : str.trim().isEmpty();
+        return str == null ? true : str.trim().isEmpty()||str.equals("undefined");
     }
 
 

@@ -24,12 +24,14 @@ public class DatabaseController extends  BasicController {
 
     @RequestMapping(value = "/finddatabaseenum")
     public Respon findDatabaseEnum() {
-        return responOk(DatabaseEnum.values());
+        Respon respon = startRespon();
+        return respon.ok(DatabaseEnum.values());
     }
 
     @PostMapping("/addConnection")
     public Respon addConnection(@RequestBody DatabaseConnect connect) {
         int insertCount = 0;
+        Respon respon = startRespon();
         if(connect.getId() != null){
             //检查是否能连接
             try {
@@ -42,11 +44,12 @@ public class DatabaseController extends  BasicController {
             }
 
         }
-        return  insertCount == 0 ? responError("连接数据库失败"):responOk("");
+        return  insertCount == 0 ? respon.responError("连接数据库失败"):respon.ok("");
     }
 
     @PostMapping("/editConnection")
     public Respon editConnection(@RequestBody DatabaseConnect connect) {
+        Respon respon = startRespon();
         int count = 0;
         if(connect.getId() != null){
             //检查是否能连接
@@ -60,25 +63,27 @@ public class DatabaseController extends  BasicController {
                 e.printStackTrace();
             }
         }
-        return  count == 0 ? responError("操作失败"):responOk("");
+        return  count == 0 ? respon.responError("操作失败"):respon.ok("");
     }
 
     @RequestMapping(value = "/findAll")
     public Respon findAll() {
-        return responOk(Select.findDataBySQL(SysConn,"SELECT * FROM databaseconnect\n" +
+        Respon respon = startRespon();
+        return respon.ok(Select.findDataBySQL(SysConn,"SELECT * FROM databaseconnect\n" +
                 "left JOIN " +
-                "(SELECT databaseConnectId,count(*) as apiCount from api GROUP BY databaseConnectId) as api\n" +
-                "on databaseconnect.id = api.databaseConnectId  "));
+                "(SELECT databaseId,count(*) as apiCount from api GROUP BY databaseId) as api\n" +
+                "on databaseconnect.id = api.databaseId  "));
     }
 
     @RequestMapping(value = "/findTableAllByDatabaseId")
     public Respon findTableAllByDatabaseId(String id) {
+        Respon respon = startRespon();
         if(Tool.isEmpty(id)){
-            return  responError("id无效");
+            return  respon.responError("id无效");
         }
         Connection coon = Connect.getSQLConnection(id);
         List<Table> tables =  Connect.getAllTableName(coon);
-        return responOk(tables);
+        return respon.ok(tables);
     }
 
 }

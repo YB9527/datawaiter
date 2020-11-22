@@ -8,11 +8,13 @@ import java.util.List;
 @Data
 public class Mapper {
     private String id;
+    private  String apiId;
     private String label;
-    private List<ResultColumn> resultColumns;
     private String sql_;
-    private CRUDEnum crud;
+    private MapperCreateEnum crud;
     private String databaseId;
     private  String tableName;
-
+    private  String mapperId;
+    private List<ResultColumn> resultColumns;
+    private List<ResultColumnCUD> resultColumnCUDs;
 }

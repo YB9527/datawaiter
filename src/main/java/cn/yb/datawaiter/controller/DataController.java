@@ -17,18 +17,12 @@ import java.util.List;
 @RequestMapping(value = "/jdbc")
 public class DataController extends  BasicController {
 
-
-
-
-
     @RequestMapping(value = "/get")
     public Respon get(String dabasekey,String sql) {
-
+        Respon respon = startRespon();
         String sys_cfg_app_domain = "select * from user ";
-        long start = System.currentTimeMillis();
         List<JSONObject> domain = Select.findDataBySQL(SystemConnect.getConn(), sys_cfg_app_domain);
-        long total = System.currentTimeMillis()- start;
-        return responOk((Object)total);
+        return respon.ok(domain);
     }
 
     @PostMapping("/post")

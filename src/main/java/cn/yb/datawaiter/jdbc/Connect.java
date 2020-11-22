@@ -55,7 +55,14 @@ public class Connect {
         try {
             List<Table> tables = new ArrayList();
             Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery("SHOW TABLES ");
+            String sql;
+
+           if(conn.getClientInfo().size() > 0 && conn.getClientInfo().getProperty("ApplicationName").equals("PostgreSQL JDBC Driver")){
+               sql = " select tablename from pg_tables where schemaname='public'";
+            }else{
+               sql = "SHOW TABLES ";
+           }
+            ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 String tableName = rs.getString(1);
                 List<TableColumn> tableColumns = getColumnCommentByTableName(conn, tableName);
@@ -147,6 +154,7 @@ public class Connect {
         return Connect.findColumnByPRI(columns);
     }
     public static Connection getSQLConnection(String connId) {
+
         Connection connect = connMap.get(connId);
         if (connect == null) {
             DatabaseConnect databaseConnect = Select.findPoById(SystemConnect.getConn(), DatabaseConnect.class, connId);

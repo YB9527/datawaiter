@@ -4,7 +4,7 @@ public enum FiledEnum {
     Integer,
     Double,
     String,
-    Blob,
+    Boolean,
     ENUM,
     DateTime
 }

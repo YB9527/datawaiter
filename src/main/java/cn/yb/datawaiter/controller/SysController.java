@@ -22,31 +22,35 @@ public class SysController extends BasicController {
 
     @RequestMapping(value = "/deleteByTableNameAndId")
     public Respon deleteByTableNameAndId(String tableName, String id) {
+        Respon respon = startRespon();
         if (tableName == null || id == null) {
-            return responBasicError();
+            return respon.responBasicError();
         }
         int count = Delete.deleteDataByPri(SysConn, tableName, id);
-        return responOk(count);
+        return respon.ok(count);
     }
 
     @RequestMapping(value = "/findByTableNameAndId")
     public Respon findByTableNameAndId(String tableName, String id) {
+        Respon respon = startRespon();
         if (tableName == null || id == null) {
-            return responBasicError();
+            return respon.responBasicError();
         }
-        return responOk(Select.findDataById(SysConn,tableName,id));
+        return respon.ok(Select.findDataById(SysConn,tableName,id));
     }
 
     @RequestMapping(value = "/findAll")
     public Respon findAll(String tableName) {
+        Respon respon = startRespon();
         if (tableName == null) {
-            return responBasicError();
+            return respon.responBasicError();
         }
-        return responOk(Select.findDataAllByTableName(SysConn, tableName));
+        return respon.ok(Select.findDataAllByTableName(SysConn, tableName));
     }
 
     @RequestMapping(value = "/findEnums")
     public Respon findEnums(String enumClassName) {
+        Respon respon = startRespon();
         try {
             Class aClass = Class.forName(enumClassName);
             Method m = aClass.getMethod("values");
@@ -64,9 +68,9 @@ public class SysController extends BasicController {
                         enJson.put(mtem.getName().replace("get", "").toLowerCase(), str);
                     }
                 }
-                return responOk(jsonArray);
+                return respon.ok(jsonArray);
             } else {
-                return responOk(obj);
+                return respon.ok(obj);
             }
 
         } catch (ClassNotFoundException e) {
@@ -78,7 +82,7 @@ public class SysController extends BasicController {
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         }
-        return responBasicError();
+        return respon.responBasicError();
     }
 
 

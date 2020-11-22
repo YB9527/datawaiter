@@ -1,9 +1,6 @@
 package cn.yb.datawaiter.jdbc;
 
 import cn.yb.datawaiter.exception.GlobRuntimeException;
-import cn.yb.datawaiter.jdbc.model.CRUDEnum;
-import cn.yb.datawaiter.jdbc.model.DatabaseConnect;
-import cn.yb.datawaiter.jdbc.model.FiledEnum;
 import cn.yb.datawaiter.jdbc.model.TableColumn;
 import cn.yb.datawaiter.tools.JSONTool;
 import cn.yb.datawaiter.tools.ReflectTool;
@@ -26,7 +23,7 @@ public class Update {
      * @param objects
      * @return
      */
-    public static int updateManyDatas(Connection conn, String tablename, List<JSONObject> objects) {
+    public static int updateDataJSON(Connection conn, String tablename, List<JSONObject> objects) {
         List<TableColumn> tableColumns = Connect.getColumnCommentByTableName(conn, tablename);
         Map<String, TableColumn> tableColumnMap = ReflectTool.getIDMap("getColumnName", tableColumns);
         List<String> sqls = new ArrayList<>();
@@ -43,8 +40,8 @@ public class Update {
             for (String sql : sqls) {
                 statement.execute(sql);
             }
-            conn.setAutoCommit(true);
-            return statement.getUpdateCount();
+            //conn.setAutoCommit(true);
+            return objects.size();
         } catch (SQLException e) {
             throw new GlobRuntimeException("SQL有问题："+e.getMessage());
         }
@@ -90,12 +87,20 @@ public class Update {
             return 0;
         }
         List<JSONObject> jsonObjects =  JSONTool.objectToJSON(list);
-        return updateManyDatas(conn,className,jsonObjects);
+        return updateDataJSON(conn,className,jsonObjects);
     }
 
-    public static void updateDataJSON(Connection conn, String simpleName, JSONObject json) {
+    public static int updateDataJSON(Connection conn, String simpleName, JSONObject json) {
         List<JSONObject> list = new ArrayList<>();
         list.add(json);
-        updateManyDatas( conn,simpleName, list);
+        return updateDataJSON( conn,simpleName, list);
+    }
+
+    public static int updateDataJSON(Connection connection, Map<String, List<JSONObject>> tableMap) {
+        int count = 0;
+        for (String tableName : tableMap.keySet()){
+            count +=  updateDataJSON(connection,tableName,tableMap.get(tableName));
+        }
+        return  count;
     }
 }

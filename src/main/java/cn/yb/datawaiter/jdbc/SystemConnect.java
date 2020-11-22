@@ -45,6 +45,7 @@ public class SystemConnect {
      * @return
      */
     public static Connection getConn() {
+
         if (systemConn == null){
             try {
                 DatabaseConnect dc = new DatabaseConnect(ip,databaseEnum,databaseName,name,password);

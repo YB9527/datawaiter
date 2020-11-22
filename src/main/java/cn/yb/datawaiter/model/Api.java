@@ -11,7 +11,7 @@ public class Api {
     /**
      * 数据库连接的id
      */
-    private String databaseConnectId;
+    private String databaseId;
     /**
      * 访问控制的id
      */
@@ -40,10 +40,7 @@ public class Api {
      * api 名字
      */
     private String label;
-    /**
-     * sql 语句
-     */
-    private String sql_;
 
-    private List<Param> params;
+    private  String mapperId;
+    private  Mapper mapper;
 }

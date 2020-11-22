@@ -12,19 +12,6 @@ import java.util.Map;
 public interface IDatawaiterService {
 
 
-    /**
-     * 查找数据
-     * @param api
-     * @return
-     */
-    List<JSONObject> findDataByApi(Api api);
-
-    /**
-     * 增删改 操作
-     * @param api
-     * @return
-     */
-    int handleData(Api api);
 
     /**
      *通过mapper 查询数据
@@ -33,10 +20,8 @@ public interface IDatawaiterService {
      */
     List<JSONObject> findDataByMapper(Mapper mapper);
 
-    /**
-     *  测试 mapper 的 update、 insert 、delete
-     * @param mapper
-     * @return
-     */
-    int mapperTest(Mapper mapper);
+
+    List<JSONObject> findDataByMapper(Api api);
+
+    int handleData(Api api, Map<String, String> paramMap);
 }
