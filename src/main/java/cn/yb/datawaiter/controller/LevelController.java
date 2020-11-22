@@ -3,6 +3,7 @@ package cn.yb.datawaiter.controller;
 import cn.yb.datawaiter.jdbc.Delete;
 import cn.yb.datawaiter.jdbc.Insert;
 import cn.yb.datawaiter.jdbc.Select;
+import cn.yb.datawaiter.jdbc.SystemConnect;
 import cn.yb.datawaiter.model.Level;
 import cn.yb.datawaiter.model.Respon;
 import cn.yb.datawaiter.service.impl.ILevelService;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLException;
 import java.util.List;
 
 @Controller
@@ -36,12 +38,14 @@ public class LevelController extends  BasicController {
     }
 
     @PostMapping("/addBeanLevel")
-    public Respon addBeanLevel(@RequestBody Level level) {
+    public Respon addBeanLevel(@RequestBody Level level) throws SQLException {
         int insertCount = 0;
         Respon respon = startRespon();
         if(level.getId() != null){
+            SysConn.setAutoCommit(false);
             level.setTypeName(Level.LEVEL_TYPENAME_BEAN);
             insertCount = Insert.insertPo(SysConn,level);
+            SysConn.commit();
         }
         return  insertCount == 0 ? respon.responBasicError():respon.ok(insertCount);
     }
@@ -57,9 +61,11 @@ public class LevelController extends  BasicController {
         return  insertCount == 0 ? respon.responBasicError():respon.ok(insertCount);
     }
     @RequestMapping(value = "/deletelevelbyid")
-    public Respon deleteLevelById(String id) {
+    public Respon deleteLevelById(String id) throws SQLException {
         Respon respon = startRespon();
+        SysConn.setAutoCommit(false);
         int count = Delete.deleteDataByPri(SysConn,Level.class.getSimpleName(), id);
+        SysConn.commit();
         return  count == 0 ? respon.responBasicError():respon.ok(count);
     }
 

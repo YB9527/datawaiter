@@ -35,9 +35,5 @@ public class SysService implements ISysService {
         }
         return jsons.get(0).toJavaObject(Api.class);
     }
-    @Override
-    public List<Param> findParamsByApiId(String apiId) {
-        String sql = "select * from  param where apiId = "+ JDBCUtils.sqlStr(apiId);
-        return   Select.findDataBySQL(SysConn, sql,Param.class);
-    }
+
 }

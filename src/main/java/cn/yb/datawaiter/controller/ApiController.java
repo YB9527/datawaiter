@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,8 +74,8 @@ public class ApiController extends BasicController {
     @RequestMapping(value = "/findParamsByApiId")
     public Respon findParamsByApiId(String apiId) {
         Respon respon = startRespon();
-        List<Param> params = sysService.findParamsByApiId(apiId);
-        return respon.ok(params);
+
+        return respon.ok("");
     }
 
     @RequestMapping(value = "/deleteByTableNameAndId")
@@ -108,7 +109,15 @@ public class ApiController extends BasicController {
     @PostMapping("/editApi")
     public Respon editApi(@RequestBody Api api) {
         Respon respon = startRespon();
-       int count = JDBCUtils.editPo(SysConn,api);
+        int count =0;
+        try {
+            SysConn.setAutoCommit(false);
+             count = JDBCUtils.editPo(SysConn,api);
+            SysConn.commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
        /* String tableName = Api.class.getSimpleName();
         JSONObject dbPo = Select.findDataById(SysConn,tableName, api.getId());
         if (dbPo == null) {
@@ -122,6 +131,7 @@ public class ApiController extends BasicController {
             Delete.deleteByColoumnAndValues(SysConn, Param.class.getSimpleName(), "apiId", new String[]{api.getId()});
             //int count2 = Insert.insertManyPos(SysConn,  paramList);
         }*/
+
         return respon.ok(count);
     }
 

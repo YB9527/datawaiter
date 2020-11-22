@@ -48,8 +48,12 @@ public class DatawaiterService implements IDatawaiterService {
                         String property = resultColumn.getProperty();
                         if (property != null) {
                             String value = resultColumn.getTestValue();
-                            value = value == null || "".equals(value) ? "''" : "'" + value + "'";
-                            sql = sql.replace(property, value);
+                           if(value != null && value.matches("[0-9]+")){
+                               sql = sql.replace(property, value);
+                           }else{
+                               value = value == null || "".equals(value) ? "''" : "'" + value + "'";
+                               sql = sql.replace(property, value);
+                           }
                         }
                     }
 
@@ -108,6 +112,9 @@ public class DatawaiterService implements IDatawaiterService {
     @Override
     public int handleData(Api api, Map<String, String> paramMap) {
         Mapper mapper = mapperService.findMapperById(api.getMapperId());
+        if(mapper == null){
+            throw  new GlobRuntimeException("mapper 查不到，id："+api.getMapperId());
+        }
         return mapperService.handelData(api.getCrud(),mapper, paramMap);
     }
 

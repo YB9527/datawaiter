@@ -19,6 +19,7 @@ public interface IMapperService {
     int saveMappers(List<Mapper> mappers);
 
     List<Mapper> findMappersByDatabaseIdAndTableName(String databaseId, String tableName);
+    List<JSONObject> findMappersByDatabaseIdAndTableNameAndCount(String databaseId, String tableName);
 
     Mapper findMapperById(String id);
 

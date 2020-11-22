@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.*;
 
 @Controller
@@ -40,7 +41,7 @@ public class MapperController extends BasicController {
     @RequestMapping(value = "/findMappersByDatabaseIdAndTableName")
     public Respon findMappersByDatabaseIdAndTableName(String databaseId,String tableName) {
         Respon respon = startRespon();
-        List<Mapper> mappers = mapperService.findMappersByDatabaseIdAndTableName(databaseId,tableName);
+        List<JSONObject> mappers = mapperService.findMappersByDatabaseIdAndTableNameAndCount(databaseId,tableName);
         return  respon.ok(mappers);
     }
     @RequestMapping(value = "/findMappersByDatabaseId")
@@ -67,12 +68,14 @@ public class MapperController extends BasicController {
 
     @PostMapping("/autoCreateMapper")
     @ResponseBody
-    public Respon autoCreateMapper(String databaseId, String tableName, String autoCreateMapperArray) {
+    public Respon autoCreateMapper(String databaseId, String tableName, String autoCreateMapperArray) throws SQLException {
         Respon respon = startRespon();
         Connection coon = Connect.getSQLConnection(databaseId);
+        coon.setAutoCommit(false);
         Table table = Connect.getTable(coon, tableName);
         List<AutoCreateMapper> autos = JSONObject.parseArray(autoCreateMapperArray, AutoCreateMapper.class);
         List<Mapper> mappers = mapperService.createMapper(databaseId, table, autos);
+        coon.commit();
         if (!Tool.isEmpty(mappers)) {
             return respon.ok(mappers);
         }
@@ -106,9 +109,23 @@ public class MapperController extends BasicController {
         }
         return respon.responError("保存失败");
     }
-
     @PostMapping("/mapperTest")
-    public Respon mapperTest(@RequestBody Mapper mapper) {
+    public Respon mapperTest(@RequestBody JSONObject josn) {
+        Respon respon = startRespon();
+        Mapper mapper = josn.toJavaObject(Mapper.class);
+        if (mapper != null) {
+            if(mapper.getCrud() == MapperCreateEnum.SELECT){
+                respon.ok(datawaiterService.findDataByMapper(mapper));
+            }else{
+                // int count = datawaiterService.mapperTest(mapper);
+                //responOk(respon,count);
+            }
+            return  respon;
+        }
+        return respon.responError("测试失败");
+    }
+    @PostMapping("/mapperTest1")
+    public Respon mapperTest1(@RequestBody Mapper mapper) {
         Respon respon = startRespon();
         if (mapper != null) {
             if(mapper.getCrud() == MapperCreateEnum.SELECT){

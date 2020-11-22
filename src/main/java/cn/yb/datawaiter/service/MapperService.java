@@ -3,10 +3,9 @@ package cn.yb.datawaiter.service;
 import cn.yb.datawaiter.dao.impl.IMapperDao;
 import cn.yb.datawaiter.exception.GlobRuntimeException;
 import cn.yb.datawaiter.jdbc.*;
-import cn.yb.datawaiter.jdbc.model.CRUDEnum;
-import cn.yb.datawaiter.jdbc.model.Table;
-import cn.yb.datawaiter.jdbc.model.TableColumn;
+import cn.yb.datawaiter.jdbc.model.*;
 import cn.yb.datawaiter.model.*;
+import cn.yb.datawaiter.service.impl.IDatabaseService;
 import cn.yb.datawaiter.service.impl.IMapperService;
 import cn.yb.datawaiter.tools.Tool;
 import com.alibaba.fastjson.JSONArray;
@@ -23,6 +22,8 @@ public class MapperService implements IMapperService {
 
     @Autowired
     private IMapperDao mapperDao;
+    @Autowired
+    private IDatabaseService databaseService;
 
     @Override
     public List<Mapper> createMapper(String databaseId, Table table, List<AutoCreateMapper> autos) {
@@ -39,6 +40,7 @@ public class MapperService implements IMapperService {
 
 
     private Mapper createMapper(String databaseId, Table table, AutoCreateMapper auto) {
+        DatabaseConnect databaseConnect = databaseService.findDatabaseConnect(databaseId);
         Mapper mapper = new Mapper();
         String tableName = table.getName();
         mapper.setDatabaseId(databaseId);
@@ -48,6 +50,9 @@ public class MapperService implements IMapperService {
         String sql = "";
         String mapperId = mapper.getId();
         TableColumn pri = table.getColumns().get(table.getPrimaryIndex());
+        List<ResultColumnCUD> cuds = new ArrayList<>();
+        cuds.add(new ResultColumnCUD(mapper));
+        mapper.setResultColumnCUDs(cuds);
         switch (auto) {
             case SelectById:
                 sql = "SELECT " + "*" + " FROM " + tableName + " WHERE " + pri.getColumnName() + " = [" + pri.getColumnName() + "]";
@@ -66,11 +71,16 @@ public class MapperService implements IMapperService {
                 mapper.setLabel("查找总条目数");
                 break;
             case SelectPagination:
+
+                sql = getSelectPaginationSQL(databaseConnect, tableName);
                 mapper.setCrud(MapperCreateEnum.SELECT);
+                resultColumns.add(new ResultColumn(mapperId,"START", "0"));
+                resultColumns.add(new ResultColumn(mapperId,"END", "10"));
                 mapper.setLabel("查找分页");
                 break;
             case DeleteByPo:
                 mapper.setCrud(MapperCreateEnum.EDIT);
+
                 mapper.setLabel("删除根据对象");
                 break;
             case SavePo:
@@ -86,19 +96,37 @@ public class MapperService implements IMapperService {
         mapper.setSql_(sql);
         return mapper;
     }
-
+    public static String getSelectPaginationSQL(DatabaseConnect databaseConnect, String tableName) {
+        DatabaseEnum databaseEnum = databaseConnect.getDatabaseEnum();
+        switch (databaseEnum){
+            case mysql:
+                return  "SELECT * FROM " + tableName + " LIMIT [START] , [END]";
+            case postgress:
+                return  "SELECT  * FROM "+ tableName +" LIMIT [END] OFFSET [START]";
+            default:
+                throw  new GlobRuntimeException("创建分页，遇到不能识别的数据库类型："+databaseEnum.name());
+        }
+    }
     @Override
     public int saveMappers(List<Mapper> mappers) {
-        Connection conn =  SystemConnect.getConn();
-        int count = Insert.insertManyPos(conn, mappers);
-        List<ResultColumn> rcs = new ArrayList<>();
-        for (Mapper mapper : mappers) {
-            if (!Tool.isEmpty(mapper.getResultColumns())) {
-                rcs.addAll(mapper.getResultColumns());
-            }
-        }
+        int count = 0;
         try {
+            Connection conn = SystemConnect.getConn();
+            conn.setAutoCommit(false);
+            List<ResultColumn> rcs = new ArrayList<>();
+            List<ResultColumnCUD> cuds = new ArrayList<>();
+
+            for (Mapper mapper : mappers) {
+                if (!Tool.isEmpty(mapper.getResultColumns())) {
+                    rcs.addAll(mapper.getResultColumns());
+                }
+                if (!Tool.isEmpty(mapper.getResultColumnCUDs())) {
+                    cuds.addAll(mapper.getResultColumnCUDs());
+                }
+            }
+            count = Insert.insertManyPos(conn, mappers);
             Insert.insertManyPos(conn, rcs);
+            Insert.insertManyPos(conn, cuds);
             conn.commit();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -107,8 +135,19 @@ public class MapperService implements IMapperService {
     }
 
     @Override
+    public List<JSONObject> findMappersByDatabaseIdAndTableNameAndCount(String databaseId, String tableName) {
+        String sql = "SELECT * FROM " +
+                "   (SELECT *  FROM Mapper WHERE databaseId = " + JDBCUtils.sqlStr(databaseId) + " AND tableName=" + JDBCUtils.sqlStr(tableName)+" ) as mapper"+
+                " LEFT JOIN (SELECT mapperId,count(*) as apiCount FROM api GROUP BY mapperId) as api " +
+                " on mapper.id=api.mapperId";
+        List<JSONObject> list = Select.findDataBySQL(SystemConnect.getConn(), sql);
+        return list;
+    }
+
+    @Override
     public List<Mapper> findMappersByDatabaseIdAndTableName(String databaseId, String tableName) {
-        String sql = "SELECT *  FROM Mapper WHERE databaseId = " + JDBCUtils.sqlStr(databaseId) + " AND tableName=" + JDBCUtils.sqlStr(tableName);
+        String sql = "SELECT *  FROM Mapper WHERE databaseId = " + JDBCUtils.sqlStr(databaseId) +
+                " AND tableName=" + JDBCUtils.sqlStr(tableName);
         List<Mapper> list = Select.findDataBySQL(SystemConnect.getConn(), sql, Mapper.class);
         return list;
     }
@@ -116,10 +155,18 @@ public class MapperService implements IMapperService {
     @Override
     public Mapper findMapperById(String id) {
         Mapper mapper = Select.findDataById2Po(SystemConnect.getConn(), Mapper.class, id);
-        String selectResultColumnSQL = "SELECT * FROM " + ResultColumn.class.getSimpleName() + " WHERE mapperId = " + JDBCUtils.sqlStr(id);
-        List<ResultColumn> list = Select.findDataBySQL(SystemConnect.getConn(), selectResultColumnSQL, ResultColumn.class);
+        if (mapper == null) {
+            return null;
+        }
+        List<ResultColumn> list = findResultColumnByMapperId(id);
         mapper.setResultColumns(list);
         return mapper;
+    }
+
+    private List<ResultColumn> findResultColumnByMapperId(String id) {
+        String selectResultColumnSQL = "SELECT * FROM " + ResultColumn.class.getSimpleName() + " WHERE mapperId = " + JDBCUtils.sqlStr(id);
+        List<ResultColumn> list = Select.findDataBySQL(SystemConnect.getConn(), selectResultColumnSQL, ResultColumn.class);
+        return list;
     }
 
     @Override
@@ -155,7 +202,7 @@ public class MapperService implements IMapperService {
                 Insert.insertManyPos(conn, all);
             }
             int count2 = Insert.insertManyPos(conn, resultColumns);
-            conn.setAutoCommit(true);
+            conn.commit();
             return count;
         } catch (Exception e) {
             try {
@@ -196,12 +243,14 @@ public class MapperService implements IMapperService {
     }
 
     @Override
-    public int deleteMapper(Mapper mapper)   {
-        Connection conn = SystemConnect.getConn();
-        Delete.deleteDataByPri(conn, Mapper.class.getSimpleName(), mapper.getId());
-        List<ResultColumn> resultColumns = mapper.getResultColumns();
-        int count =  Delete.deleteDataByPri(conn, resultColumns);
+    public int deleteMapper(Mapper mapper) {
+        int count = 0;
         try {
+            Connection conn = SystemConnect.getConn();
+            conn.setAutoCommit(false);//开启事务
+            Delete.deleteDataByPri(conn, Mapper.class.getSimpleName(), mapper.getId());
+            List<ResultColumn> resultColumns = mapper.getResultColumns();
+            count = Delete.deleteDataByPri(conn, resultColumns);
             conn.commit();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -213,12 +262,23 @@ public class MapperService implements IMapperService {
     public List<Mapper> findMappersByDatabaseId(String databaseId) {
         String sql = "SELECT *  FROM Mapper WHERE databaseId = " + JDBCUtils.sqlStr(databaseId);
         List<Mapper> list = Select.findDataBySQL(SystemConnect.getConn(), sql, Mapper.class);
+        for (Mapper mapper : list) {
+            mapper.setResultColumns(findResultColumnByMapperId(mapper.getId()));
+        }
         return list;
     }
 
     @Override
     public int editResultColumnCUD(ResultColumnCUD resultColumnCUD) {
-        return JDBCUtils.editPo(SystemConnect.getConn(), resultColumnCUD);
+        Connection conn = SystemConnect.getConn();
+        int count = 0;
+        try {
+            conn.setAutoCommit(false);//开启事务
+            count = JDBCUtils.editPo(conn, resultColumnCUD);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return count;
     }
 
     @Override
@@ -311,7 +371,7 @@ public class MapperService implements IMapperService {
         String property = cud.getProperty();
         String tableName = cud.getTableName();
         String str = dataMap.getString(property);
-        if(Tool.isEmpty(str)){
+        if (Tool.isEmpty(str)) {
             return;
         }
         JSONArray jsonArray;

@@ -37,7 +37,9 @@ public class DatabaseController extends  BasicController {
             try {
                 Connection sqlConnection = Connect.getSQLConnection(connect);
                 if(sqlConnection != null){
+                    SysConn.setAutoCommit(false);
                     insertCount = Insert.insertPo(SysConn,connect);
+                    SysConn.commit();
                 }
             }catch (Exception e){
                 e.printStackTrace();
@@ -56,8 +58,10 @@ public class DatabaseController extends  BasicController {
             try {
                 Connection sqlConnection = Connect.getSQLConnection(connect);
                 if(sqlConnection != null){
+                    SysConn.setAutoCommit(false);
                     count = Update.updateDataPo(SysConn,connect);
                     Connect.removeSQLConnection(connect.getId());
+                    SysConn.commit();
                 }
             }catch (Exception e){
                 e.printStackTrace();

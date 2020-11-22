@@ -25,12 +25,22 @@ public class ResultColumn {
     public ResultColumn() {
 
     }
+
     public ResultColumn(String mapperId, TableColumn tc) {
         id = UUID.randomUUID().toString();
-        property ="[" + tc.getColumnName()+"]";
+        property = "[" + tc.getColumnName() + "]";
         column_ = "";
         poRelation = PoRelation.no;
-        this.mapperId= mapperId;
+        this.mapperId = mapperId;
+    }
+
+    public ResultColumn(String mapperId, String property, String testValue) {
+        id = UUID.randomUUID().toString();
+        this.property = "[" + property + "]";
+        column_ = "";
+        poRelation = PoRelation.no;
+        this.testValue = testValue;
+        this.mapperId = mapperId;
     }
 
 

@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface ISysService {
     Api findApiByURL(String relative);
-    List<Param> findParamsByApiId(String apiId);
+
 }

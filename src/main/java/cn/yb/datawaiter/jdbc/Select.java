@@ -2,6 +2,8 @@ package cn.yb.datawaiter.jdbc;
 
 import cn.yb.datawaiter.exception.GlobRuntimeException;
 import cn.yb.datawaiter.jdbc.model.Column;
+import cn.yb.datawaiter.jdbc.model.DatabaseConnect;
+import cn.yb.datawaiter.jdbc.model.DatabaseEnum;
 import cn.yb.datawaiter.model.Mapper;
 import cn.yb.datawaiter.tools.Tool;
 import com.alibaba.fastjson.JSON;
@@ -62,7 +64,13 @@ public class Select {
 
     public static <T> T findDataById2Po(Connection conn, Class<T> clazz, String id) {
         String className = clazz.getSimpleName();
-        return findDataById(conn, className, id).toJavaObject(clazz);
+        JSONObject json = findDataById(conn, className, id);
+        if (json != null) {
+            return json.toJavaObject(clazz);
+        } else {
+            return null;
+        }
+
     }
 
     public static JSONObject findDataById(Connection conn, String tableName, String id) {
@@ -96,4 +104,6 @@ public class Select {
         List<T> list = findDataBySQL(conn, sql, mapperClass);
         return list.size() > 0 ? list.get(0) : null;
     }
+
+
 }

@@ -3,6 +3,7 @@ package cn.yb.datawaiter.model;
 import lombok.Data;
 
 import java.util.List;
+import java.util.UUID;
 
 @Data
 public class ResultColumnCUD {
@@ -23,5 +24,12 @@ public class ResultColumnCUD {
 
     public ResultColumnCUD() {
 
+    }
+
+    public ResultColumnCUD(Mapper mapper) {
+        this.id = UUID.randomUUID().toString();
+        this.property = mapper.getTableName();
+        this.tableName =  mapper.getTableName();
+        this.mapperId = mapper.getId();
     }
 }
