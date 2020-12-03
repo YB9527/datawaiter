@@ -7,19 +7,16 @@ import cn.yb.datawaiter.jdbc.model.CRUDEnum;
 import cn.yb.datawaiter.jdbc.model.DatabaseConnect;
 import cn.yb.datawaiter.model.*;
 import cn.yb.datawaiter.service.impl.IDatawaiterService;
-import cn.yb.datawaiter.service.impl.ILevelService;
+
 import cn.yb.datawaiter.service.impl.IMapperService;
 import com.alibaba.fastjson.JSONObject;
-import com.sun.deploy.net.HttpResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.*;
 
 @Controller
@@ -90,17 +87,17 @@ public class DatawaiterController extends BasicController {
 
             if (api != null) {
                 Map<String, String> paramMap = getAllRequestParam(request);
-                List<Param> params = new ArrayList<>();
+              /*  List<Param> params = new ArrayList<>();
                 for (String paramName : paramMap.keySet()) {
                     if (paramName != null) {
                         String value = paramMap.get(paramName);
                         value = value == null ? "" : value;
                         params.add(new Param("[" + paramName + "]", value));
                     }
-                }
+                }*/
                 //api.setParams(params);
                 if (api.getQuestMethod() == QuestMethod.GET) {
-                    List<JSONObject> jsons = datawaiterService.findDataByMapper(api);
+                    List<JSONObject> jsons = datawaiterService.findDataByMapper(api,paramMap);
                     if (jsons != null) {
                         return respon.ok(jsons);
                     }
@@ -111,6 +108,7 @@ public class DatawaiterController extends BasicController {
             }
             return respon.responError("URL地址有问题：" + url);
         } catch (GlobRuntimeException e) {
+            e.printStackTrace();
             return  respon.responError(e.getMessage());
         }
     }

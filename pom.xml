@@ -75,12 +75,25 @@
     </dependencies>
 
     <build>
+        <!--    <resources>
+                <resource>
+                    <directory>src/main/resources</directory>
+                    <excludes>
+                        <exclude>*.properties</exclude>
+                        <exclude>*.yml</exclude>
+                        <exclude>*.xml</exclude>
+                    </excludes>
+                </resource>
+            </resources>-->
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+            <!--拷贝资源文件 copy-resources-->
         </plugins>
+        <finalName>datawaiter</finalName>
     </build>
+    <packaging>war</packaging>
 
 </project>

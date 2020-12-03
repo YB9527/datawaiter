@@ -6,17 +6,12 @@ import cn.yb.datawaiter.model.*;
 import cn.yb.datawaiter.service.impl.IDatawaiterService;
 import cn.yb.datawaiter.service.impl.IMapperService;
 import cn.yb.datawaiter.service.impl.ISysService;
-import cn.yb.datawaiter.tools.FileTool;
-import cn.yb.datawaiter.tools.ReflectTool;
 import cn.yb.datawaiter.tools.Tool;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -51,7 +46,12 @@ public class DatawaiterService implements IDatawaiterService {
                            if(value != null && value.matches("[0-9]+")){
                                sql = sql.replace(property, value);
                            }else{
-                               value = value == null || "".equals(value) ? "''" : "'" + value + "'";
+                               /*//检查前面是否有in
+                               int index =  sql.lastIndexOf("IN",sql.indexOf(property));
+                               if(index != -1){
+                                   //检查中间是否有其他字符串
+                               }*/
+                               //value = value == null || "".equals(value) ? "''" : "'" + value + "'";
                                sql = sql.replace(property, value);
                            }
                         }
@@ -104,8 +104,20 @@ public class DatawaiterService implements IDatawaiterService {
 
 
     @Override
-    public List<JSONObject> findDataByMapper(Api api) {
+    public List<JSONObject> findDataByMapper(Api api, Map<String, String> paramMap) {
         Mapper mapper = mapperService.findMapperById(api.getMapperId());
+        for (ResultColumn resultColumn : mapper.getResultColumns()){
+            String key = resultColumn.getProperty().replace("[","").replace("]","");
+            String value = paramMap.get(key);
+            resultColumn.setTestValue(value);
+            if(value == null){
+                throw  new GlobRuntimeException("api "+api.getLabel()+",没有传递这个参数："+key);
+            }
+          /*  if(resultColumn.getProperty().equals(param.getParamName())){
+
+            }*/
+
+        }
         return findDataByMapper(mapper);
     }
 

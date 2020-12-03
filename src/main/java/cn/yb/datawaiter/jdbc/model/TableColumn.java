@@ -67,13 +67,21 @@ public class TableColumn {
                     break;
                 case "datetime":
                 case "date":
-                case "timestamp":
-                case "time":
                     filedEnum = FiledEnum.DateTime;
+                    break;
+                case "time":
+                case "timestamp":
+                    filedEnum = FiledEnum.TimeStamp;
+                    break;
+                case "geometry":
+                    filedEnum = FiledEnum.Blob;
                     break;
 
                 default:
-                    throw new RuntimeException("无法识别的类型："+columntype);
+                    filedEnum = FiledEnum.String;
+                    System.out.println("无法识别的类型："+columntype);
+                    break;
+                    //throw new RuntimeException("无法识别的类型："+columntype);
             }
             tableColumn.filedEnum = filedEnum;
             tableColumn.paramType = rs.getType();

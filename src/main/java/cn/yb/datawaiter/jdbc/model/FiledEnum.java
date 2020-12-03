@@ -6,5 +6,7 @@ public enum FiledEnum {
     String,
     Boolean,
     ENUM,
-    DateTime
+    DateTime,
+    TimeStamp,
+    Blob,
 }

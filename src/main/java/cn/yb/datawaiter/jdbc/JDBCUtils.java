@@ -2,6 +2,7 @@ package cn.yb.datawaiter.jdbc;
 
 import cn.yb.datawaiter.exception.GlobRuntimeException;
 import cn.yb.datawaiter.jdbc.model.CRUDEnum;
+import cn.yb.datawaiter.jdbc.model.FiledEnum;
 import cn.yb.datawaiter.jdbc.model.TableColumn;
 import cn.yb.datawaiter.model.ResultColumn;
 import cn.yb.datawaiter.model.ResultColumnCUD;
@@ -76,13 +77,20 @@ public class JDBCUtils {
                     }*/
                     ps.setString(i, jsonObject.getString(columnName));
                     break;
+                case TimeStamp:
                 case DateTime:
                     Date date = jsonObject.getDate(columnName);
-                    if (date != null) {
+                    if (date != null ) {
                         long lg = date.getTime(); //日期转时间戳
                         ps.setTimestamp(i, new Timestamp(lg / 1000 * 1000));
                     } else {
-                        ps.setNull(i, Types.DATE);
+                        if(tableColumn.getFiledEnum() == FiledEnum.TimeStamp){
+                            int a1 =Types.TIME_WITH_TIMEZONE;
+                            int a2 =tableColumn.getParamType();
+                            ps.setNull(i,Types.TIME_WITH_TIMEZONE);
+                        }else{
+                            ps.setNull(i,Types.DATE);
+                        }
                     }
                     break;
                 default:

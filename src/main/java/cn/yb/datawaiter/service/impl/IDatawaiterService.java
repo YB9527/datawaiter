@@ -5,7 +5,6 @@ import cn.yb.datawaiter.model.Mapper;
 import cn.yb.datawaiter.model.Param;
 import com.alibaba.fastjson.JSONObject;
 
-import java.sql.Connection;
 import java.util.List;
 import java.util.Map;
 
@@ -21,7 +20,7 @@ public interface IDatawaiterService {
     List<JSONObject> findDataByMapper(Mapper mapper);
 
 
-    List<JSONObject> findDataByMapper(Api api);
+    List<JSONObject> findDataByMapper(Api api, Map<String, String> paramMap);
 
     int handleData(Api api, Map<String, String> paramMap);
 }

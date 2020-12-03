@@ -2,16 +2,11 @@ package cn.yb.datawaiter.controller;
 
 import cn.yb.datawaiter.exception.GlobRuntimeException;
 import cn.yb.datawaiter.jdbc.*;
-import cn.yb.datawaiter.jdbc.model.Column;
-import cn.yb.datawaiter.jdbc.model.TableColumn;
 import cn.yb.datawaiter.model.Api;
-import cn.yb.datawaiter.model.Mapper;
-import cn.yb.datawaiter.model.Param;
 import cn.yb.datawaiter.model.Respon;
 import cn.yb.datawaiter.service.impl.IApiService;
 import cn.yb.datawaiter.service.impl.IDatawaiterService;
 import cn.yb.datawaiter.tools.Tool;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,11 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RestController
@@ -135,14 +127,14 @@ public class ApiController extends BasicController {
         return respon.ok(count);
     }
 
-    @PostMapping("/findDataByAPI")
+   /* @PostMapping("/findDataByAPI")
     public Respon findDataByAPI(@RequestBody Api api) {
         Respon respon = startRespon();
         try {
 
-            return respon.ok(datawaiterService.findDataByMapper(api));
+            return respon.ok(datawaiterService.findDataByMapper(api, params));
         } catch (GlobRuntimeException e) {
             return respon.responError(e.getMessage());
         }
-    }
+    }*/
 }
