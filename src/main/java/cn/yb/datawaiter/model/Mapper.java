@@ -14,7 +14,6 @@ public class Mapper {
     private MapperCreateEnum crud;
     private String databaseId;
     private  String tableName;
-    private  String mapperId;
     private List<ResultColumn> resultColumns;
     private List<ResultColumnCUD> resultColumnCUDs;
 }

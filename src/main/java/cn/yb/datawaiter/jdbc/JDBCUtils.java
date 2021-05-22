@@ -67,6 +67,9 @@ public class JDBCUtils {
                         ps.setNull(i, Types.BOOLEAN);
                     }
                     break;
+                case Blob:
+                    ps.setNull(i, Types.BINARY);
+                    break;
                 case ENUM:
                 case String:
                     /*Double svalue = jsonObject.getDouble(tableColumn.getColumnName());
@@ -239,5 +242,15 @@ public class JDBCUtils {
             count = Update.updateDataJSON (conn, tableName, jsonObject);
         }
         return count;
+    }
+
+    public static String getKeyStr(String columnname) {
+
+        switch (columnname){
+            case "key":
+                columnname = "`"+columnname+ "`";
+                break;
+        }
+        return columnname;
     }
 }

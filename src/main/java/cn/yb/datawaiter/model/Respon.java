@@ -9,7 +9,7 @@ import java.util.Date;
 public class Respon {
     private final static int CODE_SUCCESS=1000;
     private final static int CODE_ERROR=1001;
-
+    private Boolean success ;
     private Boolean isOk;
     private Integer code;
     private String msg;
@@ -27,6 +27,7 @@ public class Respon {
 
     }
     public Respon(Boolean isOk, Integer code, String msg, Object data) {
+        this.success = isOk;
         this.isOk = isOk;
         this.code = code;
         this.msg = msg;
@@ -34,12 +35,14 @@ public class Respon {
     }
     public void  buildRespon(Boolean isOk, Integer code, String msg, Object data) {
         this.isOk = isOk;
+        this.success = isOk;
         this.code = code;
         this.msg = msg;
         this.data = data;
         this.endDate = new Date();
         this.totalTime = (endDate.getTime() - startDate.getTime())+" 毫秒";
     }
+
     public Respon ok(Object obj) {
         this.buildRespon(true, CODE_SUCCESS, "成功", obj);
         return this;

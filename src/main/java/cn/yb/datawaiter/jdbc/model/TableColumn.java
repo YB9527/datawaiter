@@ -45,6 +45,8 @@ public class TableColumn {
                     filedEnum = FiledEnum.Integer;
                     break;
                 case "double":
+                case "float4":
+                case "float8":
                 case "float":
                 case "real":
                 case "numeric":

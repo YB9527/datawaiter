@@ -17,3 +17,5 @@ SystemDatabase:
   databaseName: datawaitersystem
   name: root
   password: 1234
+uploadconfig:
+  dir: D:\datawaiter\upload\

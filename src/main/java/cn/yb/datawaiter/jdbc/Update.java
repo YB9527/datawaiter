@@ -59,7 +59,7 @@ public class Update {
         StringBuilder sb = new StringBuilder("update " + tablename + " set ");
         for (String columnname : tableColumnMap.keySet()) {
             TableColumn tableColumn = tableColumnMap.get(columnname);
-            sb.append(columnname + "=" + JDBCUtils.getSQLValue(tableColumn, jsonObject) + ",");
+            sb.append(JDBCUtils.getKeyStr(columnname)  + "=" + JDBCUtils.getSQLValue(tableColumn, jsonObject) + ",");
         }
         sb.setCharAt(sb.length() - 1, ' ');
         sb.append(" WHERE " + columnByPRI.getColumnName() + "=" + JDBCUtils.getSQLValue(columnByPRI, jsonObject));

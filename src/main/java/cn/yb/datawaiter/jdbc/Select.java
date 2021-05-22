@@ -30,10 +30,12 @@ public class Select {
                 jsonObject = new JSONObject();
                 jsonObjects.add(jsonObject);
                 for (Column column : cols) {
+
                     jsonObject.put(column.getColumnLabel(), rs.getObject(column.getColumnLabel()));
                 }
             }
         } catch (Exception e) {
+            System.out.println(sql) ;
             throw new GlobRuntimeException(e.getMessage());
         }
         return jsonObjects;

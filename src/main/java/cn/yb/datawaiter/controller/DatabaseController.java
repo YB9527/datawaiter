@@ -75,8 +75,8 @@ public class DatabaseController extends  BasicController {
         Respon respon = startRespon();
         return respon.ok(Select.findDataBySQL(SysConn,"SELECT * FROM databaseconnect\n" +
                 "left JOIN " +
-                "(SELECT databaseId,count(*) as apiCount from api GROUP BY databaseId) as api\n" +
-                "on databaseconnect.id = api.databaseId  "));
+                "(SELECT databaseConnectId,count(*) as apiCount from api GROUP BY databaseConnectId) as api\n" +
+                "on databaseconnect.id = api.databaseConnectId  "));
     }
 
     @RequestMapping(value = "/findTableAllByDatabaseId")

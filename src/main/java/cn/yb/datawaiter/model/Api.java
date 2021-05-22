@@ -11,7 +11,7 @@ public class Api {
     /**
      * 数据库连接的id
      */
-    private String databaseId;
+    private String databaseConnectId;
     /**
      * 访问控制的id
      */

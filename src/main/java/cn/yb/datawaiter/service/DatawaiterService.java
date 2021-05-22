@@ -24,14 +24,8 @@ public class DatawaiterService implements IDatawaiterService {
     private IMapperService mapperService;
     //private static String ARRAY = "Array";
 
-
-
-
-
     @Override
     public List<JSONObject> findDataByMapper(Mapper mapper) {
-
-
         if (mapper != null) {
             String connId = mapper.getDatabaseId();
             Connection conn = Connect.getSQLConnection(connId);
@@ -52,7 +46,12 @@ public class DatawaiterService implements IDatawaiterService {
                                    //检查中间是否有其他字符串
                                }*/
                                //value = value == null || "".equals(value) ? "''" : "'" + value + "'";
-                               sql = sql.replace(property, value);
+                               if(value != null  && value instanceof  String){
+                                   sql = sql.replace(property,"'" + value+"'" );
+                               }else{
+                                   sql = sql.replace(property,value );
+                               }
+
                            }
                         }
                     }

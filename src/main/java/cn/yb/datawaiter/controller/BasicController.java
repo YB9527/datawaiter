@@ -4,6 +4,7 @@ import cn.yb.datawaiter.exception.GlobRuntimeException;
 import cn.yb.datawaiter.jdbc.Connect;
 import cn.yb.datawaiter.jdbc.SystemConnect;
 import cn.yb.datawaiter.model.Respon;
+import cn.yb.datawaiter.model.ResponTotal;
 import cn.yb.datawaiter.service.impl.ISysService;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,9 @@ public class BasicController {
 
     protected Respon startRespon() {
        return new Respon(new Date());
+    }
+    protected ResponTotal startResponTotal() {
+        return new ResponTotal(new Date());
     }
   /* *//* protected Respon getRespon(Boolean isOk, Integer code, String message, Object object) {
         Respon respon = new Respon(isOk, code, message, object);

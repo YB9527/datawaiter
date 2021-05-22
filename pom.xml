@@ -37,7 +37,7 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <scope>runtime</scope>
+
         </dependency>
 
         <dependency>
@@ -94,6 +94,6 @@
         </plugins>
         <finalName>datawaiter</finalName>
     </build>
-    <packaging>war</packaging>
+    <packaging>war </packaging>
 
 </project>

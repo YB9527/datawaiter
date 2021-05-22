@@ -26,31 +26,9 @@ class DatawaiterApplicationTests {
 
     @Test
     void contextLoads() throws FileNotFoundException {
-        File text = new File("d:\\123 (2).txt");
 
-        try {
-            FileReader fr = new FileReader(text);
-            BufferedReader br = new BufferedReader(fr);
-            String tempString = null;
-            int line = 1;
-            List<String> sqls = new ArrayList<>();
-            List<JSONObject> jsons = new ArrayList<>();
-            while ((tempString = br.readLine()) != null) {//BufferedReader有readLine()，可以实现按行读取
-                JSONObject json = JSONObject.parseObject(tempString);
-                sqls.add("insert into m_dict_data(id,pid,dictid,code,label) values ('" + json.getString("id") + "' ," +
-                        "'" + json.getString("pid") +
-                        "' ,'" + json.getString("dictid") + "' ,'" +
-                        json.getString("code") + "' ,'" +
-                        json.getString("label") + "' );");
 
-                jsons.add(json);
-            }
-            int count = jsons.size();
-            FileTool.writeStrs(sqls, "d:/444.txt");
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
         public void test2() throws IOException {
 

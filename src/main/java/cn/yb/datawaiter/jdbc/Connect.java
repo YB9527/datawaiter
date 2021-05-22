@@ -92,9 +92,10 @@ public class Connect {
      * @throws Exception
      */
     public static List<TableColumn> getColumnCommentByTableName(Connection conn, String tableName) {
+        String sql="";
         try {
             Statement stmt = conn.createStatement();
-            String sql;
+
             if(conn.getClientInfo().size() > 0 && conn.getClientInfo().getProperty("ApplicationName").equals("PostgreSQL JDBC Driver")){
                        sql ="select a.attname as Field,format_type(a.atttypid,a.atttypmod) as Type, " +
                                "(case " +
@@ -123,6 +124,7 @@ public class Connect {
             }
             return tableColumns;
         } catch (SQLException e) {
+            System.out.println(sql);
             e.printStackTrace();
         }
         return null;

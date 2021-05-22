@@ -29,6 +29,7 @@ public class Column {
 
     public static Column newInstance(ResultSetMetaData rsmd, int index){
         try {
+
             String columnName = rsmd.getColumnName(index).toLowerCase();
             String columnLabel = rsmd.getColumnLabel(index);
             String columnTypeName = rsmd.getColumnTypeName(index);

@@ -1,5 +1,7 @@
 package cn.yb.datawaiter.jdbc.model;
 
+
+
 import lombok.Data;
 
 import java.util.Objects;
@@ -9,16 +11,18 @@ public class DatabaseConnect {
     private String id;
     private String label;
     private DatabaseEnum databaseEnum;
-    private  String ip;
-    private  String databaseName;
-    private  String username;
-    private  String password;
-    public DatabaseConnect(){
+    private String ip;
+    private String databaseName;
+    private String username;
+    private String password;
+
+    public DatabaseConnect() {
 
     }
-    public DatabaseConnect(String ip,DatabaseEnum databaseEnum,String databasename,String name, String password ) {
+
+    public DatabaseConnect(String ip, DatabaseEnum databaseEnum, String databasename, String name, String password) {
         this.ip = ip;
-        this.databaseEnum =databaseEnum;
+        this.databaseEnum = databaseEnum;
         this.username = name;
         this.password = password;
         this.databaseName = databasename;
@@ -36,6 +40,7 @@ public class DatabaseConnect {
                 Objects.equals(username, that.username) &&
                 Objects.equals(password, that.password);
     }
+
 
     @Override
     public int hashCode() {

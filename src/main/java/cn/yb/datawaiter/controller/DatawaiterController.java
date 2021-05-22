@@ -9,6 +9,7 @@ import cn.yb.datawaiter.model.*;
 import cn.yb.datawaiter.service.impl.IDatawaiterService;
 
 import cn.yb.datawaiter.service.impl.IMapperService;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.*;
 
 @Controller
@@ -107,7 +111,7 @@ public class DatawaiterController extends BasicController {
                 }
             }
             return respon.responError("URL地址有问题：" + url);
-        } catch (GlobRuntimeException e) {
+        } catch (GlobRuntimeException  e) {
             e.printStackTrace();
             return  respon.responError(e.getMessage());
         }
@@ -144,6 +148,8 @@ public class DatawaiterController extends BasicController {
         }
         return res;
     }
+
+
 
 
     @RequestMapping(value = "/{a}", method = RequestMethod.POST)

@@ -8,6 +8,7 @@ import cn.yb.datawaiter.model.*;
 import cn.yb.datawaiter.service.impl.IDatabaseService;
 import cn.yb.datawaiter.service.impl.IMapperService;
 import cn.yb.datawaiter.tools.Tool;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -146,7 +147,7 @@ public class MapperService implements IMapperService {
 
     @Override
     public List<Mapper> findMappersByDatabaseIdAndTableName(String databaseId, String tableName) {
-        String sql = "SELECT *  FROM Mapper WHERE databaseId = " + JDBCUtils.sqlStr(databaseId) +
+        String sql = "SELECT *  FROM Mapper WHERE databaseConnectId = " + JDBCUtils.sqlStr(databaseId) +
                 " AND tableName=" + JDBCUtils.sqlStr(tableName);
         List<Mapper> list = Select.findDataBySQL(SystemConnect.getConn(), sql, Mapper.class);
         return list;
@@ -372,13 +373,16 @@ public class MapperService implements IMapperService {
         String tableName = cud.getTableName();
         String str = dataMap.getString(property);
         if (Tool.isEmpty(str)) {
-            return;
+            str = dataMap.toJSONString();
+            if(str == null){
+                return;
+            }
         }
         JSONArray jsonArray;
         if (str.startsWith("[")) {
             jsonArray = dataMap.getJSONArray(property);
         } else {
-            JSONObject json = dataMap.getJSONObject(property);
+            JSONObject json = JSON.parseObject(str);
             jsonArray = new JSONArray();
             jsonArray.add(json);
         }
