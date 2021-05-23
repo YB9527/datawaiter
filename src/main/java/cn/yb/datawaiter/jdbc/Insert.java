@@ -33,11 +33,8 @@ public class Insert {
 
             TableColumn tableColumn = tableColumns.get(i);
             String columnname = tableColumn.getColumnName();
-            switch (columnname){
-                case "column":
-                    columnname = "`"+ columnname +"`";
-                    break;
-            }
+            columnname = JDBCUtils.getKeyStr(columnname);
+
             sb.append(columnname + ",");
             filelds[i] = tableColumn.getFiledEnum();
         }

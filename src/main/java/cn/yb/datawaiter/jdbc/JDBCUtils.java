@@ -248,6 +248,8 @@ public class JDBCUtils {
 
         switch (columnname){
             case "key":
+            case "column":
+            case "describe":
                 columnname = "`"+columnname+ "`";
                 break;
         }
