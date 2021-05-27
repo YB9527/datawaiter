@@ -39,6 +39,7 @@ public class TestController extends BasicController {
         Respon respon = startRespon();
 
         DatabaseConnect dc = new DatabaseConnect("127.0.0.1", DatabaseEnum.mysql,"restaurant","root","1234");
+
         dc.setLabel("系统数据库");
 
         Connection conn = Connect.getSQLConnection(dc);
