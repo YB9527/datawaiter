@@ -84,22 +84,18 @@ public class DatawaiterController extends BasicController {
 
     public Respon handel(HttpServletRequest request, HttpServletResponse response) {
         Respon respon = startRespon();
-        try {
+
             String url = request.getRequestURI();
             String relative = url.replace(baseURL, "");
-            Api api = sysService.findApiByURL(relative);
+            Map<String, String> paramMap = getAllRequestParam(request);
+            if(paramMap.size() > 0){
+                System.out.println(paramMap.values().iterator().next());
+            }
+            return respon;
+           /* Api api = sysService.findApiByURL(relative);
 
             if (api != null) {
-                Map<String, String> paramMap = getAllRequestParam(request);
-              /*  List<Param> params = new ArrayList<>();
-                for (String paramName : paramMap.keySet()) {
-                    if (paramName != null) {
-                        String value = paramMap.get(paramName);
-                        value = value == null ? "" : value;
-                        params.add(new Param("[" + paramName + "]", value));
-                    }
-                }*/
-                //api.setParams(params);
+
                 if (api.getQuestMethod() == QuestMethod.GET) {
                     List<JSONObject> jsons = datawaiterService.findDataByMapper(api,paramMap);
                     if (jsons != null) {
@@ -114,7 +110,7 @@ public class DatawaiterController extends BasicController {
         } catch (GlobRuntimeException  e) {
             e.printStackTrace();
             return  respon.responError(e.getMessage());
-        }
+        }*/
     }
 
     public Respon mapperTesthandel(HttpServletRequest request, HttpServletResponse response) {
