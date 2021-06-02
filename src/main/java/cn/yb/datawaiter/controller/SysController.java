@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 @Controller
@@ -19,6 +21,13 @@ import java.util.Map;
 @RequestMapping(value = "/sys")
 public class SysController extends BasicController {
 
+    @RequestMapping(value = "/getdatetime")
+    public Respon getdatetime() {
+        Respon respon = startRespon();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+
+        return respon.ok(df.format(new Date()));
+    }
 
     @RequestMapping(value = "/deleteByTableNameAndId")
     public Respon deleteByTableNameAndId(String tableName, String id) {
