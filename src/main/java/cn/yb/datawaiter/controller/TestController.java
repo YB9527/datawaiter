@@ -62,7 +62,7 @@ public class TestController extends BasicController {
     public Respon handel(HttpServletRequest request, HttpServletResponse response) {
         Respon respon = startRespon();
         String url = request.getRequestURI();
-        Map<String, String> paramMap = getAllRequestParam(request);
+       JSONObject jsonObject = getJSONParam(request);
         return respon.ok("");
 
     }
