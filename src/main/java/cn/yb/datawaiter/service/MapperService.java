@@ -138,7 +138,7 @@ public class MapperService implements IMapperService {
     @Override
     public List<JSONObject> findMappersByDatabaseIdAndTableNameAndCount(String databaseId, String tableName) {
         String sql = "SELECT * FROM " +
-                "   (SELECT *  FROM Mapper WHERE databaseId = " + JDBCUtils.sqlStr(databaseId) + " AND tableName=" + JDBCUtils.sqlStr(tableName)+" ) as mapper"+
+                "   (SELECT *  FROM Mapper WHERE databaseConnectId = " + JDBCUtils.sqlStr(databaseId) + " AND tableName=" + JDBCUtils.sqlStr(tableName)+" ) as mapper"+
                 " LEFT JOIN (SELECT mapperId,count(*) as apiCount FROM api GROUP BY mapperId) as api " +
                 " on mapper.id=api.mapperId";
         List<JSONObject> list = Select.findDataBySQL(SystemConnect.getConn(), sql);
@@ -261,7 +261,7 @@ public class MapperService implements IMapperService {
 
     @Override
     public List<Mapper> findMappersByDatabaseId(String databaseId) {
-        String sql = "SELECT *  FROM Mapper WHERE databaseId = " + JDBCUtils.sqlStr(databaseId);
+        String sql = "SELECT *  FROM Mapper WHERE databaseConnectId = " + JDBCUtils.sqlStr(databaseId);
         List<Mapper> list = Select.findDataBySQL(SystemConnect.getConn(), sql, Mapper.class);
         for (Mapper mapper : list) {
             mapper.setResultColumns(findResultColumnByMapperId(mapper.getId()));
