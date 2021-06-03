@@ -35,7 +35,7 @@ public class Connect {
 
     public static Connection getMySQLConnection(DatabaseConnect databaseConnect) throws ClassNotFoundException, SQLException {
         Class.forName("com.mysql.jdbc.Driver");
-        Connection conn = DriverManager.getConnection("jdbc:mysql://" + databaseConnect.getIp() + "/" + databaseConnect.getDatabaseName() + "?serverTimezone=UTC", databaseConnect.getUsername(), databaseConnect.getPassword());
+        Connection conn = DriverManager.getConnection("jdbc:mysql://" + databaseConnect.getIp() + "/" + databaseConnect.getDatabaseName() + "?serverTimezone=GMT%2B8", databaseConnect.getUsername(), databaseConnect.getPassword());
         return conn;
     }
 

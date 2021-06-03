@@ -11,10 +11,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.sun.org.apache.regexp.internal.RE;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.*;
 import java.util.Date;
-import java.util.List;
 
 public class JDBCUtils {
 
@@ -86,6 +84,7 @@ public class JDBCUtils {
                     if (date != null ) {
                         long lg = date.getTime(); //日期转时间戳
                         ps.setTimestamp(i, new Timestamp(lg / 1000 * 1000));
+
                     } else {
                         if(tableColumn.getFiledEnum() == FiledEnum.TimeStamp){
                             int a1 =Types.TIME_WITH_TIMEZONE;
