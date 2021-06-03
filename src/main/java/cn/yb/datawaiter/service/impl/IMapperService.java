@@ -41,5 +41,6 @@ public interface IMapperService {
      * @return
      */
     int handelData(CRUDEnum crud, Mapper mapper, Map<String, String> paramMap);
+    int handelData(CRUDEnum crud, Mapper mapper,JSONObject jsonObject);
 
 }

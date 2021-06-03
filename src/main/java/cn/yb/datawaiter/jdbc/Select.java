@@ -22,6 +22,7 @@ public class Select {
         List<JSONObject> jsonObjects = new ArrayList<>();
         try {
             stat = conn.createStatement();
+
             ResultSet rs = stat.executeQuery(sql);
             ResultSetMetaData rsmd = rs.getMetaData();
             List<Column> cols = Connect.getTableColumn(rsmd);
@@ -40,7 +41,6 @@ public class Select {
         }
         return jsonObjects;
     }
-
     /**
      * 查找表中所有对象
      *

@@ -23,4 +23,5 @@ public interface IDatawaiterService {
     List<JSONObject> findDataByMapper(Api api, Map<String, String> paramMap);
 
     int handleData(Api api, Map<String, String> paramMap);
+    int handleData(Api api, JSONObject jsonObject);
 }

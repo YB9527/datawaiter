@@ -138,7 +138,7 @@ public class MapperService implements IMapperService {
     @Override
     public List<JSONObject> findMappersByDatabaseIdAndTableNameAndCount(String databaseId, String tableName) {
         String sql = "SELECT * FROM " +
-                "   (SELECT *  FROM Mapper WHERE databaseId = " + JDBCUtils.sqlStr(databaseId) + " AND tableName=" + JDBCUtils.sqlStr(tableName)+" ) as mapper"+
+                "   (SELECT *  FROM Mapper WHERE databaseConnectId = " + JDBCUtils.sqlStr(databaseId) + " AND tableName=" + JDBCUtils.sqlStr(tableName)+" ) as mapper"+
                 " LEFT JOIN (SELECT mapperId,count(*) as apiCount FROM api GROUP BY mapperId) as api " +
                 " on mapper.id=api.mapperId";
         List<JSONObject> list = Select.findDataBySQL(SystemConnect.getConn(), sql);
@@ -261,7 +261,7 @@ public class MapperService implements IMapperService {
 
     @Override
     public List<Mapper> findMappersByDatabaseId(String databaseId) {
-        String sql = "SELECT *  FROM Mapper WHERE databaseId = " + JDBCUtils.sqlStr(databaseId);
+        String sql = "SELECT *  FROM Mapper WHERE databaseConnectId = " + JDBCUtils.sqlStr(databaseId);
         List<Mapper> list = Select.findDataBySQL(SystemConnect.getConn(), sql, Mapper.class);
         for (Mapper mapper : list) {
             mapper.setResultColumns(findResultColumnByMapperId(mapper.getId()));
@@ -331,13 +331,53 @@ public class MapperService implements IMapperService {
 
     @Override
     public int handelData(CRUDEnum crud, Mapper mapper, Map<String, String> dataMap) {
-        Map<String, List<JSONObject>> tableMap = new HashMap<>();
+        JSONObject jsonObject =  JSONObject.parseObject(JSONObject.toJSONString(dataMap));
+        return   handelData(crud, mapper, jsonObject);
+       /* Map<String, List<JSONObject>> tableMap = new HashMap<>();
 
         List<ResultColumnCUD> resultColumns = findResultColumnCUDByMapperId(mapper.getId());
         if (resultColumns != null) {
             for (ResultColumnCUD resultColumn : resultColumns) {
                 handelData(tableMap, resultColumn, JSONObject.parseObject(JSONObject.toJSONString(dataMap)));
 
+            }
+        }
+        Connection conn = Connect.getSQLConnection(mapper.getDatabaseId());
+        try {
+            conn.setAutoCommit(false);//开启事务
+            int count = 0;
+            switch (crud) {
+                case INSERT:
+                    count = Insert.insertManyJSONs(conn, tableMap);
+                    break;
+                case DELETE:
+                    count = Delete.deleteDataByPri(conn, tableMap);
+                    break;
+                case UPDATE:
+                    count = Update.updateDataJSON(conn, tableMap);
+                    break;
+            }
+            conn.commit();
+            return count;
+        } catch (Exception e) {
+            try {
+                conn.rollback();//回滚事务
+                throw new GlobRuntimeException(e.getMessage());
+            } catch (SQLException ex) {
+                throw new GlobRuntimeException(ex.getMessage());
+            }
+        }*/
+    }
+
+    @Override
+    public int handelData(CRUDEnum crud, Mapper mapper, JSONObject jsonObject) {
+
+        Map<String, List<JSONObject>> tableMap = new HashMap<>();
+
+        List<ResultColumnCUD> resultColumns = findResultColumnCUDByMapperId(mapper.getId());
+        if (resultColumns != null) {
+            for (ResultColumnCUD resultColumn : resultColumns) {
+                handelData(tableMap, resultColumn, jsonObject);
             }
         }
         Connection conn = Connect.getSQLConnection(mapper.getDatabaseId());
