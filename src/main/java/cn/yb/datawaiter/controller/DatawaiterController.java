@@ -84,35 +84,62 @@ public class DatawaiterController extends BasicController {
 
     public Respon handel(HttpServletRequest request, HttpServletResponse response) {
         Respon respon = startRespon();
-
+        try {
             String url = request.getRequestURI();
             String relative = url.replace(baseURL, "");
-            Map<String, String> paramMap = getAllRequestParam(request);
-            if(paramMap.size() > 0){
-                System.out.println(paramMap.values().iterator().next());
-            }
-            return respon;
-           /* Api api = sysService.findApiByURL(relative);
+            Api api = sysService.findApiByURL(relative);
 
             if (api != null) {
 
+              /*  List<Param> params = new ArrayList<>();
+                for (String paramName : paramMap.keySet()) {
+                    if (paramName != null) {
+                        String value = paramMap.get(paramName);
+                        value = value == null ? "" : value;
+                        params.add(new Param("[" + paramName + "]", value));
+                    }
+                }*/
+                //api.setParams(params);
                 if (api.getQuestMethod() == QuestMethod.GET) {
+                    Map<String, String> paramMap = getAllRequestParam(request);
                     List<JSONObject> jsons = datawaiterService.findDataByMapper(api,paramMap);
                     if (jsons != null) {
                         return respon.ok(jsons);
                     }
                 } else {
 
-                    return respon.ok(datawaiterService.handleData(api,paramMap));
+                    JSONObject jsonObject = getJSONParam(request);
+
+                    return respon.ok(datawaiterService.handleData(api,jsonObject));
                 }
             }
             return respon.responError("URL地址有问题：" + url);
         } catch (GlobRuntimeException  e) {
             e.printStackTrace();
             return  respon.responError(e.getMessage());
-        }*/
+        }
     }
-
+    public JSONObject getJSONParam(HttpServletRequest request){
+        JSONObject jsonParam = null;
+        try {
+            // 获取输入流
+            BufferedReader streamReader = new BufferedReader(new InputStreamReader(request.getInputStream(), "UTF-8"));
+            // 写入数据到Stringbuilder
+            StringBuilder sb = new StringBuilder();
+            String line = null;
+            while ((line = streamReader.readLine()) != null) {
+                sb.append(line);
+            }
+            jsonParam = JSONObject.parseObject(sb.toString());
+            Map<String, String> map = getAllRequestParam(request);
+            for (String key : map.keySet() ) {
+                jsonParam.put(key,map.get(key));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return jsonParam;
+    }
     public Respon mapperTesthandel(HttpServletRequest request, HttpServletResponse response) {
         Respon respon = startRespon();
         try {

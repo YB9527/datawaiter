@@ -10,6 +10,7 @@ import cn.yb.datawaiter.jdbc.model.DatabaseConnect;
 import cn.yb.datawaiter.jdbc.model.DatabaseEnum;
 import cn.yb.datawaiter.model.Api;
 import cn.yb.datawaiter.model.Respon;
+import cn.yb.datawaiter.model.UploadFile;
 import cn.yb.datawaiter.service.impl.IApiService;
 import cn.yb.datawaiter.service.impl.IDatawaiterService;
 import cn.yb.datawaiter.tools.Tool;
