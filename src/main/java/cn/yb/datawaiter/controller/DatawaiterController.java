@@ -90,7 +90,7 @@ public class DatawaiterController extends BasicController {
             Api api = sysService.findApiByURL(relative);
 
             if (api != null) {
-                Map<String, String> paramMap = getAllRequestParam(request);
+
               /*  List<Param> params = new ArrayList<>();
                 for (String paramName : paramMap.keySet()) {
                     if (paramName != null) {
@@ -101,13 +101,14 @@ public class DatawaiterController extends BasicController {
                 }*/
                 //api.setParams(params);
                 if (api.getQuestMethod() == QuestMethod.GET) {
+                    Map<String, String> paramMap = getAllRequestParam(request);
                     List<JSONObject> jsons = datawaiterService.findDataByMapper(api,paramMap);
                     if (jsons != null) {
                         return respon.ok(jsons);
                     }
                 } else {
-
-                    return respon.ok(datawaiterService.handleData(api,paramMap));
+                    JSONObject jsonObject = getJSONParam(request);
+                    return respon.ok(datawaiterService.handleData(api,jsonObject));
                 }
             }
             return respon.responError("URL地址有问题：" + url);
@@ -146,9 +147,32 @@ public class DatawaiterController extends BasicController {
                 res.put(en, value);
             }
         }
+
         return res;
     }
 
+    public JSONObject getJSONParam(HttpServletRequest request){
+        Map<String, String> map =  getAllRequestParam(request);
+        JSONObject jsonParam = null;
+        try {
+            // 获取输入流
+            BufferedReader streamReader = new BufferedReader(new InputStreamReader(request.getInputStream(), "UTF-8"));
+            // 写入数据到Stringbuilder
+            StringBuilder sb = new StringBuilder();
+            String line = null;
+            while ((line = streamReader.readLine()) != null) {
+                sb.append(line);
+            }
+            jsonParam = JSONObject.parseObject(sb.toString());
+            for (String key: map.keySet() ) {
+                jsonParam.put(key,map.get(key));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return jsonParam;
+    }
 
 
 

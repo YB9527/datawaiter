@@ -129,4 +129,13 @@ public class DatawaiterService implements IDatawaiterService {
         return mapperService.handelData(api.getCrud(),mapper, paramMap);
     }
 
+    @Override
+    public int handleData(Api api, JSONObject jsonObject) {
+        Mapper mapper = mapperService.findMapperById(api.getMapperId());
+        if(mapper == null){
+            throw  new GlobRuntimeException("mapper 查不到，id："+api.getMapperId());
+        }
+        return mapperService.handelData(api.getCrud(),mapper, jsonObject);
+    }
+
 }
