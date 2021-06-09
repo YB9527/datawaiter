@@ -10,6 +10,7 @@ import cn.yb.datawaiter.service.impl.IDatawaiterService;
 
 import cn.yb.datawaiter.service.impl.IMapperService;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -120,7 +121,7 @@ public class DatawaiterController extends BasicController {
         }
     }
     public JSONObject getJSONParam(HttpServletRequest request){
-        JSONObject jsonParam = null;
+        JSONObject jsonParam = new JSONObject();
         try {
             // 获取输入流
             BufferedReader streamReader = new BufferedReader(new InputStreamReader(request.getInputStream(), "UTF-8"));
@@ -130,7 +131,13 @@ public class DatawaiterController extends BasicController {
             while ((line = streamReader.readLine()) != null) {
                 sb.append(line);
             }
-            jsonParam = JSONObject.parseObject(sb.toString());
+            String str = sb.toString();
+            if(str.startsWith("[")){
+                jsonParam.put("_Array_",JSONArray.parse(str));
+            }else {
+                jsonParam = JSONObject.parseObject(sb.toString());
+            }
+
             Map<String, String> map = getAllRequestParam(request);
             for (String key : map.keySet() ) {
                 jsonParam.put(key,map.get(key));

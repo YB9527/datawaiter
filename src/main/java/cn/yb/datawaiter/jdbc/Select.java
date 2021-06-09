@@ -13,7 +13,9 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Select {
@@ -27,12 +29,21 @@ public class Select {
             ResultSetMetaData rsmd = rs.getMetaData();
             List<Column> cols = Connect.getTableColumn(rsmd);
             JSONObject jsonObject;
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
             while (rs.next()) {
                 jsonObject = new JSONObject();
                 jsonObjects.add(jsonObject);
-                for (Column column : cols) {
 
-                    jsonObject.put(column.getColumnLabel(), rs.getObject(column.getColumnLabel()));
+                for (Column column : cols) {
+                    Object value = rs.getObject(column.getColumnLabel());
+                    switch (column.getColumnTypeName()){
+                        case "DATETIME":
+                            if(value != null){
+                                value = df.format(value);
+                            }
+                            break;
+                    }
+                    jsonObject.put(column.getColumnLabel(), value);
                 }
             }
         } catch (Exception e) {

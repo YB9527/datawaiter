@@ -48,7 +48,7 @@ public class DatawaiterService implements IDatawaiterService {
                                //value = value == null || "".equals(value) ? "''" : "'" + value + "'";
                                if(value != null  && value instanceof  String){
                                    sql = sql.replace(property,"'" + value+"'" );
-                               }else{
+                               }else {
                                    sql = sql.replace(property,value );
                                }
 
@@ -78,7 +78,8 @@ public class DatawaiterService implements IDatawaiterService {
                 for (ResultColumn childRc : childMapper.getResultColumns()) {
                     String childProperty = childRc.getProperty();
                     if (rc.getColumn_().equals(childProperty)) {
-                        String testValue = json.getString(rc.getProperty());
+                        String property =  rc.getProperty().trim();
+                        String testValue = json.getString(property);
                         childRc.setTestValue(testValue);
                         List<JSONObject> childDatas = findDataByMapper(childMapper);
                         switch (rc.getPoRelation()) {
@@ -90,7 +91,7 @@ public class DatawaiterService implements IDatawaiterService {
                                 }
                                 break;
                             case collection:
-                                json.replace(rc.getProperty(), childDatas);
+                                json.replace(property, childDatas);
                                 break;
                         }
                     }
@@ -106,6 +107,9 @@ public class DatawaiterService implements IDatawaiterService {
     public List<JSONObject> findDataByMapper(Api api, Map<String, String> paramMap) {
         Mapper mapper = mapperService.findMapperById(api.getMapperId());
         for (ResultColumn resultColumn : mapper.getResultColumns()){
+            if(resultColumn.getPoRelation() != PoRelation.no){
+                continue;
+            }
             String key = resultColumn.getProperty().replace("[","").replace("]","");
             String value = paramMap.get(key);
             resultColumn.setTestValue(value);

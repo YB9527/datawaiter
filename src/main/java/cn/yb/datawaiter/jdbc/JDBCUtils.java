@@ -119,8 +119,14 @@ public class JDBCUtils {
             case Double:
                 sqlvalue = "" + jsonObject.getDouble(tableColumn.getColumnName());
                 break;
+            case DateTime:
             case String:
-                sqlvalue = "\"" + jsonObject.getString(tableColumn.getColumnName()) + "\"";
+                String tem = jsonObject.getString(tableColumn.getColumnName());
+                if(tem == null  || tem.equals("null")){
+                    sqlvalue = null;
+                }else{
+                    sqlvalue = "\"" + jsonObject.getString(tableColumn.getColumnName()) + "\"";
+                }
                 break;
             case ENUM:
                 sqlvalue = "\"" + jsonObject.getString(tableColumn.getColumnName()) + "\"";

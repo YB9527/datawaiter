@@ -28,11 +28,12 @@ public class Update {
         Map<String, TableColumn> tableColumnMap = ReflectTool.getIDMap("getColumnName", tableColumns);
         List<String> sqls = new ArrayList<>();
         TableColumn columnByPRI = Connect.findColumnByPRI(tableColumns);
+        String sqlt="";
         for (JSONObject jsonObject : objects) {
-            String sql = getUpdateSQL(tableColumnMap, tablename, columnByPRI, jsonObject);
+            sqlt = getUpdateSQL(tableColumnMap, tablename, columnByPRI, jsonObject);
             //sql =  sql.replace("","\"");
 
-            sqls.add(sql);
+            sqls.add(sqlt);
         }
         try {
             conn.setAutoCommit(false);//开启事务
@@ -43,6 +44,7 @@ public class Update {
             //conn.setAutoCommit(true);
             return objects.size();
         } catch (SQLException e) {
+            System.out.println(sqlt);
             throw new GlobRuntimeException("SQL有问题："+e.getMessage());
         }
 
