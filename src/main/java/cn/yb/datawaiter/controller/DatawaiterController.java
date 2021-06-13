@@ -103,6 +103,13 @@ public class DatawaiterController extends BasicController {
                 //api.setParams(params);
                 if (api.getQuestMethod() == QuestMethod.GET) {
                     Map<String, String> paramMap = getAllRequestParam(request);
+                    JSONObject jsonObject = getJSONParam(request);
+                    if(jsonObject != null){
+                        for (String key : jsonObject.keySet()){
+                            paramMap.put(key,jsonObject.getString(key));
+                        }
+                    }
+
                     List<JSONObject> jsons = datawaiterService.findDataByMapper(api,paramMap);
                     if (jsons != null) {
                         return respon.ok(jsons);
@@ -137,7 +144,9 @@ public class DatawaiterController extends BasicController {
             }else {
                 jsonParam = JSONObject.parseObject(sb.toString());
             }
-
+            if(jsonParam == null){
+                jsonParam = new JSONObject();
+            }
             Map<String, String> map = getAllRequestParam(request);
             for (String key : map.keySet() ) {
                 jsonParam.put(key,map.get(key));

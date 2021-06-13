@@ -89,8 +89,9 @@ public class FileController extends BasicController {
         }
         try {
             for (int i = 0; i < files.size(); i++) {
+                String uuid = UUID.randomUUID().toString();
                 MultipartFile file = files.get(i);
-                String fileName = file.getOriginalFilename();
+                String fileName = uuid+"_" +file.getOriginalFilename();
                 String selfDir = "";
                 if(dirs != null && dirs.size() == files.size()){
                     selfDir =  dirs.get(i)+"\\";
@@ -107,7 +108,7 @@ public class FileController extends BasicController {
                     suffix = fileName.substring(fileName.lastIndexOf(".")+1);
                 }
                 uploadFile = new UploadFile(selfDir + fileName,suffix);
-                uploadFile.setId(UUID.randomUUID().toString());
+                uploadFile.setId(uuid);
                 uploadFiles.add(uploadFile);
                 file.transferTo(dest);
             }

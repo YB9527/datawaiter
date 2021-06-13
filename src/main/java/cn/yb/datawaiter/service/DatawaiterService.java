@@ -48,6 +48,7 @@ public class DatawaiterService implements IDatawaiterService {
                                //value = value == null || "".equals(value) ? "''" : "'" + value + "'";
                                if(value != null  && value instanceof  String){
                                    sql = sql.replace(property,"'" + value+"'" );
+
                                }else {
                                    sql = sql.replace(property,value );
                                }
@@ -111,7 +112,7 @@ public class DatawaiterService implements IDatawaiterService {
                 continue;
             }
             String key = resultColumn.getProperty().replace("[","").replace("]","");
-            String value = paramMap.get(key);
+            String value = paramMap.get(key.trim());
             resultColumn.setTestValue(value);
             if(value == null){
                 throw  new GlobRuntimeException("api "+api.getLabel()+",没有传递这个参数："+key);
