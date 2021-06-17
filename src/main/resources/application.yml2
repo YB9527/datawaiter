@@ -16,6 +16,6 @@ SystemDatabase:
   databaseEnum: mysql
   databaseName: datawaitersystem
   name: root
-  password: Yanbo@123
+  password: 1234
 uploadconfig:
-  dir: \home\project\uploadfile
+  dir: D:\datawaiter\upload\

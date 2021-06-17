@@ -20,6 +20,10 @@ import java.util.List;
 
 public class Select {
     public static List<JSONObject> findDataBySQL(Connection conn, String sql) {
+       // System.out.println(sql) ;
+        if(sql.contains("DatabaseConnect")){
+            int a =1;
+        }
         Statement stat = null;
         List<JSONObject> jsonObjects = new ArrayList<>();
         try {
@@ -61,7 +65,7 @@ public class Select {
      */
     public static List<JSONObject> findDataAllByPoName(Connection sysConn, Class clazz) {
 
-        String className = clazz.getSimpleName();
+        String className = clazz.getSimpleName().toLowerCase();
         return findDataBySQL(sysConn, "select * from " + className);
     }
 
@@ -71,12 +75,12 @@ public class Select {
 
 
     public static JSONObject findDataById(Connection conn, Class clazz, String id) {
-        String className = clazz.getSimpleName();
+        String className = clazz.getSimpleName().toLowerCase();;
         return findDataById(conn, className, id);
     }
 
     public static <T> T findDataById2Po(Connection conn, Class<T> clazz, String id) {
-        String className = clazz.getSimpleName();
+        String className = clazz.getSimpleName().toLowerCase();;
         JSONObject json = findDataById(conn, className, id);
         if (json != null) {
             return json.toJavaObject(clazz);
@@ -106,7 +110,7 @@ public class Select {
     }
 
     public static <T> T findPoById(Connection conn, Class<T> clazz, String id) {
-        JSON json = findDataById(conn, clazz.getSimpleName(), id);
+        JSON json = findDataById(conn, clazz.getSimpleName().toLowerCase(), id);
         if (json != null) {
             return json.toJavaObject(clazz);
         }

@@ -80,7 +80,7 @@ public class Update {
             return 0;
         }
         Class aClass = list.get(0).getClass();
-        String className = aClass.getSimpleName();
+        String className = aClass.getSimpleName().toLowerCase();
         return  updateManyDataPos(conn,className,list);
     }
 

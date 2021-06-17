@@ -28,7 +28,7 @@ public class SysService implements ISysService {
 
     @Override
     public Api findApiByURL(String relativeURL) {
-        String sql = "SELECT * FROM "+Api.class.getSimpleName()+" WHERE  Concat(Concat(rooturl , '/'), selfURL) ="+ JDBCUtils.sqlStr(relativeURL);
+        String sql = "SELECT * FROM "+Api.class.getSimpleName().toLowerCase()+" WHERE  Concat(Concat(rooturl , '/'), selfURL) ="+ JDBCUtils.sqlStr(relativeURL);
         List<JSONObject> jsons = Select.findDataBySQL(SysConn,sql);
         if(Tool.isEmpty(jsons)){
             return  null;

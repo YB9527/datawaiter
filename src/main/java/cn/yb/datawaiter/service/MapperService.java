@@ -43,7 +43,7 @@ public class MapperService implements IMapperService {
     private Mapper createMapper(String databaseId, Table table, AutoCreateMapper auto) {
         DatabaseConnect databaseConnect = databaseService.findDatabaseConnect(databaseId);
         Mapper mapper = new Mapper();
-        String tableName = table.getName();
+        String tableName = table.getName().toLowerCase();
         mapper.setDatabaseId(databaseId);
         mapper.setId(UUID.randomUUID().toString());
         mapper.setTableName(tableName);
@@ -138,7 +138,7 @@ public class MapperService implements IMapperService {
     @Override
     public List<JSONObject> findMappersByDatabaseIdAndTableNameAndCount(String databaseId, String tableName) {
         String sql = "SELECT * FROM " +
-                "   (SELECT *  FROM Mapper WHERE databaseId = " + JDBCUtils.sqlStr(databaseId) + " AND tableName=" + JDBCUtils.sqlStr(tableName)+" ) as mapper"+
+                "   (SELECT *  FROM mapper WHERE databaseId = " + JDBCUtils.sqlStr(databaseId) + " AND tableName=" + JDBCUtils.sqlStr(tableName)+" ) as mapper"+
                 " LEFT JOIN (SELECT mapperId,count(*) as apiCount FROM api GROUP BY mapperId) as api " +
                 " on mapper.id=api.mapperId";
         List<JSONObject> list = Select.findDataBySQL(SystemConnect.getConn(), sql);
@@ -147,7 +147,7 @@ public class MapperService implements IMapperService {
 
     @Override
     public List<Mapper> findMappersByDatabaseIdAndTableName(String databaseId, String tableName) {
-        String sql = "SELECT *  FROM Mapper WHERE databaseConnectId = " + JDBCUtils.sqlStr(databaseId) +
+        String sql = "SELECT *  FROM mapper WHERE databaseConnectId = " + JDBCUtils.sqlStr(databaseId) +
                 " AND tableName=" + JDBCUtils.sqlStr(tableName);
         List<Mapper> list = Select.findDataBySQL(SystemConnect.getConn(), sql, Mapper.class);
         return list;
@@ -165,7 +165,7 @@ public class MapperService implements IMapperService {
     }
 
     private List<ResultColumn> findResultColumnByMapperId(String id) {
-        String selectResultColumnSQL = "SELECT * FROM " + ResultColumn.class.getSimpleName() + " WHERE mapperId = " + JDBCUtils.sqlStr(id);
+        String selectResultColumnSQL = "SELECT * FROM " + ResultColumn.class.getSimpleName().toLowerCase() + " WHERE mapperId = " + JDBCUtils.sqlStr(id);
         List<ResultColumn> list = Select.findDataBySQL(SystemConnect.getConn(), selectResultColumnSQL, ResultColumn.class);
         return list;
     }
@@ -261,7 +261,7 @@ public class MapperService implements IMapperService {
 
     @Override
     public List<Mapper> findMappersByDatabaseId(String databaseId) {
-        String sql = "SELECT *  FROM Mapper WHERE databaseId = " + JDBCUtils.sqlStr(databaseId);
+        String sql = "SELECT *  FROM mapper WHERE databaseId = " + JDBCUtils.sqlStr(databaseId);
         List<Mapper> list = Select.findDataBySQL(SystemConnect.getConn(), sql, Mapper.class);
         for (Mapper mapper : list) {
             mapper.setResultColumns(findResultColumnByMapperId(mapper.getId()));
@@ -284,7 +284,7 @@ public class MapperService implements IMapperService {
 
     @Override
     public List<ResultColumnCUD> findResultColumnCUDByMapperId(String mapperId) {
-        String sql = "SELECT *  FROM " + ResultColumnCUD.class.getSimpleName()
+        String sql = "SELECT *  FROM " + ResultColumnCUD.class.getSimpleName().toLowerCase()
                 + " WHERE mapperId = " + JDBCUtils.sqlStr(mapperId);
         List<ResultColumnCUD> cuds = Select.findDataBySQL(SystemConnect.getConn(), sql, ResultColumnCUD.class);
         List<ResultColumnCUD> roots = findResultColumnRoots(cuds);
