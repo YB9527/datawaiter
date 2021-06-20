@@ -16,7 +16,7 @@ public class UploadFile {
     }
 
     public UploadFile(String path, String extension) {
-        this.path = path;
+        this.path = path.substring(1);
         this.extension = extension;
     }
 

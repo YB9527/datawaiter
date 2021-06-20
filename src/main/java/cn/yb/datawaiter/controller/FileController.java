@@ -1,10 +1,7 @@
 package cn.yb.datawaiter.controller;
 
 import cn.yb.datawaiter.exception.GlobRuntimeException;
-import cn.yb.datawaiter.jdbc.Connect;
-import cn.yb.datawaiter.jdbc.Delete;
-import cn.yb.datawaiter.jdbc.JDBCUtils;
-import cn.yb.datawaiter.jdbc.Select;
+import cn.yb.datawaiter.jdbc.*;
 import cn.yb.datawaiter.jdbc.model.Column;
 import cn.yb.datawaiter.jdbc.model.DatabaseConnect;
 import cn.yb.datawaiter.jdbc.model.DatabaseEnum;
@@ -28,15 +25,30 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
+import java.net.*;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Controller
 @RestController
 @RequestMapping(value = "/file")
 public class FileController extends BasicController {
+
+    private String uploadDir;
+
+    @Value("#{${uploadconfig.dir}}")
+    public void dirMap(Map<String,String> dirMap){
+        String ip = Tool.getInterIP();
+        String key ;
+        if(ip.startsWith("172.18.254.48")){
+            key = "out";
+        }else{
+            key = "in";
+        }
+        this.uploadDir = dirMap.get(key);
+    }
+
+
 
     @RequestMapping(value = "/test")
     public Respon findApiLevel() throws SQLException, ClassNotFoundException {
@@ -64,8 +76,7 @@ public class FileController extends BasicController {
     }
 
 
-    @Value(value = "${uploadconfig.dir}")
-    private String uploadDir;
+
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FileController.class);
     @GetMapping("/upload2")
@@ -94,23 +105,26 @@ public class FileController extends BasicController {
                 String fileName = uuid+"_" +file.getOriginalFilename();
                 String selfDir = "";
                 if(dirs != null && dirs.size() == files.size()){
-                    selfDir =  dirs.get(i)+"\\";
+                    selfDir =  dirs.get(i)+"/";
                 }else if(dir != null && !dir.trim().isEmpty()){
-                    selfDir =  dir+"\\";
+                    selfDir =  dir+"/";
                 }
                 File dirFile = new File(uploadDir + selfDir);
                 if(!dirFile.exists()){
-                    dirFile.mkdirs();
+                    boolean bl = dirFile .mkdirs();
+                    int a =1;
                 }
                 File dest = new File(uploadDir+ selfDir + fileName);
+
                 String suffix = "";
                 if(fileName.contains(".")){
                     suffix = fileName.substring(fileName.lastIndexOf(".")+1);
                 }
-                uploadFile = new UploadFile(selfDir + fileName,suffix);
+                uploadFile = new UploadFile('/'+selfDir + fileName,suffix);
                 uploadFile.setId(uuid);
                 uploadFiles.add(uploadFile);
                 file.transferTo(dest);
+                //System.out.println("path:"+dest.getAbsolutePath());
             }
             return respon.ok(uploadFiles);
         } catch (IOException e) {

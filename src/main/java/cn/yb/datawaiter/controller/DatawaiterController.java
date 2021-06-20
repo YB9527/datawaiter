@@ -117,7 +117,7 @@ public class DatawaiterController extends BasicController {
                 } else {
 
                     JSONObject jsonObject = getJSONParam(request);
-
+                    System.out.println(jsonObject);
                     return respon.ok(datawaiterService.handleData(api,jsonObject));
                 }
             }

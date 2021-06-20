@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 
 import java.sql.Connection;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class BasicController {
 
     @Autowired
     protected ISysService sysService;
-
+    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
     public  Connection SysConn;
 
     protected final String RESPON_MESSAGE_SAVE_SUCCESS = "保存成功";
@@ -44,7 +45,7 @@ public class BasicController {
 
 
     protected Respon startRespon() {
-       return new Respon(new Date());
+       return new Respon( new Date());
     }
     protected ResponTotal startResponTotal() {
         return new ResponTotal(new Date());

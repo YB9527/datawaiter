@@ -18,4 +18,4 @@ SystemDatabase:
   name: root
   password: Yanbo@123
 uploadconfig:
-  dir: \home\project\uploadfile
+  dir: '{"in": "D:\datawaiter\upload\", "out": "/uploadfile/"}'
