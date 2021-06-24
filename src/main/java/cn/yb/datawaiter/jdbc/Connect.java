@@ -14,6 +14,9 @@ public class Connect {
     static Map<String, Connection> userMap = new HashMap<>();
     private static final String PRI = "PRI";
 
+    static {
+        timer1();
+    }
     public static Connection getSQLConnection(DatabaseConnect databaseConnect) throws SQLException, ClassNotFoundException {
 
         Connection connection = null;
@@ -31,7 +34,18 @@ public class Connect {
                 throw new RuntimeException("暂不支持改数据库");
         }
         return connection;
-}
+    }
+    public static void timer1() {
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            public void run() {
+                for (Connection connection:  userMap.values()) {
+                    getAllTableName(connection);
+                }
+                timer1();
+            }
+        }, 1000*60*60*7);// 设定指定的时间time,此处为2000毫秒
+    }
 
     public static Connection getMySQLConnection(DatabaseConnect databaseConnect) throws ClassNotFoundException, SQLException {
         Class.forName("com.mysql.jdbc.Driver");
