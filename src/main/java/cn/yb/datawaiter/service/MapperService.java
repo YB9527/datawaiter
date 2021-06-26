@@ -176,7 +176,7 @@ public class MapperService implements IMapperService {
         try {
             conn.setAutoCommit(false);//开启事务
 
-            String tableName = Mapper.class.getSimpleName();
+            String tableName = Mapper.class.getSimpleName().toLowerCase();
             String sql = mapper.getSql_().replace("\"", "'");
             mapper.setSql_(sql);
             JSONObject dbPo = Select.findDataById(conn, tableName, mapper.getId());
@@ -195,10 +195,10 @@ public class MapperService implements IMapperService {
             } else {
                 //编辑
                 count = Update.updateDataPo(conn, mapper);
-                Delete.deleteByColoumnAndValues(conn, ResultColumn.class.getSimpleName(), "mapperId", new String[]{mapper.getId()});
+                Delete.deleteByColoumnAndValues(conn, ResultColumn.class.getSimpleName().toLowerCase(), "mapperId", new String[]{mapper.getId()});
             }
             if (resultColumnCUDs != null) {
-                Delete.deleteByColoumnAndValues(conn, ResultColumnCUD.class.getSimpleName(), "mapperId", new String[]{mapper.getId()});
+                Delete.deleteByColoumnAndValues(conn, ResultColumnCUD.class.getSimpleName().toLowerCase(), "mapperId", new String[]{mapper.getId()});
                 List<ResultColumnCUD> all = findResultColumnCUDAll(resultColumnCUDs);
                 Insert.insertManyPos(conn, all);
             }
@@ -249,7 +249,7 @@ public class MapperService implements IMapperService {
         try {
             Connection conn = SystemConnect.getConn();
             conn.setAutoCommit(false);//开启事务
-            Delete.deleteDataByPri(conn, Mapper.class.getSimpleName(), mapper.getId());
+            Delete.deleteDataByPri(conn, Mapper.class.getSimpleName().toLowerCase(), mapper.getId());
             List<ResultColumn> resultColumns = mapper.getResultColumns();
             count = Delete.deleteDataByPri(conn, resultColumns);
             conn.commit();

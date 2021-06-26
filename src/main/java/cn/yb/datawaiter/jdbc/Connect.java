@@ -124,7 +124,7 @@ public class Connect {
                                "from pg_attribute a  "+
                                "where attstattarget=-1 and attrelid = (select oid from pg_class where relname ='"+tableName+"')" ;
             }else{
-              sql = "show full columns from " + tableName;
+              sql = "show full columns from " + tableName.toLowerCase();
             }
             ResultSet rs = stmt.executeQuery(sql);
             List<TableColumn> tableColumns = new ArrayList<>();

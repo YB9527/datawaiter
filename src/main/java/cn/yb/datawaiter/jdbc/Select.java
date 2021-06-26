@@ -20,6 +20,7 @@ public class Select {
        // System.out.println(sql) ;
         if(sql.contains("DatabaseConnect")){
             int a =1;
+            
         }
         Statement stat = null;
         List<JSONObject> jsonObjects = new ArrayList<>();
@@ -88,6 +89,7 @@ public class Select {
     }
 
     public static JSONObject findDataById(Connection conn, String tableName, String id) {
+        tableName = tableName.toLowerCase();
         List<JSONObject> jsons = findDataBySQL(conn, "select * from " + tableName + " where id =" + JDBCUtils.sqlStr(id));
         if (Tool.isEmpty(jsons)) {
             return null;

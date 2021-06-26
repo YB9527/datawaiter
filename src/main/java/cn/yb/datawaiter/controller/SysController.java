@@ -54,6 +54,7 @@ public class SysController extends BasicController {
         if (tableName == null) {
             return respon.responBasicError();
         }
+        tableName = tableName.toLowerCase();
         return respon.ok(Select.findDataAllByTableName(SysConn, tableName));
     }
 

@@ -24,6 +24,7 @@ public class Update {
      * @return
      */
     public static int updateDataJSON(Connection conn, String tablename, List<JSONObject> objects) {
+        tablename = tablename.toLowerCase();
         List<TableColumn> tableColumns = Connect.getColumnCommentByTableName(conn, tablename);
         Map<String, TableColumn> tableColumnMap = ReflectTool.getIDMap("getColumnName", tableColumns);
         List<String> sqls = new ArrayList<>();
