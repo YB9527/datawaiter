@@ -1,5 +1,6 @@
 package cn.yb.datawaiter.controller;
 
+import cn.yb.datawaiter.jdbc.Connect;
 import cn.yb.datawaiter.jdbc.Delete;
 import cn.yb.datawaiter.jdbc.Select;
 import cn.yb.datawaiter.model.Respon;
@@ -20,6 +21,13 @@ import java.util.Map;
 @RestController
 @RequestMapping(value = "/sys")
 public class SysController extends BasicController {
+
+    @RequestMapping(value = "/breakconnect")
+    public Respon breakConnect() {
+        Respon respon = startRespon();
+        Connect.breakConnect();
+        return respon.ok("");
+    }
 
     @RequestMapping(value = "/getdatetime")
     public Respon getdatetime() {

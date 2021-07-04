@@ -203,4 +203,27 @@ public class Connect {
         }
         return  null;
     }
+
+    public static void breakConnect() {
+        try {
+            for (String key:connMap.keySet()
+            ) {
+                Connection connect = connMap.get(key);
+                connect.close();
+            }
+            connMap.clear();
+
+            for (String key:userMap.keySet()
+            ) {
+                Connection connect = userMap.get(key);
+                connect.close();
+            }
+            userMap.clear();
+
+        }catch (SQLException s){
+
+        }
+
+
+    }
 }

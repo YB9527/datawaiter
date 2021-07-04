@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -52,7 +53,7 @@ public class ApiController extends BasicController {
     @RequestMapping(value = "/findbylevelid")
     public Respon findbylevelid(String id) {
         Respon respon = startRespon();
-        String sql = "select * from  api where levelId = " + sqlStr(id);
+        String sql = "select * from  api where levelId = " + sqlStr(id)+" ORDER BY date";
         List<JSONObject> domain = Select.findDataBySQL(SysConn, sql);
         /*for (JSONObject json : domain){
             String  apiId = json.getString("id");
@@ -90,6 +91,8 @@ public class ApiController extends BasicController {
 
     @PostMapping("/saveApi")
     public Respon saveApi(@RequestBody Api api) {
+
+        api.setDate(new Date());
       return  editApi(api);
     }
     /**
@@ -101,6 +104,7 @@ public class ApiController extends BasicController {
     @PostMapping("/editApi")
     public Respon editApi(@RequestBody Api api) {
         Respon respon = startRespon();
+        api.setDate(new Date());
         int count =0;
         try {
             SysConn.setAutoCommit(false);

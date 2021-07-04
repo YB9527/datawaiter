@@ -3,6 +3,7 @@ package cn.yb.datawaiter.model;
 import cn.yb.datawaiter.jdbc.model.CRUDEnum;
 import lombok.Data;
 
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -43,4 +44,5 @@ public class Api {
 
     private  String mapperId;
     private  Mapper mapper;
+    private Date date;
 }

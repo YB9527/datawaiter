@@ -11,6 +11,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.sun.org.apache.regexp.internal.RE;
 
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Date;
 
@@ -100,7 +101,7 @@ public class JDBCUtils {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }
+         }
     }
 
     /**
@@ -120,6 +121,13 @@ public class JDBCUtils {
                 sqlvalue = "" + jsonObject.getDouble(tableColumn.getColumnName());
                 break;
             case DateTime:
+                Date date = jsonObject.getDate(tableColumn.getColumnName());
+                if(date != null){
+                    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+                    String str =  df.format(new Date());
+                    sqlvalue = "\"" + str + "\"";
+                    break;
+                }
             case String:
                 String tem = jsonObject.getString(tableColumn.getColumnName());
                 if(tem == null  || tem.equals("null")){
@@ -253,6 +261,8 @@ public class JDBCUtils {
 
         switch (columnname){
             case "key":
+            case "value":
+            case "group":
             case "column":
             case "describe":
                 columnname = "`"+columnname+ "`";

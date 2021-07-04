@@ -17,6 +17,7 @@ import java.util.Map;
 public class Delete {
     public static int deleteByColoumnAndValues(Connection conn, String tablename, String column, Object[] values) {
         try {
+            tablename =tablename.trim().toLowerCase();
             if(values == null){
                 return  0;
             }
