@@ -1,6 +1,8 @@
 package cn.yb.datawaiter.jdbc;
 
 import cn.yb.datawaiter.exception.GlobRuntimeException;
+import cn.yb.datawaiter.jdbc.model.CRUDEnum;
+import cn.yb.datawaiter.jdbc.model.FiledEnum;
 import cn.yb.datawaiter.jdbc.model.TableColumn;
 import cn.yb.datawaiter.tools.JSONTool;
 import cn.yb.datawaiter.tools.ReflectTool;
@@ -23,7 +25,7 @@ public class Update {
      * @param objects
      * @return
      */
-    public static int updateDataJSON(Connection conn, String tablename, List<JSONObject> objects) {
+   /* public static int updateDataJSON(Connection conn, String tablename, List<JSONObject> objects) {
         tablename = tablename.toLowerCase();
         List<TableColumn> tableColumns = Connect.getColumnCommentByTableName(conn, tablename);
         Map<String, TableColumn> tableColumnMap = ReflectTool.getIDMap("getColumnName", tableColumns);
@@ -31,6 +33,7 @@ public class Update {
         TableColumn columnByPRI = Connect.findColumnByPRI(tableColumns);
         String sqlt="";
         for (JSONObject jsonObject : objects) {
+
             sqlt = getUpdateSQL(tableColumnMap, tablename, columnByPRI, jsonObject);
             //sql =  sql.replace("","\"");
 
@@ -49,6 +52,31 @@ public class Update {
             throw new GlobRuntimeException("SQL有问题："+e.getMessage());
         }
 
+    }*/
+
+    public static int updateDataJSON(Connection conn, String tablename, List<JSONObject> objects) {
+        if(Tool.isEmpty(objects)){
+            return  0;
+        }
+        tablename = tablename.toLowerCase();
+        List<TableColumn> tableColumns = Connect.getColumnCommentByTableName(conn, tablename);
+        TableColumn columnByPRI = Connect.findColumnByPRI(tableColumns);
+        StringBuilder sb = new StringBuilder("update  " + tablename+" set " );
+        FiledEnum[] filelds = new FiledEnum[tableColumns.size()];
+        for (int i = 0; i < tableColumns.size(); i++) {
+
+            TableColumn tableColumn = tableColumns.get(i);
+            String columnname = tableColumn.getColumnName();
+            columnname = JDBCUtils.getKeyStr(columnname);
+
+            sb.append(columnname +"=?,");
+            filelds[i] = tableColumn.getFiledEnum();
+        }
+        sb.setCharAt(sb.length() - 1, ' ');
+        sb.append(" WHERE "+columnByPRI.getColumnName()+"=?");
+
+        String sql = sb.toString();
+        return JDBCUtils.executeBatch(conn, CRUDEnum.UPDATE, sql, objects, tableColumns);
     }
     /**
      * 得到修改的sql 语句

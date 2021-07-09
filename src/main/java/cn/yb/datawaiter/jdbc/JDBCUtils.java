@@ -124,7 +124,7 @@ public class JDBCUtils {
                 Date date = jsonObject.getDate(tableColumn.getColumnName());
                 if(date != null){
                     SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
-                    String str =  df.format(new Date());
+                    String str =  df.format(date);
                     sqlvalue = "\"" + str + "\"";
                     break;
                 }
@@ -170,7 +170,7 @@ public class JDBCUtils {
                 case DELETE:
                     break;
                 case UPDATE:
-                    sql = sql + " WHERE  " + columnByPRI.getColumnName() + " = ?";
+                    //sql = sql + " WHERE  " + columnByPRI.getColumnName() + " = ?";
                     break;
                 case SELECT:
                     break;

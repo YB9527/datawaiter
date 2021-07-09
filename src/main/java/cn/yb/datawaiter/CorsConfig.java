@@ -40,7 +40,7 @@ public class CorsConfig implements WebMvcConfigurer {
     public void dirMap(Map<String,String> dirMap){
         String ip = Tool.getInterIP();
         String key ;
-        if(ip.startsWith("172.18.254.48")){
+        if(ip.startsWith("172.18.254.48") ){
             key = "out";
         }else{
             key = "in";
