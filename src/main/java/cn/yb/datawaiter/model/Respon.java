@@ -61,6 +61,17 @@ public class Respon {
         Respon respon = new Respon(false, CODE_SUCCESS, "成功", "{}");
         return respon;
     }
+
+    public Respon count(int count,String error) {
+        if(count > 0){
+           return  ok(count);
+        }else{
+            return  responError(error);
+        }
+    }
+    public Respon count(int count) {
+        return  count(count,"失败");
+    }
 }
 
 

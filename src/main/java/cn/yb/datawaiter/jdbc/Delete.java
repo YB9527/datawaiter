@@ -1,5 +1,6 @@
 package cn.yb.datawaiter.jdbc;
 
+import cn.yb.auth.model.User;
 import cn.yb.datawaiter.exception.GlobRuntimeException;
 import cn.yb.datawaiter.jdbc.model.Column;
 import cn.yb.datawaiter.jdbc.model.TableColumn;
@@ -11,6 +12,7 @@ import com.alibaba.fastjson.JSONObject;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -87,6 +89,8 @@ public class Delete {
         }
         return deleteByColoumnAndValues(conn, tablename, columnName, values);
     }
+
+
     public static int deleteDataByPri(Connection conn, String tablename, String id) {
         List<TableColumn> columns = Connect.getColumnCommentByTableName(conn, tablename);
         TableColumn columnByPRI = Connect.findColumnByPRI(columns);
@@ -108,5 +112,11 @@ public class Delete {
             //throw  new GlobRuntimeException("123");
         }
         return  count;
+    }
+
+    public static<T> int deleteDataByPri(Connection conn, T t) {
+        List<T> list = new ArrayList<>();
+        list.add(t);
+        return deleteDataByPri(conn,list);
     }
 }

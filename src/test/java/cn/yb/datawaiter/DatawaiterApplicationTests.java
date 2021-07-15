@@ -11,6 +11,7 @@ import cn.yb.datawaiter.tools.FileTool;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import okhttp3.*;
+import org.apache.commons.logging.Log;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.web.servlet.RequestBuilder;
 
@@ -26,29 +27,22 @@ class DatawaiterApplicationTests {
 
     @Test
     void contextLoads() throws FileNotFoundException {
+        int[] arr = new int[]{9,5,4,6,8,7,3,1,2};
 
-
-
-    }
-        public void test2() throws IOException {
-
-        String url = "http://www.stats.gov.cn/tjsj/tjbz/tjyqhdmhcxhfdm/2020/51/20/512021.html";
-        Request request = new Request.Builder()
-                .url(url)
-                .addHeader("application/x-www-form-urlencoded", "gbk")
-                .build();
-
-        Call call = OkHttpClientUtils.client.newCall(request);
-        okhttp3.Response res = call.execute();
-        byte[] b = res.body().bytes(); //获取数据的bytess
-        String info = new String(b, "GB2312"); //然后将其转为gb2312
-        for (int i = 0; i < 10; i++) {
-            System.out.println("我是主线程,线程Id为:" + Thread.currentThread().getId());
-            try {
-                Thread.currentThread().sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        for (int i = 0; i < arr.length; i++) {
+            for (int j = 0; j < arr.length - i-1; j++) {
+                if(arr[j] < arr[j+1]){
+                    int temp = arr[j];
+                    arr[j] = arr[j+1];
+                    arr[j+1] = temp;
+                }
             }
         }
+        for (int i = 0; i < arr.length; i++) {
+            System.out.println(arr[i]);
+        }
+
     }
+
+
 }

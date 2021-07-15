@@ -1,5 +1,6 @@
 package cn.yb.datawaiter.jdbc;
 
+import cn.yb.auth.model.User;
 import cn.yb.datawaiter.exception.GlobRuntimeException;
 import cn.yb.datawaiter.jdbc.model.Column;
 import cn.yb.datawaiter.jdbc.model.DatabaseConnect;
@@ -14,6 +15,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public class Select {
     public static List<JSONObject> findDataBySQL(Connection conn, String sql) {
@@ -119,6 +121,19 @@ public class Select {
     public static <T> T findOneDataBySQL(Connection conn, String sql, Class<T> mapperClass) {
         List<T> list = findDataBySQL(conn, sql, mapperClass);
         return list.size() > 0 ? list.get(0) : null;
+    }
+
+
+    public static<T> String getSQL(Class<T> tClass, Map<String, String> map) {
+        String tableName = tClass.getSimpleName().toLowerCase();
+        StringBuilder sb = new StringBuilder();
+        sb.append("SELECT * FROM " +tableName);
+        if(map != null && map.keySet().size() > 0){
+            for (String key: map.keySet() ) {
+                sb.append(" "+key + map.get(key));
+            }
+        }
+        return  sb.toString();
     }
 
 
