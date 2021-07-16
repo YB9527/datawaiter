@@ -1,6 +1,7 @@
 package cn.yb.datawaiter.model;
 
 import cn.yb.datawaiter.controller.BasicController;
+import cn.yb.datawaiter.tools.DateTool;
 import lombok.Data;
 
 import java.util.Date;
@@ -15,12 +16,12 @@ public class Respon {
     private String msg;
     private Object data;
 
-    private Date startDate;
-    private Date endDate;
+    private String startDate;
+    private String endDate;
     private String  totalTime;
 
     public Respon(Date startDate) {
-        this.startDate = startDate;
+        this.startDate = DateTool.dataFormat(startDate);
     }
 
     public Respon(){
@@ -39,8 +40,8 @@ public class Respon {
         this.code = code;
         this.msg = msg;
         this.data = data;
-        this.endDate = new Date();
-        this.totalTime = (endDate.getTime() - startDate.getTime())+" 毫秒";
+        this.endDate = DateTool.dataFormat(new Date());
+        this.totalTime = (DateTool.toDate(this.endDate).getTime() - DateTool.toDate(this.startDate).getTime())+" 毫秒";
     }
 
     public Respon ok(Object obj) {

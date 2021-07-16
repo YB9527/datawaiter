@@ -10,10 +10,11 @@ import cn.yb.datawaiter.jdbc.SystemConnect;
 import cn.yb.datawaiter.model.Condition;
 import com.alibaba.fastjson.JSONObject;
 import org.omg.PortableInterceptor.USER_EXCEPTION;
+import org.springframework.stereotype.Service;
 
 import java.util.Map;
 import java.util.TreeMap;
-
+@Service
 public class PostionService implements IPositionService {
     @Override
     public int edit(Position position) {

@@ -1,4 +1,4 @@
-package cn.yb.datawaiter;
+package cn.yb;
 
 import javax.servlet.*;
 import javax.servlet.FilterConfig;

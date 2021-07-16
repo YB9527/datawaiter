@@ -2,6 +2,7 @@ package cn.yb.datawaiter.tools;
 
 
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -24,8 +25,17 @@ public class DateTool {
      * @param format
      * @return
      */
-    private static String dataFormat(Date date, String format) {
+    public static String dataFormat(Date date, String format) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format);
        return simpleDateFormat.format(date);
     }
+    public static Date toDate(String date) {
+        try {
+            return simpleDateFormat.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return  null;
+    }
+
 }

@@ -8,10 +8,11 @@ import cn.yb.datawaiter.jdbc.Delete;
 import cn.yb.datawaiter.jdbc.JDBCUtils;
 import cn.yb.datawaiter.jdbc.Select;
 import cn.yb.datawaiter.jdbc.SystemConnect;
+import org.springframework.stereotype.Service;
 
 import java.util.Map;
 import java.util.TreeMap;
-
+@Service
 public class DepartmentService implements IDepartmentService {
     @Override
     public int edit(Department department) {

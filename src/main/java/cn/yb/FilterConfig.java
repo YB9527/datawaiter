@@ -1,4 +1,4 @@
-package cn.yb.datawaiter;
+package cn.yb;
 
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -12,7 +12,7 @@ public class FilterConfig {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setFilter(new LogCostFilter());
         registration.addUrlPatterns("/*");
-        registration.setName("cn.yb.datawaiter.LogCostFilter");
+        registration.setName("cn.yb.LogCostFilter");
         registration.setOrder(1);
         return registration;
     }

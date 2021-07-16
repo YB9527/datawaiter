@@ -46,12 +46,12 @@ public class TestController extends BasicController {
     public Respon findApiById(String id) throws SQLException, ClassNotFoundException {
         Respon respon = startRespon();
 
-        DatabaseConnect dc = new DatabaseConnect("127.0.0.1", DatabaseEnum.mysql,"restaurant","root","1234");
+       /* DatabaseConnect dc = new DatabaseConnect("127.0.0.1", DatabaseEnum.mysql,"restaurant","root","1234");
         dc.setLabel("系统数据库");
 
         Connection conn = Connect.getSQLConnection(dc);
-        List<JSONObject>  jsonObjects = Select.findDataBySQL(conn,"SELECT * FROM FOOD");
-        return respon.ok( jsonObjects);
+        List<JSONObject>  jsonObjects = Select.findDataBySQL(conn,"SELECT * FROM FOOD");*/
+        return respon.ok( "");
     }
 
     @RequestMapping("/{a}")
