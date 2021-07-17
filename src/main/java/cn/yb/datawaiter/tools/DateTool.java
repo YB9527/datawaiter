@@ -32,10 +32,11 @@ public class DateTool {
     public static Date toDate(String date) {
         try {
             return simpleDateFormat.parse(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            //e.printStackTrace();
+            return  null;
         }
-        return  null;
+
     }
 
 }

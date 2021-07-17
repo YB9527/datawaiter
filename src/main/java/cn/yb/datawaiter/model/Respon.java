@@ -40,8 +40,13 @@ public class Respon {
         this.code = code;
         this.msg = msg;
         this.data = data;
-        this.endDate = DateTool.dataFormat(new Date());
-        this.totalTime = (DateTool.toDate(this.endDate).getTime() - DateTool.toDate(this.startDate).getTime())+" 毫秒";
+        try {
+            this.endDate = DateTool.dataFormat(new Date());
+            this.totalTime = (DateTool.toDate(this.endDate).getTime() - DateTool.toDate(this.startDate).getTime())+" 毫秒";
+        }catch (Exception e){
+
+        }
+
     }
 
     public Respon ok(Object obj) {
