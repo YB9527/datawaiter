@@ -10,4 +10,6 @@ public interface IProjectService {
     List<? extends Project> findAll();
 
     Project findById(String id);
+
+    int edit(List<Project> projectArray);
 }

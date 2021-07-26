@@ -2,6 +2,7 @@ package cn.yb.sys.controller;
 
 import cn.yb.datawaiter.controller.BasicController;
 import cn.yb.datawaiter.jdbc.Connect;
+import cn.yb.datawaiter.jdbc.Update;
 import cn.yb.datawaiter.model.Mapper;
 import cn.yb.datawaiter.model.Respon;
 import cn.yb.datawaiter.tools.Tool;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @Controller
 @RestController
@@ -31,6 +34,16 @@ public class ProjectController extends BasicController {
         return respon.responError("保存失败");
     }
 
+    @PostMapping("/updateAll")
+    public Respon updateAll(@RequestBody List<Project> projectArray) {
+        Respon respon = startRespon();
+        if (projectArray != null && projectArray.size() > 0) {
+
+            int count = projectService.edit(projectArray);
+            return respon.ok(count);
+        }
+        return respon.responError("保存失败");
+    }
 
     @RequestMapping(value = "/findById")
     public Respon findById(String id) {

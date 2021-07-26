@@ -1,10 +1,7 @@
 package cn.yb.sys.service;
 
 import cn.yb.datawaiter.exception.GlobRuntimeException;
-import cn.yb.datawaiter.jdbc.Insert;
-import cn.yb.datawaiter.jdbc.JDBCUtils;
-import cn.yb.datawaiter.jdbc.Select;
-import cn.yb.datawaiter.jdbc.SystemConnect;
+import cn.yb.datawaiter.jdbc.*;
 import cn.yb.sys.model.Project;
 import cn.yb.sys.model.ProjectVo;
 import cn.yb.sys.service.impl.IProjectService;
@@ -46,5 +43,10 @@ public class ProjectService implements IProjectService {
                 "\tON project.id = fj.projectid ";
         ProjectVo pro = Select.findOneDataBySQL(SystemConnect.getConn(),sql, ProjectVo.class);
         return pro;
+    }
+
+    @Override
+    public int edit(List<Project> projectArray) {
+        return Update.updateManyDataPosInService(SystemConnect.getConn(),projectArray);
     }
 }
