@@ -60,6 +60,7 @@ public class CorsConfig implements WebMvcConfigurer {
         registry.addInterceptor(initAuthInterceptor())
                 .excludePathPatterns("/database/**")
                 .excludePathPatterns("/sys/**")
+                .excludePathPatterns("/project/**")
                 .excludePathPatterns("/user/**")
                 .excludePathPatterns("/image/**");
     }

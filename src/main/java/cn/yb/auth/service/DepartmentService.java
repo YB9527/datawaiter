@@ -23,8 +23,8 @@ public class DepartmentService implements IDepartmentService {
     @Override
     public int delete(Department department) {
         //检查此职位是否有人
-        Map<String,String> map = new TreeMap<>();
-        map.put("postionid","="+department.getId());
+        Map<String,Object> map = new TreeMap<>();
+        map.put("postionid=",department.getId());
         String sql = Select.getSQL(User.class,map);
         int  usercount = Select.findDataBySQL(SystemConnect.getConn(),sql).size();
         if(usercount == 0){

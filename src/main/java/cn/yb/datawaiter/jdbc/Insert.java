@@ -6,6 +6,7 @@ import cn.yb.datawaiter.jdbc.model.FiledEnum;
 import cn.yb.datawaiter.jdbc.model.TableColumn;
 import cn.yb.datawaiter.tools.JSONTool;
 import cn.yb.datawaiter.tools.Tool;
+import cn.yb.sys.model.FJ;
 import com.alibaba.fastjson.JSONObject;
 
 import java.sql.Connection;
@@ -115,5 +116,21 @@ public class Insert {
             //throw  new GlobRuntimeException("aa");
         }
         return  count;
+    }
+
+    public static<T> int insertManyPosInService(Connection conn, List<T> list) {
+        try {
+            conn.setAutoCommit(false);//开启事务
+            int count = Insert.insertManyPos(conn,list);
+            conn.commit();
+            return  count;
+        } catch (Exception e) {
+            try {
+                conn.rollback();//回滚事务
+                throw new GlobRuntimeException(e.getMessage());
+            } catch (SQLException ex) {
+                throw new GlobRuntimeException(ex.getMessage());
+            }
+        }
     }
 }

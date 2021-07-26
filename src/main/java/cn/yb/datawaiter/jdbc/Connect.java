@@ -107,6 +107,7 @@ public class Connect {
      */
     public static List<TableColumn> getColumnCommentByTableName(Connection conn, String tableName) {
         String sql="";
+        tableName =tableName.toLowerCase();
         try {
             Statement stmt = conn.createStatement();
 

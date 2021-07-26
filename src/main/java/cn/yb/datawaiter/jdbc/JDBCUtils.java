@@ -6,6 +6,7 @@ import cn.yb.datawaiter.jdbc.model.FiledEnum;
 import cn.yb.datawaiter.jdbc.model.TableColumn;
 import cn.yb.datawaiter.model.ResultColumn;
 import cn.yb.datawaiter.model.ResultColumnCUD;
+import cn.yb.sys.model.Project;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.sun.org.apache.regexp.internal.RE;
@@ -269,5 +270,47 @@ public class JDBCUtils {
                 break;
         }
         return columnname;
+    }
+
+    public static<T> int editPoInService(Connection conn, T t) {
+        try {
+            conn.setAutoCommit(false);//开启事务
+            int count =  editPo(conn,t);
+            conn.commit();
+            return count;
+        } catch (Exception e) {
+            try {
+                conn.rollback();//回滚事务
+                throw new GlobRuntimeException(e.getMessage());
+            } catch (SQLException ex) {
+                throw new GlobRuntimeException(ex.getMessage());
+            }
+        }
+    }
+    public  static void startTransaction(Connection conn){
+
+        try {
+            conn.setAutoCommit(false);//开启事务
+
+        } catch (SQLException e) {
+            try {
+                conn.rollback();//回滚事务
+                throw new GlobRuntimeException(e.getMessage());
+            } catch (SQLException ex) {
+                throw new GlobRuntimeException(ex.getMessage());
+            }
+        }
+    }
+    public  static void conmitTransaction(Connection conn){
+        try {
+            conn.commit();
+        } catch (SQLException e) {
+            try {
+                conn.rollback();//回滚事务
+                throw new GlobRuntimeException(e.getMessage());
+            } catch (SQLException ex) {
+                throw new GlobRuntimeException(ex.getMessage());
+            }
+        }
     }
 }

@@ -7,6 +7,7 @@ import cn.yb.datawaiter.jdbc.model.TableColumn;
 import cn.yb.datawaiter.model.ResultColumn;
 import cn.yb.datawaiter.tools.JSONTool;
 import cn.yb.datawaiter.tools.Tool;
+import cn.yb.sys.model.FJ;
 import com.alibaba.fastjson.JSONObject;
 
 import java.sql.Connection;
@@ -118,5 +119,12 @@ public class Delete {
         List<T> list = new ArrayList<>();
         list.add(t);
         return deleteDataByPri(conn,list);
+    }
+
+    public static<T> int deleteDataByPriInServerice(Connection conn, List<T> list) {
+        JDBCUtils.startTransaction(conn);
+        int count = deleteDataByPri(conn,list);
+        JDBCUtils.conmitTransaction(conn);
+        return  count;
     }
 }

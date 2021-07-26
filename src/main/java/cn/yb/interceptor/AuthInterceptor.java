@@ -16,7 +16,8 @@ public class AuthInterceptor implements HandlerInterceptor {
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=utf-8");
         String token = request.getHeader("token");
-        if (Tool.isEmpty(token)) {
+        return  true;
+       /* if (Tool.isEmpty(token)) {
             response.getWriter().print("用户未登录，请登录后操作！");
             return false;
         }
@@ -25,7 +26,7 @@ public class AuthInterceptor implements HandlerInterceptor {
             response.getWriter().print("token错误，请查看！");
             return false;
         }
-        return true;
+        return true;*/
     }
 
 

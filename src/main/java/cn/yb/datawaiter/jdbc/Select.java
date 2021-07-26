@@ -7,6 +7,7 @@ import cn.yb.datawaiter.jdbc.model.DatabaseConnect;
 import cn.yb.datawaiter.jdbc.model.DatabaseEnum;
 import cn.yb.datawaiter.model.Mapper;
 import cn.yb.datawaiter.tools.Tool;
+import cn.yb.sys.model.Project;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
@@ -124,17 +125,28 @@ public class Select {
     }
 
 
-    public static<T> String getSQL(Class<T> tClass, Map<String, String> map) {
+    public static<T> String getSQL(Class<T> tClass, Map<String, Object> map) {
         String tableName = tClass.getSimpleName().toLowerCase();
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT * FROM " +tableName);
         if(map != null && map.keySet().size() > 0){
+            sb.append(" WHERE " );
             for (String key: map.keySet() ) {
-                sb.append(" "+key + map.get(key));
+               Object value = map.get(key);
+               if(value instanceof  String){
+                   sb.append(" "+key + "'"+value+"'");
+               }else{
+                   sb.append(" "+key + value);
+               }
+
             }
         }
         return  sb.toString();
     }
 
 
+    public static <T> List<T> findDataAllToPo(Connection conn, Class<T> tClass) {
+        String str = getSQL(tClass,null);
+        return  findDataBySQL(conn,str,tClass);
+    }
 }

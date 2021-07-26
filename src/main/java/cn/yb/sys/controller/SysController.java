@@ -1,5 +1,6 @@
-package cn.yb.datawaiter.controller;
+package cn.yb.sys.controller;
 
+import cn.yb.datawaiter.controller.BasicController;
 import cn.yb.datawaiter.jdbc.Connect;
 import cn.yb.datawaiter.jdbc.Delete;
 import cn.yb.datawaiter.jdbc.Select;
