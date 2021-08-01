@@ -46,7 +46,7 @@ public class DatabaseController extends  BasicController {
             }
 
         }
-        return  insertCount == 0 ? respon.responError("连接数据库失败"):respon.ok("");
+        return  insertCount == 0 ? respon.responError("连接数据库失败"):respon.ok("添加成功");
     }
 
     @PostMapping("/editConnection")
@@ -67,7 +67,7 @@ public class DatabaseController extends  BasicController {
                 e.printStackTrace();
             }
         }
-        return  count == 0 ? respon.responError("操作失败"):respon.ok("");
+        return  count == 0 ? respon.responError("操作失败"):respon.ok("修改成功");
     }
 
     @RequestMapping(value = "/findAll")
@@ -77,6 +77,15 @@ public class DatabaseController extends  BasicController {
                 "left JOIN " +
                 "(SELECT databaseConnectId,count(*) as apiCount from api GROUP BY databaseConnectId) as api\n" +
                 "on databaseconnect.id = api.databaseConnectId  "));
+    }
+
+    @RequestMapping(value = "/findByProjectId")
+    public Respon findByProjectId(String projectid) {
+        Respon respon = startRespon();
+        return respon.ok(Select.findDataBySQL(SysConn,"SELECT * FROM (SELECT * FROM databaseconnect  WHERE  projectid = '"+projectid+"' ) databaseconnect\n" +
+                "\t\tleft JOIN  \n" +
+                "\t\t(SELECT databaseConnectId,count(*) as apiCount from api GROUP BY databaseConnectId) as api \n" +
+                "\t\ton databaseconnect.id = api.databaseConnectId "));
     }
 
     @RequestMapping(value = "/findTableAllByDatabaseId")

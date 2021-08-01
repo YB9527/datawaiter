@@ -27,7 +27,7 @@ public class ProjectService implements IProjectService {
         //return Select.findDataAllToPo(SystemConnect.getConn(),Project.class);
     }
     public String findSQL(String id){
-        String sql = "SELECT * FROM project \n" +
+        String sql = "SELECT * FROM (SELECT * FROM project WHERE isdelete != 1 OR isdelete is NULL  )project \n" +
                 "\tLEFT JOIN (SELECT objectid,path as imagepath   FROM fj WHERE isdelete != 1) as fj\n" +
                 "\tON project.id = fj.objectid ORDER BY seq";
         if (id == null){
@@ -38,7 +38,7 @@ public class ProjectService implements IProjectService {
     }
     @Override
     public ProjectVo findById(String id) {
-        String sql ="SELECT * FROM (SELECT * FROM project WHERE id = '"+id+"' )project\n" +
+        String sql ="SELECT * FROM (SELECT * FROM project WHERE id = '"+id+"' AND  (isdelete != 1 OR isdelete is NULL))project\n" +
                 "\tLEFT JOIN (SELECT projectid,path as imagepath FROM fj WHERE isdelete != 1) as fj\n" +
                 "\tON project.id = fj.projectid ";
         ProjectVo pro = Select.findOneDataBySQL(SystemConnect.getConn(),sql, ProjectVo.class);

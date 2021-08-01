@@ -9,6 +9,7 @@ import java.util.Objects;
 @Data
 public class DatabaseConnect {
     private String id;
+    private String projectid;
     private String label;
     private DatabaseEnum databaseEnum;
     private String ip;

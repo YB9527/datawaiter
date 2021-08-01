@@ -1,9 +1,6 @@
 package cn.yb.datawaiter.controller;
 
-import cn.yb.datawaiter.jdbc.Delete;
-import cn.yb.datawaiter.jdbc.Insert;
-import cn.yb.datawaiter.jdbc.Select;
-import cn.yb.datawaiter.jdbc.SystemConnect;
+import cn.yb.datawaiter.jdbc.*;
 import cn.yb.datawaiter.model.Level;
 import cn.yb.datawaiter.model.Respon;
 import cn.yb.datawaiter.service.impl.ILevelService;
@@ -22,11 +19,30 @@ public class LevelController extends  BasicController {
 
     @Autowired
     private ILevelService levelService;
+
+
+    @RequestMapping(value = "/findApiLevelByParentId")
+    public Respon findApiLevelByParentId(String parentId) {
+        Respon respon = startRespon();
+
+        String sql = "SELECT * FROM \n" +
+                "\t\t(select * from level where typename = '"+ Level.LEVEL_TYPENAME_API+"' AND parentid='"+parentId+"') as level\n" +
+                "LEFT JOIN (select levelid,count(*) as apicount from  api GROUP BY levelId ) AS api\n" +
+                "ON level.id = api.levelid";
+        List<JSONObject> domain = Select.findDataBySQL(SysConn, sql);
+        return respon.ok(domain);
+    }
+
     @RequestMapping(value = "/findapilevel")
     public Respon findApiLevel() {
         Respon respon = startRespon();
-        String sql = "select * from level where typename = '"+ Level.LEVEL_TYPENAME_API+"'";
+
+        String sql = "SELECT * FROM \n" +
+                "\t\t(select * from level where typename = '"+ Level.LEVEL_TYPENAME_API+"'"+") as level\n" +
+                "LEFT JOIN (select levelid,count(*) as apicount from  api GROUP BY levelId ) AS api\n" +
+                "ON level.id = api.levelid";
         List<JSONObject> domain = Select.findDataBySQL(SysConn, sql);
+
         return respon.ok(domain);
     }
     @RequestMapping(value = "/findBeanLevel")
@@ -60,6 +76,17 @@ public class LevelController extends  BasicController {
         }
         return  insertCount == 0 ? respon.responBasicError():respon.ok(insertCount);
     }
+    @PostMapping("/editApiLevel")
+    public Respon editApiLevel(@RequestBody Level level) {
+        int count = 0;
+        Respon respon = startRespon();
+        if(level.getId() != null){
+            level.setTypeName(Level.LEVEL_TYPENAME_API);
+            count = Update.updateManyDataPosInService(SysConn,level);
+        }
+        return  count == 0 ? respon.responBasicError():respon.ok(count);
+    }
+
     @RequestMapping(value = "/deletelevelbyid")
     public Respon deleteLevelById(String id) throws SQLException {
         Respon respon = startRespon();
@@ -76,5 +103,7 @@ public class LevelController extends  BasicController {
         levelService.findParent(json);
         return respon.ok(json);
     }
+
+
 
 }

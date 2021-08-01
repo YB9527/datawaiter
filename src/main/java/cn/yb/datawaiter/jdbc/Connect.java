@@ -2,6 +2,7 @@ package cn.yb.datawaiter.jdbc;
 
 import cn.yb.datawaiter.exception.GlobRuntimeException;
 import cn.yb.datawaiter.jdbc.model.*;
+import com.mysql.cj.jdbc.ConnectionImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -70,17 +71,18 @@ public class Connect {
             List<Table> tables = new ArrayList();
             Statement stmt = conn.createStatement();
             String sql;
-
+            String databasename = ((ConnectionImpl) conn).getDatabase();
            if(conn.getClientInfo().size() > 0 && conn.getClientInfo().getProperty("ApplicationName").equals("PostgreSQL JDBC Driver")){
                sql = " select tablename from pg_tables where schemaname='public'";
             }else{
-               sql = "SHOW TABLES ";
+               sql = "select TABLE_NAME,TABLE_COMMENT from INFORMATION_SCHEMA.Tables where table_schema = '"+databasename+"' ";
            }
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 String tableName = rs.getString(1);
+                String content = rs.getString(2);
                 List<TableColumn> tableColumns = getColumnCommentByTableName(conn, tableName);
-                Table table = new Table(tableName, tableColumns);
+                Table table = new Table(tableName,content, tableColumns);
                 for (TableColumn tableColumn : tableColumns) {
                     if (PRI.equals(tableColumn.getKey())) {
                         table.setPrimaryIndex(tableColumns.indexOf(tableColumn));

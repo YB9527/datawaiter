@@ -142,5 +142,10 @@ public class Update {
         JDBCUtils.conmitTransaction(conn);
         return  count;
     }
-
+    public static<T> int updateManyDataPosInService(Connection conn, T t) {
+        JDBCUtils.startTransaction(conn);
+        int count = updateDataPo(conn,t);
+        JDBCUtils.conmitTransaction(conn);
+        return  count;
+    }
 }

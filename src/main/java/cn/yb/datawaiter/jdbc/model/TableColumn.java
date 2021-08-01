@@ -22,7 +22,7 @@ public class TableColumn {
         TableColumn tableColumn = new TableColumn();
         try {
             //tableColumn.collation = rs.getString("Collation");
-            //tableColumn.comment = rs.getString("Comment");
+            tableColumn.comment = rs.getString("Comment");
             //tableColumn.defaultValue = rs.getString("Default");
            // tableColumn.extra = rs.getString("Extra");
             tableColumn.columnName = rs.getString("Field");

@@ -9,8 +9,12 @@ public class Table {
     private  String name;
     private List<TableColumn> columns;
     private Integer primaryIndex;
-    public Table(String name, List<TableColumn> columns) {
+    private String label;
+    public Table(String name, String label, List<TableColumn> columns) {
         this.name = name;
         this.columns = columns;
+        this.label = label;
     }
+
+
 }
