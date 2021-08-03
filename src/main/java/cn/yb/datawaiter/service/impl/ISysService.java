@@ -6,6 +6,6 @@ import cn.yb.datawaiter.model.Param;
 import java.util.List;
 
 public interface ISysService {
-    Api findApiByURL(String relative);
 
+    Api findApiByURLAndProjectid(String relative,String projectid);
 }

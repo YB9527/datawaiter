@@ -39,6 +39,11 @@ public class BasicController {
         SysConn = systemConnect.getConn();
     }
 
+
+    public static Connection getSystemConnect() {
+       return SystemConnect.getConn();
+    }
+
     public String  sqlStr(String str){
         return  "\""+str+"\"";
     }

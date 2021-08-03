@@ -9,6 +9,8 @@ import cn.yb.datawaiter.model.*;
 import cn.yb.datawaiter.service.impl.IDatawaiterService;
 
 import cn.yb.datawaiter.service.impl.IMapperService;
+import cn.yb.sys.model.Project;
+import cn.yb.sys.service.impl.IProjectService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -83,12 +85,19 @@ public class DatawaiterController extends BasicController {
     @Autowired
     private IMapperService mapperService;
 
+    @Autowired
+    private IProjectService projectService;
+
     public Respon handel(HttpServletRequest request, HttpServletResponse response) {
         Respon respon = startRespon();
         try {
             String url = request.getRequestURI();
-            String relative = url.replace(baseURL, "");
-            Api api = sysService.findApiByURL(relative);
+            int index = url.indexOf("/",1);
+            int end = url.indexOf("/",index+1);
+            String  projecturl = url.substring(index+1,end);
+            Project project = projectService.findByURL(projecturl);
+            String relative = url.replace(baseURL+"/"+projecturl, "");
+            Api api = sysService.findApiByURLAndProjectid(relative,project.getId());
 
             if (api != null) {
 

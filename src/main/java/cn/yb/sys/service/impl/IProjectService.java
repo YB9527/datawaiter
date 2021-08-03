@@ -12,4 +12,6 @@ public interface IProjectService {
     Project findById(String id);
 
     int edit(List<Project> projectArray);
+
+    Project findByURL(String projecturl);
 }

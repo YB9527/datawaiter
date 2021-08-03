@@ -26,7 +26,7 @@ public class SysService implements ISysService {
     }
     private Connection SysConn;
 
-    @Override
+
     public Api findApiByURL(String relativeURL) {
         String sql = "SELECT * FROM "+Api.class.getSimpleName().toLowerCase()+" WHERE  Concat(Concat(rooturl , '/'), selfURL) ="+ JDBCUtils.sqlStr(relativeURL);
         List<JSONObject> jsons = Select.findDataBySQL(SysConn,sql);
@@ -36,4 +36,14 @@ public class SysService implements ISysService {
         return jsons.get(0).toJavaObject(Api.class);
     }
 
+    @Override
+    public Api findApiByURLAndProjectid(String relativeURL, String projectid) {
+
+        String sql = "SELECT * FROM "+Api.class.getSimpleName().toLowerCase()+" WHERE  projectid= '"+projectid+"' AND Concat(Concat(rooturl , '/'), selfURL) ="+ JDBCUtils.sqlStr(relativeURL);
+        List<JSONObject> jsons = Select.findDataBySQL(SysConn,sql);
+        if(Tool.isEmpty(jsons)){
+            return  null;
+        }
+        return jsons.get(0).toJavaObject(Api.class);
+    }
 }

@@ -127,26 +127,39 @@ public class Select {
 
     public static<T> String getSQL(Class<T> tClass, Map<String, Object> map) {
         String tableName = tClass.getSimpleName().toLowerCase();
+        return  getSQL(tableName,  map);
+    }
+    public static<T> String getSQL(String tablename, Map<String, Object> map) {
         StringBuilder sb = new StringBuilder();
-        sb.append("SELECT * FROM " +tableName);
+        sb.append("SELECT * FROM " +tablename);
         if(map != null && map.keySet().size() > 0){
             sb.append(" WHERE " );
             for (String key: map.keySet() ) {
-               Object value = map.get(key);
-               if(value instanceof  String){
-                   sb.append(" "+key + "'"+value+"'");
-               }else{
-                   sb.append(" "+key + value);
-               }
-
+                Object value = map.get(key);
+                if(value instanceof  String){
+                    sb.append(" "+key + "'"+value+"'");
+                }else if(value != null){
+                    sb.append(" "+key + value);
+                }else{
+                    sb.append(" "+key );
+                }
             }
         }
         return  sb.toString();
     }
 
-
     public static <T> List<T> findDataAllToPo(Connection conn, Class<T> tClass) {
         String str = getSQL(tClass,null);
         return  findDataBySQL(conn,str,tClass);
+    }
+
+    public static <T> List<T> findDataByMap(Connection conn,Class<T> tClass, Map<String, Object> map) {
+        String str = getSQL(tClass,map);
+        return  findDataBySQL(conn,str,tClass);
+    }
+
+    public static  List<JSONObject> findDataByMap(Connection conn,String tableName, Map<String, Object> map) {
+        String str = getSQL(tableName,map);
+        return  findDataBySQL(conn,str);
     }
 }

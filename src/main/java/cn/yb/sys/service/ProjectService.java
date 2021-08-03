@@ -10,11 +10,14 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 @Service
 public class ProjectService implements IProjectService {
+    private  Map<String,Project> projectURLMap = new HashMap<>();
     @Override
     public int edit(Project project) {
         return JDBCUtils.editPoInService(SystemConnect.getConn(),project);
@@ -48,5 +51,20 @@ public class ProjectService implements IProjectService {
     @Override
     public int edit(List<Project> projectArray) {
         return Update.updateManyDataPosInService(SystemConnect.getConn(),projectArray);
+    }
+
+    @Override
+    public Project findByURL(String projecturl) {
+        if(projectURLMap.containsKey(projecturl)){
+            return  projectURLMap.get(projecturl);
+        }
+        Map<String,Object> map = new LinkedHashMap();
+        map.put(" url = ",projecturl);
+        List<Project> projects = Select.findDataByMap(SystemConnect.getConn(),Project.class,map);
+        if(projects.size() > 0){
+            projectURLMap.put(projecturl,projects.get(0));
+            return  projects.get(0);
+        }
+        return null;
     }
 }

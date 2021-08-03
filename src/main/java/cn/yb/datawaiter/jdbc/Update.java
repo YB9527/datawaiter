@@ -7,7 +7,9 @@ import cn.yb.datawaiter.jdbc.model.TableColumn;
 import cn.yb.datawaiter.tools.JSONTool;
 import cn.yb.datawaiter.tools.ReflectTool;
 import cn.yb.datawaiter.tools.Tool;
+import cn.yb.sys.model.Dic;
 import cn.yb.sys.model.FJ;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 import java.sql.Connection;
@@ -145,6 +147,20 @@ public class Update {
     public static<T> int updateManyDataPosInService(Connection conn, T t) {
         JDBCUtils.startTransaction(conn);
         int count = updateDataPo(conn,t);
+        JDBCUtils.conmitTransaction(conn);
+        return  count;
+    }
+
+    public static int updateJSONInService(Connection conn, String tablename, Object t){
+
+        JDBCUtils.startTransaction(conn);
+        JSONObject json ;
+        if(t instanceof  JSONObject){
+            json = (JSONObject) t;
+        }else{
+            json =  (JSONObject) JSON.toJSON(t);
+        }
+        int count = updateDataJSON(conn,tablename,json);
         JDBCUtils.conmitTransaction(conn);
         return  count;
     }

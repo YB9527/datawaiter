@@ -7,6 +7,7 @@ import cn.yb.datawaiter.jdbc.model.TableColumn;
 import cn.yb.datawaiter.tools.JSONTool;
 import cn.yb.datawaiter.tools.Tool;
 import cn.yb.sys.model.FJ;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 import java.sql.Connection;
@@ -132,5 +133,27 @@ public class Insert {
                 throw new GlobRuntimeException(ex.getMessage());
             }
         }
+    }
+    public static<T> int insertManyPosInService(Connection conn, T t) {
+
+           JDBCUtils.startTransaction(conn);
+            int count = Insert.insertPo(conn,t);
+            JDBCUtils.conmitTransaction(conn);
+            return  count;
+
+    }
+
+    public static int insertJSONInService(Connection conn, String tablename, Object t){
+
+        JDBCUtils.startTransaction(conn);
+        JSONObject json ;
+        if(t instanceof  JSONObject){
+            json = (JSONObject) t;
+        }else{
+            json =  (JSONObject) JSON.toJSON(t);
+        }
+        int count = Insert.insertJSON(conn,tablename,json);
+        JDBCUtils.conmitTransaction(conn);
+        return  count;
     }
 }

@@ -41,8 +41,13 @@ public class Api {
      * api 名字
      */
     private String label;
+    /**
+     * 项目id
+     */
+    private String projectid;
 
     private  String mapperId;
     private  Mapper mapper;
     private Date date;
+
 }
