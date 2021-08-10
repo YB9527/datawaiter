@@ -2,6 +2,8 @@ package cn.yb.sys.model;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class Dic {
     private  String id;
@@ -13,4 +15,5 @@ public class Dic {
     private  String key;
     private  String value;
     private  int seq;
+    List<Dic> children;
 }

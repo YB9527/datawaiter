@@ -2,11 +2,14 @@ package cn.yb.sys.controller;
 
 import cn.yb.datawaiter.controller.BasicController;
 import cn.yb.datawaiter.jdbc.*;
+import cn.yb.datawaiter.jdbc.model.Field;
+import cn.yb.datawaiter.jdbc.model.FieldDic;
 import cn.yb.datawaiter.model.Respon;
 import cn.yb.datawaiter.tools.ReflectTool;
 import cn.yb.sys.model.Dic;
 import cn.yb.sys.model.ProjectDic;
 import cn.yb.sys.service.impl.IDicService;
+import cn.yb.sys.service.impl.IFieldService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -31,6 +35,9 @@ import static cn.yb.datawaiter.jdbc.Select.getSQL;
 public class DicController extends BasicController {
     @Autowired
     private IDicService dicService;
+
+
+
     @PostMapping("/saveprojectdic")
     public Respon saveprojectdic(@RequestBody ProjectDic projectdic) {
         Respon respon = startRespon();
@@ -50,7 +57,7 @@ public class DicController extends BasicController {
     @PostMapping("/deleteProjectDic")
     public Respon deleteProjectDic(@RequestBody ProjectDic projectdic) {
         Respon respon = startRespon();
-        int count = Delete.deleteDataByPri(getSystemConnect(),projectdic);
+        int count = Delete.deleteDataInServerice(getSystemConnect(),projectdic);
 
         return respon.ok(count);
     }
@@ -90,12 +97,23 @@ public class DicController extends BasicController {
         List<ProjectDic> dic =  Select.findDataByMap(getSystemConnect(),ProjectDic.class,map);
         return respon.ok(dic);
     }
+    @RequestMapping(value = "/findAllByProjectid")
+    public Respon findAllByProjectid(String projectid) {
+        Respon respon = startRespon();
+        Map<String, Object> map = new LinkedHashMap<>();
+        map.put(" projectid = ", projectid);
+        List<ProjectDic> projectDics =  Select.findDataByMap(getSystemConnect(),ProjectDic.class,map);
+        for(ProjectDic projectDic :projectDics){
+            projectDic.setDicArray(dicService.findAllDic(projectDic));
+        }
+        return respon.ok(projectDics);
+    }
 
     @RequestMapping(value = "/finddicgroup")
     public Respon findDicGroupAll(String databaseconnectid,String dictablename) {
         Respon respon = startRespon();
         String sql ="SELECT * FROM (\n" +
-                "SELECT dicgroup,dicgrouplabel,count(*) as childrencount FROM "+dictablename+" GROUP BY dicgroup) dicgroup\n" +
+                "SELECT dicgroup,dicgrouplabel,count(*) as childrencount FROM "+dictablename+" GROUP BY dicgroup,dicgrouplabel) dicgroup\n" +
                 "\n" +
                 "LEFT JOIN (SELECT\t id, seq,dicgroup dicgroup_ FROM "+dictablename+" WHERE  `key` IS NULL OR `key` = '' ) as dic\n" +
                 "\n" +
@@ -112,6 +130,15 @@ public class DicController extends BasicController {
         map.put(" ORDER BY  seq ", null);
         List<JSONObject> dic =  Select.findDataByMap(Connect.getSQLConnection(databaseconnectid),dictablename,map);
         return respon.ok(dic);
+    }
+
+    @PostMapping("/setFiledDic")
+    public Respon setFiledDic(@RequestBody Field Field) {
+        Respon respon = startRespon();
+       /* ProjectDic projectDic = Select.findDataById2Po(getSystemConnect(),ProjectDic.class,projectdicid);
+        Connection connect = Connect.getSQLConnection(projectDic.getDatabaseconnectid());
+        int count  = Update.updateJSONInService(connect,projectDic.getDictablename(),dic);*/
+        return respon.ok(0);
     }
 
 

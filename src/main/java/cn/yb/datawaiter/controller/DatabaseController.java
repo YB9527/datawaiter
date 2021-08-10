@@ -1,13 +1,14 @@
 package cn.yb.datawaiter.controller;
 
 import cn.yb.datawaiter.jdbc.*;
-import cn.yb.datawaiter.jdbc.model.DatabaseConnect;
-import cn.yb.datawaiter.jdbc.model.DatabaseEnum;
-import cn.yb.datawaiter.jdbc.model.Table;
+import cn.yb.datawaiter.jdbc.model.*;
 import cn.yb.datawaiter.model.Level;
 import cn.yb.datawaiter.model.Respon;
 import cn.yb.datawaiter.tools.Tool;
+import cn.yb.sys.service.impl.IFieldService;
+import cn.yb.sys.service.impl.IProjectService;
 import com.alibaba.fastjson.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +22,11 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/database")
 public class DatabaseController extends  BasicController {
+    @Autowired
+    private IProjectService projectService;
+
+    @Autowired
+    private IFieldService fieldService;
 
     @RequestMapping(value = "/finddatabaseenum")
     public Respon findDatabaseEnum() {
@@ -79,13 +85,16 @@ public class DatabaseController extends  BasicController {
                 "on databaseconnect.id = api.databaseConnectId  "));
     }
 
+    /**
+     * 查找项目所有的表格
+     * @param projectid
+     * @return
+     */
     @RequestMapping(value = "/findByProjectId")
     public Respon findByProjectId(String projectid) {
         Respon respon = startRespon();
-        return respon.ok(Select.findDataBySQL(SysConn,"SELECT * FROM (SELECT * FROM databaseconnect  WHERE  projectid = '"+projectid+"' ) databaseconnect\n" +
-                "\t\tleft JOIN  \n" +
-                "\t\t(SELECT databaseConnectId,count(*) as apiCount from api GROUP BY databaseConnectId) as api \n" +
-                "\t\ton databaseconnect.id = api.databaseConnectId "));
+        return   respon.ok(projectService.findAllDatabaseByProjectid(projectid));
+
     }
 
     @RequestMapping(value = "/findTableAllByDatabaseId")
@@ -98,5 +107,34 @@ public class DatabaseController extends  BasicController {
         List<Table> tables =  Connect.getAllTableName(coon);
         return respon.ok(tables);
     }
+
+    @RequestMapping(value = "/findFiledAllByDatabaseidAndTableName")
+    public Respon findFiledAllByDatabaseidAndTableName(String databaseId,String tableName) {
+        Respon respon = startRespon();
+        if(Tool.isEmpty(databaseId) || Tool.isEmpty(tableName)){
+            return  respon.responError("id无效");
+        }
+        Connection coon = Connect.getSQLConnection(databaseId);
+        List<TableColumn> tableColumns =  Connect.getColumnCommentByTableName(coon,tableName);
+        return respon.ok(tableColumns);
+    }
+
+    @RequestMapping(value = "/findTableField")
+    public Respon findTableField(String projectid, String databaseid,String tableName) {
+        Respon respon = startRespon();
+        if(Tool.isEmpty(projectid,databaseid,tableName)){
+            return  respon.responError("id无效");
+        }
+        List<JSONObject> tableColumns =  fieldService.findTableField(projectid,databaseid,tableName);
+        return respon.ok(tableColumns);
+    }
+
+    @PostMapping("/saveOrUpdateField")
+    public Respon saveOrUpdateField(@RequestBody List<Field>  fieldarray) {
+        Respon respon = startRespon();
+        fieldService.saveOrUpdateField(fieldarray);
+        return respon.ok("");
+    }
+
 
 }

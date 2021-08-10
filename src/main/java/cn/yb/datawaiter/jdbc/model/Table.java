@@ -6,14 +6,16 @@ import java.util.List;
 
 @Data
 public class Table {
+    private  String databaseid;
     private  String name;
     private List<TableColumn> columns;
     private Integer primaryIndex;
-    private String label;
-    public Table(String name, String label, List<TableColumn> columns) {
+    private String content;
+    public Table(String databaseid,String name, String content, List<TableColumn> columns) {
         this.name = name;
+        this.databaseid = databaseid;
         this.columns = columns;
-        this.label = label;
+        this.content = content;
     }
 
 

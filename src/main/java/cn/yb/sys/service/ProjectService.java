@@ -1,7 +1,10 @@
 package cn.yb.sys.service;
 
-import cn.yb.datawaiter.exception.GlobRuntimeException;
 import cn.yb.datawaiter.jdbc.*;
+import cn.yb.datawaiter.jdbc.model.DatabaseConnect;
+import cn.yb.datawaiter.jdbc.model.SelectBuild;
+import cn.yb.datawaiter.jdbc.model.Table;
+import cn.yb.datawaiter.tools.Tool;
 import cn.yb.sys.model.Project;
 import cn.yb.sys.model.ProjectVo;
 import cn.yb.sys.service.impl.IProjectService;
@@ -9,15 +12,15 @@ import com.alibaba.fastjson.JSONObject;
 import org.springframework.stereotype.Service;
 
 import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class ProjectService implements IProjectService {
     private  Map<String,Project> projectURLMap = new HashMap<>();
+    public Connection getSysConnection(){
+        return  SystemConnect.getConn();
+    }
+
     @Override
     public int edit(Project project) {
         return JDBCUtils.editPoInService(SystemConnect.getConn(),project);
@@ -66,5 +69,51 @@ public class ProjectService implements IProjectService {
             return  projects.get(0);
         }
         return null;
+    }
+
+
+
+    @Override
+    public List<JSONObject> findAllDatabaseByProjectid(String projectid) {
+        String sql = "SELECT * FROM (SELECT * FROM databaseconnect  WHERE  projectid = '"+projectid+"' ) databaseconnect\n" +
+                "\t\tleft JOIN  \n" +
+                "\t\t(SELECT databaseConnectId,count(*) as apiCount from api GROUP BY databaseConnectId) as api \n" +
+                "\t\ton databaseconnect.id = api.databaseConnectId ";
+        return Select.findDataBySQL(getSysConnection(),sql);
+    }
+
+    @Override
+    public List<JSONObject> findDatabaseInTables(String projectid) {
+        List<JSONObject> list = new ArrayList<>();
+        List<DatabaseConnect> databaseConnects = SelectBuild.newInstance(DatabaseConnect.class)
+                .setWhereFiled("projectid = " ,projectid)
+                .build(getSysConnection(),DatabaseConnect.class);
+        if(!Tool.isEmpty(databaseConnects)){
+            for(DatabaseConnect connect : databaseConnects){
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("id",connect.getId());
+                jsonObject.put("databaseName",connect.getDatabaseName());
+                jsonObject.put("label",connect.getLabel());
+                jsonObject.put("tableArray",Connect.getAllTableName(connect.getId()));
+                list.add( jsonObject);
+            }
+        }
+
+        return list;
+    }
+
+    @Override
+    public List<Table> findAllTable(String projectid) {
+        List<Table> list = new ArrayList<>();
+        List<DatabaseConnect> databaseConnects = SelectBuild.newInstance(DatabaseConnect.class)
+                .setWhereFiled("projectid = " ,projectid)
+                .build(getSysConnection(),DatabaseConnect.class);
+        if(!Tool.isEmpty(databaseConnects)){
+            for(DatabaseConnect connect : databaseConnects){
+                list.addAll( Connect.getAllTableName(connect.getId()));
+            }
+        }
+
+        return list;
     }
 }

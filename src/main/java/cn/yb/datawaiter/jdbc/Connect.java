@@ -60,6 +60,11 @@ public class Connect {
         return conn;
     }
 
+    public static List<Table> getAllTableName(String dabaseid){
+        Connection conn = getSQLConnection(dabaseid);
+        return getAllTableName(conn);
+
+    }
     /**
      * 获取当前数据库下的所有表名称
      *
@@ -68,6 +73,13 @@ public class Connect {
      */
     public static List<Table> getAllTableName(Connection conn) {
         try {
+            String databaseid = "";
+            for(String databaseidtem : connMap.keySet()){
+                if(conn == connMap.get(databaseidtem)){
+                    databaseid = databaseidtem;
+                    break;
+                }
+            }
             List<Table> tables = new ArrayList();
             Statement stmt = conn.createStatement();
             String sql;
@@ -82,7 +94,7 @@ public class Connect {
                 String tableName = rs.getString(1);
                 String content = rs.getString(2);
                 List<TableColumn> tableColumns = getColumnCommentByTableName(conn, tableName);
-                Table table = new Table(tableName,content, tableColumns);
+                Table table = new Table(databaseid,tableName,content, tableColumns);
                 for (TableColumn tableColumn : tableColumns) {
                     if (PRI.equals(tableColumn.getKey())) {
                         table.setPrimaryIndex(tableColumns.indexOf(tableColumn));

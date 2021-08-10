@@ -1,6 +1,8 @@
 package cn.yb.sys.service.impl;
 
+import cn.yb.datawaiter.jdbc.model.Table;
 import cn.yb.sys.model.Project;
+import com.alibaba.fastjson.JSONObject;
 
 import java.util.List;
 
@@ -14,4 +16,10 @@ public interface IProjectService {
     int edit(List<Project> projectArray);
 
     Project findByURL(String projecturl);
+
+    List<Table > findAllTable(String projectid);
+
+    List<JSONObject> findAllDatabaseByProjectid(String projectid);
+
+    List<JSONObject> findDatabaseInTables(String projectid);
 }

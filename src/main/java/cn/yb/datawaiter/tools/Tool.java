@@ -27,14 +27,7 @@ public class Tool {
     public static boolean isEmpty(List list) {
         return list == null ? true: list.isEmpty();
     }
-    public static boolean isEmpty(String[] strs) {
-        for (int i = 0; i < strs.length; i++) {
-            if(isEmpty(strs[i])){
-                return  true;
-            }
-        }
-        return  false;
-    }
+
     /**
      *
      * @param flag null 返回false
@@ -75,9 +68,6 @@ public class Tool {
     }
 
 
-    public static boolean isEmpty(String str) {
-        return str == null ? true : str.trim().isEmpty()||str.equals("undefined");
-    }
 
 
 
@@ -149,4 +139,12 @@ public class Tool {
         }
     }
 
+    public static boolean isEmpty(String... strarray) {
+        for(String str : strarray ){
+            if(str == null ||  str.trim().isEmpty()||str.equals("undefined")){
+                return  true;
+            }
+        }
+        return  false;
+    }
 }

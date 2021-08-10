@@ -27,7 +27,7 @@ public class TableColumn {
            // tableColumn.extra = rs.getString("Extra");
             tableColumn.columnName = rs.getString("Field");
             tableColumn.key = rs.getString("Key");
-            //tableColumn.isNull = rs.getString("Null") == "YES" ? true : false;
+            tableColumn.isNull = rs.getString("Null").equalsIgnoreCase("YES")  ;
             //tableColumn.privileges = rs.getString("Privileges");
             String columntype = rs.getString("Type").toLowerCase();
 
