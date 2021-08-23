@@ -131,7 +131,7 @@ public class Select {
     }
     public static<T> String getSQL(String tablename, Map<String, Object> map) {
         StringBuilder sb = new StringBuilder();
-        sb.append("SELECT * FROM " +tablename);
+        sb.append("SELECT * FROM `" +tablename+"`");
         if(map != null && map.keySet().size() > 0){
             sb.append(" WHERE " );
             for (String key: map.keySet() ) {

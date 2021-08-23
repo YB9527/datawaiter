@@ -64,7 +64,7 @@ public class Update {
         tablename = tablename.toLowerCase();
         List<TableColumn> tableColumns = Connect.getColumnCommentByTableName(conn, tablename);
         TableColumn columnByPRI = Connect.findColumnByPRI(tableColumns);
-        StringBuilder sb = new StringBuilder("update  " + tablename+" set " );
+        StringBuilder sb = new StringBuilder("update  `" + tablename+"` set " );
         FiledEnum[] filelds = new FiledEnum[tableColumns.size()];
         for (int i = 0; i < tableColumns.size(); i++) {
 

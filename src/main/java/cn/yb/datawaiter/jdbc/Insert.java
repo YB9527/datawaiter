@@ -28,9 +28,9 @@ public class Insert {
         if(Tool.isEmpty(objects)){
             return  0;
         }
-         tablename = tablename.toLowerCase();
+         tablename =tablename.toLowerCase();
         List<TableColumn> tableColumns = Connect.getColumnCommentByTableName(conn, tablename);
-        StringBuilder sb = new StringBuilder("insert into " + tablename + "(");
+        StringBuilder sb = new StringBuilder("insert into `" + tablename + "`(");
         FiledEnum[] filelds = new FiledEnum[tableColumns.size()];
         for (int i = 0; i < tableColumns.size(); i++) {
 

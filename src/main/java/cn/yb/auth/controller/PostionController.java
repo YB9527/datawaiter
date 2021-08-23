@@ -1,8 +1,7 @@
 package cn.yb.auth.controller;
 
-import cn.yb.auth.model.Department;
 import cn.yb.auth.model.Position;
-import cn.yb.auth.service.impl.IDepartmentService;
+import cn.yb.auth.model.User;
 import cn.yb.auth.service.impl.IPositionService;
 import cn.yb.datawaiter.controller.BasicController;
 import cn.yb.datawaiter.model.Respon;
@@ -13,9 +12,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @Controller
 @RestController
-@RequestMapping(value = "/user")
+@RequestMapping(value = "/postion")
 public class PostionController extends BasicController {
     @Autowired
     private IPositionService positionService;
@@ -31,6 +32,22 @@ public class PostionController extends BasicController {
     public Respon delete(@RequestBody Position position) {
         Respon respon = startRespon();
         int count = positionService.delete(position);
-        return  respon.count(count,"职位有成员无法删除");
+        return  respon.ok(count);
     }
+
+    @RequestMapping(value = "/findGroupByProjectid")
+    public Respon findGroupByProjectid(String projectid){
+        Respon respon = startRespon();
+        List<Position>   list = positionService.findGroupByProjectid(projectid);
+        return respon.ok(list);
+
+    }
+
+    @RequestMapping(value = "/findByProjectid")
+    public Respon findByProjectid(String projectid){
+        Respon respon = startRespon();
+        List<Position>   list = positionService.findByProjectid(projectid);
+        return respon.ok(list);
+    }
+
 }

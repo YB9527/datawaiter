@@ -236,14 +236,16 @@ public class JDBCUtils {
     }
 
     public static int editPo(Connection conn, Object obj) {
+        startTransaction(conn);
         if (obj == null) {
             return 0;
         }
         String tableName = obj.getClass().getSimpleName();
         JSONObject jsonObject = (JSONObject) JSON.toJSON(obj);
 
-        return editJSON(conn, tableName, jsonObject);
-
+        int count = editJSON(conn, tableName, jsonObject);
+        conmitTransaction(conn);
+        return  count;
     }
 
     private static int editJSON(Connection conn, String tableName, JSONObject jsonObject) {
@@ -262,6 +264,7 @@ public class JDBCUtils {
 
         switch (columnname){
             case "key":
+            case "position":
             case "value":
             case "group":
             case "column":

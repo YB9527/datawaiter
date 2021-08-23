@@ -7,12 +7,14 @@ import cn.yb.datawaiter.jdbc.Delete;
 import cn.yb.datawaiter.jdbc.JDBCUtils;
 import cn.yb.datawaiter.jdbc.Select;
 import cn.yb.datawaiter.jdbc.SystemConnect;
+import cn.yb.datawaiter.jdbc.model.SelectBuild;
 import cn.yb.datawaiter.model.Condition;
 import com.alibaba.fastjson.JSONObject;
 import org.omg.PortableInterceptor.USER_EXCEPTION;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 @Service
@@ -26,12 +28,28 @@ public class PostionService implements IPositionService {
     public int delete(Position position) {
         //检查此职位是否有人
         Map<String,Object> map = new LinkedHashMap<>();
-        map.put("postionid=",position.getId());
-        String sql = Select.getSQL(User.class,map);
+        map.put("positionid=",position.getId());
+        String sql = Select.getSQL("user_position",map);
         int  usercount = Select.findDataBySQL(SystemConnect.getConn(),sql).size();
         if(usercount == 0){
-            return   Delete.deleteDataByPri(SystemConnect.getConn(),position);
+            return   Delete.deleteDataInServerice(SystemConnect.getConn(),position);
         }
         return usercount;
+    }
+
+    @Override
+    public List<Position> findGroupByProjectid(String projectid) {
+        return SelectBuild.newInstance(Position.class)
+                .setWhereFiled("projectid = ",projectid)
+                .setWhereFiled(" AND pid IS NULL",null)
+                .build(SystemConnect.getConn(),Position.class);
+    }
+
+    @Override
+    public List<Position> findByProjectid(String projectid) {
+        return SelectBuild.newInstance(Position.class)
+                .setWhereFiled("projectid = ",projectid)
+                .order("ORDER BY  level")
+                .build(SystemConnect.getConn(),Position.class);
     }
 }
