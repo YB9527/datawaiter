@@ -28,10 +28,18 @@ public class ProjectService implements IProjectService {
     }
 
     @Override
-    public List<? extends Project> findAll() {
+    public List<? extends Project> findAll(String name) {
 
-        return Select.findDataBySQL(SystemConnect.getConn(),findSQL(null), ProjectVo.class);
+        return Select.findDataBySQL(SystemConnect.getConn(),findSQLByName(name), ProjectVo.class);
         //return Select.findDataAllToPo(SystemConnect.getConn(),Project.class);
+    }
+    public String findSQLByName(String name){
+        String namesq = name != null ?" AND name LIKE '%"+name+"%'":"";
+        String sql = "SELECT * FROM (SELECT * FROM project WHERE (isdelete != 1  OR isdelete is NULL ) "+namesq+" )project \n" +
+                "\tLEFT JOIN (SELECT objectid,path as imagepath   FROM fj WHERE isdelete != 1) as fj\n" +
+                "\tON project.id = fj.objectid ORDER BY seq";
+
+        return  sql;
     }
     public String findSQL(String id){
         String sql = "SELECT * FROM (SELECT * FROM project WHERE isdelete != 1 OR isdelete is NULL  )project \n" +

@@ -11,7 +11,7 @@ import java.util.List;
 public interface IProjectService {
     int edit(Project project);
 
-    List<? extends Project> findAll();
+    List<? extends Project> findAll(String name);
 
     Project findById(String id);
 

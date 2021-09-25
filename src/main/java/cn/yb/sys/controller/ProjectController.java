@@ -68,10 +68,10 @@ public class ProjectController extends BasicController  implements IDataControll
     }
 
     @RequestMapping(value = "/findall")
-    public Respon findAll() {
+    public Respon findAll(@RequestBody QueryBase data) {
         Respon respon = startRespon();
 
-        return respon.ok(projectService.findAll());
+        return respon.ok(projectService.findAll(data.searchkey));
     }
 
 
@@ -102,8 +102,8 @@ public class ProjectController extends BasicController  implements IDataControll
     }
 
     @Override
-    public Respon findDataAll(String data) {
-        return findAll();
+    public Respon findDataAll(@RequestBody QueryBase data) {
+        return findAll(data);
     }
 
     public  Respon updateData(@RequestBody String data) {

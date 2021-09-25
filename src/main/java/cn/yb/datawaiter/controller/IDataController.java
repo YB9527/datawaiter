@@ -18,7 +18,7 @@ public interface IDataController {
 
 
     @PostMapping(value = "/findDataAll")
-    public Respon findDataAll(String data);
+    public Respon findDataAll(@RequestBody QueryBase data);
 
     @PostMapping(value = "/updateData")
     public Respon updateData(String data);
