@@ -54,7 +54,10 @@ public class ProjectController extends BasicController  implements IDataControll
         }
         return respon.responError("保存失败");
     }
-
+    @RequestMapping(value = "/findById")
+    public Respon findById(String id) {
+        return  findDataById(id);
+    }
 
     public Respon findDataById(String id) {
         Respon respon = startRespon();
