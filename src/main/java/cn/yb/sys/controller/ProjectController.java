@@ -1,13 +1,18 @@
 package cn.yb.sys.controller;
 
 import cn.yb.datawaiter.controller.BasicController;
+import cn.yb.datawaiter.controller.IDataController;
+import cn.yb.datawaiter.controller.query.QueryBase;
 import cn.yb.datawaiter.jdbc.Connect;
+import cn.yb.datawaiter.jdbc.Select;
 import cn.yb.datawaiter.jdbc.Update;
+import cn.yb.datawaiter.jdbc.model.SelectBuild;
 import cn.yb.datawaiter.jdbc.model.Table;
 import cn.yb.datawaiter.model.Mapper;
 import cn.yb.datawaiter.model.Respon;
 import cn.yb.datawaiter.tools.Tool;
 import cn.yb.sys.model.Project;
+import cn.yb.sys.model.ProjectVo;
 import cn.yb.sys.service.impl.IFieldService;
 import cn.yb.sys.service.impl.IProjectService;
 import com.alibaba.fastjson.JSONObject;
@@ -23,14 +28,14 @@ import java.util.List;
 @Controller
 @RestController
 @RequestMapping(value = "/project")
-public class ProjectController extends BasicController {
+public class ProjectController extends BasicController  implements IDataController {
     @Autowired
     private IProjectService projectService;
 
 
 
     @PostMapping("/edit")
-    public Respon editMapper(@RequestBody Project project) {
+    public Respon edit(@RequestBody Project project) {
         Respon respon = startRespon();
         if (project != null) {
             int count = projectService.edit(project);
@@ -50,8 +55,8 @@ public class ProjectController extends BasicController {
         return respon.responError("保存失败");
     }
 
-    @RequestMapping(value = "/findById")
-    public Respon findById(String id) {
+
+    public Respon findDataById(String id) {
         Respon respon = startRespon();
         if(Tool.isEmpty(id)){
             return respon.responError("id不能为null");
@@ -66,6 +71,7 @@ public class ProjectController extends BasicController {
         return respon.ok(projectService.findAll());
     }
 
+
     /**
      * 查询项目所有的表格
      * @return
@@ -76,5 +82,45 @@ public class ProjectController extends BasicController {
         //List<Table> tables =  projectService.findAllTable(projectid);
         List<JSONObject> databaseInTables =  projectService.findDatabaseInTables(projectid);
         return respon.ok(databaseInTables);
+    }
+
+
+
+    public Respon findTotal(@RequestBody QueryBase data){
+        Respon respon = startRespon();
+        int count = projectService.findTotal(data.searchkey);
+        return respon.ok(count);
+    }
+
+    public Respon findPageData(@RequestBody QueryBase data){
+        Respon respon = startRespon();
+        List<ProjectVo> list = projectService.findPageData(data);
+        return respon.ok(list);
+    }
+
+    @Override
+    public Respon findDataAll(String data) {
+        return findAll();
+    }
+
+    public  Respon updateData(@RequestBody String data) {
+        Respon respon = startRespon();
+        Project project = toObject(data,Project.class);
+        if (project != null ) {
+            int count = projectService.edit(project);
+            return respon.ok(count);
+        }
+        return respon.responError("保存失败");
+    }
+
+    @Override
+    public Respon saveData(String data) {
+
+        return updateData(data);
+    }
+
+    @Override
+    public Respon deleteData(Object data) {
+        return null;
     }
 }

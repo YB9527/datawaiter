@@ -132,8 +132,17 @@ public class Select {
     public static<T> String getSQL(String tablename, Map<String, Object> map) {
         StringBuilder sb = new StringBuilder();
         sb.append("SELECT * FROM `" +tablename+"`");
-        if(map != null && map.keySet().size() > 0){
+        String where = getWhereSQL(map);
+        if(!Tool.isEmpty(where)){
             sb.append(" WHERE " );
+            sb.append(where);
+        }
+        return  sb.toString();
+    }
+
+    public static String getWhereSQL(Map<String, Object> map) {
+        StringBuilder sb = new StringBuilder();
+        if(map != null && map.keySet().size() > 0){
             for (String key: map.keySet() ) {
                 Object value = map.get(key);
                 if(value instanceof  String){

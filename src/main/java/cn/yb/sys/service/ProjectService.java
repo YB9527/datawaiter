@@ -1,5 +1,6 @@
 package cn.yb.sys.service;
 
+import cn.yb.datawaiter.controller.query.QueryBase;
 import cn.yb.datawaiter.jdbc.*;
 import cn.yb.datawaiter.jdbc.model.DatabaseConnect;
 import cn.yb.datawaiter.jdbc.model.SelectBuild;
@@ -100,6 +101,32 @@ public class ProjectService implements IProjectService {
         }
 
         return list;
+    }
+
+    @Override
+    public int findTotal(String name) {
+        SelectBuild selectBuild =SelectBuild
+                .newInstance(Project.class);
+        if(!Tool.isEmpty(name)){
+            selectBuild
+                    .setWhereFiled(" name LIKE ","%"+name+"%");
+        }
+        int count = selectBuild
+                .findCount(getSysConnection());
+        return count;
+    }
+
+    @Override
+    public List<ProjectVo> findPageData(QueryBase data) {
+
+        SelectBuild selectBuild =SelectBuild
+                .newInstance(Project.class);
+        if(!Tool.isEmpty(data.searchkey)){
+            selectBuild
+                    .setWhereFiled(" name LIKE ","%"+data.searchkey+"%");
+        }
+
+        return selectBuild.setLimit(data.pagenum,data.pagecount).build(getSysConnection(),ProjectVo.class);
     }
 
     @Override

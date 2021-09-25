@@ -1,7 +1,9 @@
 package cn.yb.sys.service.impl;
 
+import cn.yb.datawaiter.controller.query.QueryBase;
 import cn.yb.datawaiter.jdbc.model.Table;
 import cn.yb.sys.model.Project;
+import cn.yb.sys.model.ProjectVo;
 import com.alibaba.fastjson.JSONObject;
 
 import java.util.List;
@@ -22,4 +24,8 @@ public interface IProjectService {
     List<JSONObject> findAllDatabaseByProjectid(String projectid);
 
     List<JSONObject> findDatabaseInTables(String projectid);
+
+    int findTotal(String name);
+
+    List<ProjectVo> findPageData(QueryBase data);
 }

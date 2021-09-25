@@ -1,14 +1,23 @@
 package cn.yb.datawaiter.controller;
 
+import cn.yb.datawaiter.controller.query.QueryBase;
 import cn.yb.datawaiter.exception.GlobRuntimeException;
 import cn.yb.datawaiter.jdbc.Connect;
 import cn.yb.datawaiter.jdbc.SystemConnect;
 import cn.yb.datawaiter.model.Respon;
 import cn.yb.datawaiter.model.ResponTotal;
 import cn.yb.datawaiter.service.impl.ISysService;
+import cn.yb.datawaiter.tools.JSONTool;
+import cn.yb.datawaiter.tools.Tool;
+import cn.yb.sys.model.Project;
+import cn.yb.sys.model.ProjectVo;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 
 import java.sql.Connection;
@@ -16,7 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-public class BasicController {
+public  class BasicController {
 
     @Autowired
     protected ISysService sysService;
@@ -52,12 +61,21 @@ public class BasicController {
     protected Respon startRespon() {
        return new Respon( new Date());
     }
+
+
+
     protected ResponTotal startResponTotal() {
         return new ResponTotal(new Date());
     }
-  /* *//* protected Respon getRespon(Boolean isOk, Integer code, String message, Object object) {
-        Respon respon = new Respon(isOk, code, message, object);
-        return respon;
-    }*/
+
+    public  static <T> T toObject(String str,Class<T> tClass){
+        //return
+        if(Tool.isEmpty(str)){
+            return  null;
+        }
+        return JSONObject.parseObject(str,tClass);
+    }
+
+
 
 }
