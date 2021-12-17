@@ -4,12 +4,9 @@ import cn.yb.datawaiter.exception.GlobRuntimeException;
 import cn.yb.datawaiter.jdbc.model.CRUDEnum;
 import cn.yb.datawaiter.jdbc.model.FiledEnum;
 import cn.yb.datawaiter.jdbc.model.TableColumn;
-import cn.yb.datawaiter.model.ResultColumn;
-import cn.yb.datawaiter.model.ResultColumnCUD;
-import cn.yb.sys.model.Project;
+import cn.yb.datawaiter.model.entity.ResultColumnEntity;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.sun.org.apache.regexp.internal.RE;
 
 import java.sql.*;
 import java.text.SimpleDateFormat;
@@ -225,10 +222,10 @@ public class JDBCUtils {
         return sb.substring(0, sb.length() - 1);
     }
 
-    public static List<ResultColumn> getResultColumn(String mapperId, List<TableColumn> columns) {
-        List<ResultColumn> rcs = new ArrayList<>();
+    public static List<ResultColumnEntity> getResultColumn(String mapperId, List<TableColumn> columns) {
+        List<ResultColumnEntity> rcs = new ArrayList<>();
         for (TableColumn tc : columns) {
-            ResultColumn rc = new ResultColumn(mapperId, tc);
+            ResultColumnEntity rc = new ResultColumnEntity(mapperId, tc);
             rc.setMapperId(mapperId);
             rcs.add(rc);
         }

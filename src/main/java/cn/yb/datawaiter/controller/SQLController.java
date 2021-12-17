@@ -2,15 +2,9 @@ package cn.yb.datawaiter.controller;
 
 import cn.yb.datawaiter.jdbc.Connect;
 import cn.yb.datawaiter.jdbc.Select;
-import cn.yb.datawaiter.jdbc.model.Table;
-import cn.yb.datawaiter.model.AutoCreateMapper;
-import cn.yb.datawaiter.model.Mapper;
-import cn.yb.datawaiter.model.Respon;
-import cn.yb.datawaiter.model.ResponTotal;
-import cn.yb.datawaiter.tools.Tool;
-import com.alibaba.fastjson.JSON;
+import cn.yb.datawaiter.model.entity.Respon;
+import cn.yb.datawaiter.model.entity.ResponTotal;
 import com.alibaba.fastjson.JSONObject;
-import com.sun.org.apache.regexp.internal.RE;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

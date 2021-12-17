@@ -3,9 +3,10 @@ package cn.yb.auth.controller;
 import cn.yb.auth.model.User;
 import cn.yb.auth.service.impl.IUserService;
 import cn.yb.datawaiter.controller.BasicController;
-import cn.yb.datawaiter.model.Respon;
+import cn.yb.datawaiter.model.entity.Respon;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,4 +34,9 @@ public class UserController extends BasicController {
         return respon;
     }
 
+    @GetMapping("/hello")
+    public String hello() {
+
+        return "hello";
+    }
 }

@@ -2,7 +2,10 @@ package cn.yb.datawaiter.service;
 
 import cn.yb.datawaiter.exception.GlobRuntimeException;
 import cn.yb.datawaiter.jdbc.*;
-import cn.yb.datawaiter.model.*;
+import cn.yb.datawaiter.model.entity.ApiEntity;
+import cn.yb.datawaiter.model.entity.MapperEntity;
+import cn.yb.datawaiter.model.entity.PoRelation;
+import cn.yb.datawaiter.model.entity.ResultColumnEntity;
 import cn.yb.datawaiter.service.impl.IDatawaiterService;
 import cn.yb.datawaiter.service.impl.IMapperService;
 import cn.yb.datawaiter.service.impl.ISysService;
@@ -25,18 +28,18 @@ public class DatawaiterService implements IDatawaiterService {
     //private static String ARRAY = "Array";
 
     @Override
-    public List<JSONObject> findDataByMapper(Mapper mapper) {
-        if (mapper != null) {
-            String connId = mapper.getDatabaseId();
+    public List<JSONObject> findDataByMapper(MapperEntity mapperEntity) {
+        if (mapperEntity != null) {
+            String connId = mapperEntity.getDatabaseId();
             Connection conn = Connect.getSQLConnection(connId);
-            String sql = mapper.getSql_();
-            List<ResultColumn> resultColumns = mapper.getResultColumns();
-            if (resultColumns != null) {
-                for (ResultColumn resultColumn : resultColumns) {
-                    if (resultColumn.getPoRelation() == PoRelation.no) {
-                        String property = resultColumn.getProperty();
+            String sql = mapperEntity.getSql_();
+            List<ResultColumnEntity> resultColumnEntities = mapperEntity.getResultColumnEntities();
+            if (resultColumnEntities != null) {
+                for (ResultColumnEntity resultColumnEntity : resultColumnEntities) {
+                    if (resultColumnEntity.getPoRelation() == PoRelation.no) {
+                        String property = resultColumnEntity.getProperty();
                         if (property != null) {
-                            String value = resultColumn.getTestValue();
+                            String value = resultColumnEntity.getTestValue();
                            if(value != null && value.matches("[0-9]+")){
                                sql = sql.replace(property, value);
                            }else{
@@ -60,29 +63,29 @@ public class DatawaiterService implements IDatawaiterService {
                 }
             }
             List<JSONObject> jsons = Select.findDataBySQL(conn, sql);
-            setDataByPoReation(jsons, resultColumns);
+            setDataByPoReation(jsons, resultColumnEntities);
             return jsons;
         }
         return null;
     }
 
-    private void setDataByPoReation(List<JSONObject> jsons, List<ResultColumn> resultColumns) {
-        for (ResultColumn rc : resultColumns) {
+    private void setDataByPoReation(List<JSONObject> jsons, List<ResultColumnEntity> resultColumnEntities) {
+        for (ResultColumnEntity rc : resultColumnEntities) {
             if (rc.getPoRelation() == PoRelation.no) {
                 continue;
             }
-            Mapper childMapper = mapperService.findMapperById(rc.getColumn_MapperId());
-            if (childMapper == null) {
+            MapperEntity childMapperEntity = mapperService.findMapperById(rc.getColumn_MapperId());
+            if (childMapperEntity == null) {
                 return;
             }
             for (JSONObject json : jsons) {
-                for (ResultColumn childRc : childMapper.getResultColumns()) {
+                for (ResultColumnEntity childRc : childMapperEntity.getResultColumnEntities()) {
                     String childProperty = childRc.getProperty();
                     if (rc.getColumn_().equals(childProperty)) {
                         String property =  rc.getProperty().trim();
                         String testValue = json.getString(property);
                         childRc.setTestValue(testValue);
-                        List<JSONObject> childDatas = findDataByMapper(childMapper);
+                        List<JSONObject> childDatas = findDataByMapper(childMapperEntity);
                         switch (rc.getPoRelation()) {
                             case association:
                                 if (!Tool.isEmpty(childDatas)) {
@@ -105,42 +108,42 @@ public class DatawaiterService implements IDatawaiterService {
 
 
     @Override
-    public List<JSONObject> findDataByMapper(Api api, Map<String, String> paramMap) {
-        Mapper mapper = mapperService.findMapperById(api.getMapperId());
-        for (ResultColumn resultColumn : mapper.getResultColumns()){
-            if(resultColumn.getPoRelation() != PoRelation.no){
+    public List<JSONObject> findDataByMapper(ApiEntity apiEntity, Map<String, String> paramMap) {
+        MapperEntity mapperEntity = mapperService.findMapperById(apiEntity.getMapperId());
+        for (ResultColumnEntity resultColumnEntity : mapperEntity.getResultColumnEntities()){
+            if(resultColumnEntity.getPoRelation() != PoRelation.no){
                 continue;
             }
-            String key = resultColumn.getProperty().replace("[","").replace("]","");
+            String key = resultColumnEntity.getProperty().replace("[","").replace("]","");
             String value = paramMap.get(key.trim());
-            resultColumn.setTestValue(value);
+            resultColumnEntity.setTestValue(value);
             if(value == null){
-                throw  new GlobRuntimeException("api "+api.getLabel()+",没有传递这个参数："+key);
+                throw  new GlobRuntimeException("api "+ apiEntity.getLabel()+",没有传递这个参数："+key);
             }
           /*  if(resultColumn.getProperty().equals(param.getParamName())){
 
             }*/
 
         }
-        return findDataByMapper(mapper);
+        return findDataByMapper(mapperEntity);
     }
 
     @Override
-    public int handleData(Api api, Map<String, String> paramMap) {
-        Mapper mapper = mapperService.findMapperById(api.getMapperId());
-        if(mapper == null){
-            throw  new GlobRuntimeException("mapper 查不到，id："+api.getMapperId());
+    public int handleData(ApiEntity apiEntity, Map<String, String> paramMap) {
+        MapperEntity mapperEntity = mapperService.findMapperById(apiEntity.getMapperId());
+        if(mapperEntity == null){
+            throw  new GlobRuntimeException("mapper 查不到，id："+ apiEntity.getMapperId());
         }
-        return mapperService.handelData(api.getCrud(),mapper, paramMap);
+        return mapperService.handelData(apiEntity.getCrud(), mapperEntity, paramMap);
     }
 
     @Override
-    public int handleData(Api api, JSONObject jsonObject) {
-        Mapper mapper = mapperService.findMapperById(api.getMapperId());
-        if(mapper == null){
-            throw  new GlobRuntimeException("mapper 查不到，id："+api.getMapperId());
+    public int handleData(ApiEntity apiEntity, JSONObject jsonObject) {
+        MapperEntity mapperEntity = mapperService.findMapperById(apiEntity.getMapperId());
+        if(mapperEntity == null){
+            throw  new GlobRuntimeException("mapper 查不到，id："+ apiEntity.getMapperId());
         }
-        return mapperService.handelData(api.getCrud(),mapper, jsonObject);
+        return mapperService.handelData(apiEntity.getCrud(), mapperEntity, jsonObject);
     }
 
 }

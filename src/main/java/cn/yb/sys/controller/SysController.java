@@ -4,7 +4,7 @@ import cn.yb.datawaiter.controller.BasicController;
 import cn.yb.datawaiter.jdbc.Connect;
 import cn.yb.datawaiter.jdbc.Delete;
 import cn.yb.datawaiter.jdbc.Select;
-import cn.yb.datawaiter.model.Respon;
+import cn.yb.datawaiter.model.entity.Respon;
 import cn.yb.datawaiter.tools.ReflectTool;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;

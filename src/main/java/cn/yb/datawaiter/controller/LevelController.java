@@ -1,8 +1,8 @@
 package cn.yb.datawaiter.controller;
 
 import cn.yb.datawaiter.jdbc.*;
-import cn.yb.datawaiter.model.Level;
-import cn.yb.datawaiter.model.Respon;
+import cn.yb.datawaiter.model.entity.LevelEntity;
+import cn.yb.datawaiter.model.entity.Respon;
 import cn.yb.datawaiter.service.impl.ILevelService;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ public class LevelController extends  BasicController {
         Respon respon = startRespon();
 
         String sql = "SELECT * FROM \n" +
-                "\t\t(select * from level where typename = '"+ Level.LEVEL_TYPENAME_API+"' AND parentid='"+parentId+"') as level\n" +
+                "\t\t(select * from level where typename = '"+ LevelEntity.LEVEL_TYPENAME_API+"' AND parentid='"+parentId+"') as level\n" +
                 "LEFT JOIN (select levelid,count(*) as apicount from  api GROUP BY levelId ) AS api\n" +
                 "ON level.id = api.levelid";
         List<JSONObject> domain = Select.findDataBySQL(SysConn, sql);
@@ -38,7 +38,7 @@ public class LevelController extends  BasicController {
         Respon respon = startRespon();
 
         String sql = "SELECT * FROM \n" +
-                "\t\t(select * from level where typename = '"+ Level.LEVEL_TYPENAME_API+"'"+") as level\n" +
+                "\t\t(select * from level where typename = '"+ LevelEntity.LEVEL_TYPENAME_API+"'"+") as level\n" +
                 "LEFT JOIN (select levelid,count(*) as apicount from  api GROUP BY levelId ) AS api\n" +
                 "ON level.id = api.levelid";
         List<JSONObject> domain = Select.findDataBySQL(SysConn, sql);
@@ -48,41 +48,41 @@ public class LevelController extends  BasicController {
     @RequestMapping(value = "/findBeanLevel")
     public Respon findBeanLevel() {
         Respon respon = startRespon();
-        String sql = "select * from level where typename = '"+ Level.LEVEL_TYPENAME_BEAN+"'";
+        String sql = "select * from level where typename = '"+ LevelEntity.LEVEL_TYPENAME_BEAN+"'";
         List<JSONObject> domain = Select.findDataBySQL(SysConn, sql);
         return respon.ok(domain);
     }
 
     @PostMapping("/addBeanLevel")
-    public Respon addBeanLevel(@RequestBody Level level) throws SQLException {
+    public Respon addBeanLevel(@RequestBody LevelEntity levelEntity) throws SQLException {
         int insertCount = 0;
         Respon respon = startRespon();
-        if(level.getId() != null){
+        if(levelEntity.getId() != null){
             SysConn.setAutoCommit(false);
-            level.setTypeName(Level.LEVEL_TYPENAME_BEAN);
-            insertCount = Insert.insertPo(SysConn,level);
+            levelEntity.setTypeName(LevelEntity.LEVEL_TYPENAME_BEAN);
+            insertCount = Insert.insertPo(SysConn, levelEntity);
             SysConn.commit();
         }
         return  insertCount == 0 ? respon.responBasicError():respon.ok(insertCount);
     }
 
     @PostMapping("/addapilevel")
-    public Respon saveAppversion(@RequestBody Level level) {
+    public Respon saveAppversion(@RequestBody LevelEntity levelEntity) {
         int insertCount = 0;
         Respon respon = startRespon();
-        if(level.getId() != null){
-            level.setTypeName(Level.LEVEL_TYPENAME_API);
-            insertCount = Insert.insertPo(SysConn,level);
+        if(levelEntity.getId() != null){
+            levelEntity.setTypeName(LevelEntity.LEVEL_TYPENAME_API);
+            insertCount = Insert.insertPo(SysConn, levelEntity);
         }
         return  insertCount == 0 ? respon.responBasicError():respon.ok(insertCount);
     }
     @PostMapping("/editApiLevel")
-    public Respon editApiLevel(@RequestBody Level level) {
+    public Respon editApiLevel(@RequestBody LevelEntity levelEntity) {
         int count = 0;
         Respon respon = startRespon();
-        if(level.getId() != null){
-            level.setTypeName(Level.LEVEL_TYPENAME_API);
-            count = Update.updateManyDataPosInService(SysConn,level);
+        if(levelEntity.getId() != null){
+            levelEntity.setTypeName(LevelEntity.LEVEL_TYPENAME_API);
+            count = Update.updateManyDataPosInService(SysConn, levelEntity);
         }
         return  count == 0 ? respon.responBasicError():respon.ok(count);
     }
@@ -91,7 +91,7 @@ public class LevelController extends  BasicController {
     public Respon deleteLevelById(String id) throws SQLException {
         Respon respon = startRespon();
         SysConn.setAutoCommit(false);
-        int count = Delete.deleteDataByPri(SysConn,Level.class.getSimpleName(), id);
+        int count = Delete.deleteDataByPri(SysConn, LevelEntity.class.getSimpleName(), id);
         SysConn.commit();
         return  count == 0 ? respon.responBasicError():respon.ok(count);
     }

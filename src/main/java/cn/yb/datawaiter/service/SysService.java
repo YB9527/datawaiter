@@ -3,8 +3,7 @@ package cn.yb.datawaiter.service;
 import cn.yb.datawaiter.jdbc.JDBCUtils;
 import cn.yb.datawaiter.jdbc.Select;
 import cn.yb.datawaiter.jdbc.SystemConnect;
-import cn.yb.datawaiter.model.Api;
-import cn.yb.datawaiter.model.Param;
+import cn.yb.datawaiter.model.entity.ApiEntity;
 import cn.yb.datawaiter.service.impl.ISysService;
 import cn.yb.datawaiter.tools.Tool;
 import com.alibaba.fastjson.JSONObject;
@@ -27,23 +26,23 @@ public class SysService implements ISysService {
     private Connection SysConn;
 
 
-    public Api findApiByURL(String relativeURL) {
-        String sql = "SELECT * FROM "+Api.class.getSimpleName().toLowerCase()+" WHERE  Concat(Concat(rooturl , '/'), selfURL) ="+ JDBCUtils.sqlStr(relativeURL);
+    public ApiEntity findApiByURL(String relativeURL) {
+        String sql = "SELECT * FROM "+ ApiEntity.class.getSimpleName().toLowerCase()+" WHERE  Concat(Concat(rooturl , '/'), selfURL) ="+ JDBCUtils.sqlStr(relativeURL);
         List<JSONObject> jsons = Select.findDataBySQL(SysConn,sql);
         if(Tool.isEmpty(jsons)){
             return  null;
         }
-        return jsons.get(0).toJavaObject(Api.class);
+        return jsons.get(0).toJavaObject(ApiEntity.class);
     }
 
     @Override
-    public Api findApiByURLAndProjectid(String relativeURL, String projectid) {
+    public ApiEntity findApiByURLAndProjectid(String relativeURL, String projectid) {
 
-        String sql = "SELECT * FROM "+Api.class.getSimpleName().toLowerCase()+" WHERE  projectid= '"+projectid+"' AND Concat(Concat(rooturl , '/'), selfURL) ="+ JDBCUtils.sqlStr(relativeURL);
+        String sql = "SELECT * FROM "+ ApiEntity.class.getSimpleName().toLowerCase()+" WHERE  projectid= '"+projectid+"' AND Concat(Concat(rooturl , '/'), selfURL) ="+ JDBCUtils.sqlStr(relativeURL);
         List<JSONObject> jsons = Select.findDataBySQL(SysConn,sql);
         if(Tool.isEmpty(jsons)){
             return  null;
         }
-        return jsons.get(0).toJavaObject(Api.class);
+        return jsons.get(0).toJavaObject(ApiEntity.class);
     }
 }

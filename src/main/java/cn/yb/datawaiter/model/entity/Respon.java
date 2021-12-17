@@ -1,6 +1,5 @@
-package cn.yb.datawaiter.model;
+package cn.yb.datawaiter.model.entity;
 
-import cn.yb.datawaiter.controller.BasicController;
 import cn.yb.datawaiter.tools.DateTool;
 import lombok.Data;
 

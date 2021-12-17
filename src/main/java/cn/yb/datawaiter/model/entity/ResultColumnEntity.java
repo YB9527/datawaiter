@@ -1,13 +1,12 @@
-package cn.yb.datawaiter.model;
+package cn.yb.datawaiter.model.entity;
 
 import cn.yb.datawaiter.jdbc.model.TableColumn;
 import lombok.Data;
 
-import java.util.List;
 import java.util.UUID;
 
 @Data
-public class ResultColumn {
+public class ResultColumnEntity {
     private String id;
     private String property;
     private String column_;
@@ -22,11 +21,11 @@ public class ResultColumn {
      */
     private String testValue;
 
-    public ResultColumn() {
+    public ResultColumnEntity() {
 
     }
 
-    public ResultColumn(String mapperId, TableColumn tc) {
+    public ResultColumnEntity(String mapperId, TableColumn tc) {
         id = UUID.randomUUID().toString();
         property = "[" + tc.getColumnName() + "]";
         column_ = "";
@@ -34,7 +33,7 @@ public class ResultColumn {
         this.mapperId = mapperId;
     }
 
-    public ResultColumn(String mapperId, String property, String testValue) {
+    public ResultColumnEntity(String mapperId, String property, String testValue) {
         id = UUID.randomUUID().toString();
         this.property = "[" + property + "]";
         column_ = "";

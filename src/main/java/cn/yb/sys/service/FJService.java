@@ -1,8 +1,6 @@
 package cn.yb.sys.service;
 
-import cn.yb.datawaiter.controller.FileController;
 import cn.yb.datawaiter.jdbc.*;
-import cn.yb.datawaiter.model.UploadFile;
 import cn.yb.datawaiter.tools.Tool;
 import cn.yb.sys.model.FJ;
 import cn.yb.sys.service.impl.IFJService;

@@ -2,7 +2,7 @@ package cn.yb.datawaiter.service;
 
 import cn.yb.datawaiter.jdbc.Select;
 import cn.yb.datawaiter.jdbc.SystemConnect;
-import cn.yb.datawaiter.model.Level;
+import cn.yb.datawaiter.model.entity.LevelEntity;
 import cn.yb.datawaiter.service.impl.ILevelService;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,7 @@ public class LevelService  implements ILevelService {
     @Override
     public JSONObject findDataById( String id) {
 
-        return Select.findDataById(SystemConnect.getConn(),Level.class, id);
+        return Select.findDataById(SystemConnect.getConn(), LevelEntity.class, id);
 
     }
 

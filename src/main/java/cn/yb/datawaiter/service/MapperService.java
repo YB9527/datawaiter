@@ -3,8 +3,9 @@ package cn.yb.datawaiter.service;
 import cn.yb.datawaiter.dao.impl.IMapperDao;
 import cn.yb.datawaiter.exception.GlobRuntimeException;
 import cn.yb.datawaiter.jdbc.*;
+import cn.yb.datawaiter.jdbc.Select;
 import cn.yb.datawaiter.jdbc.model.*;
-import cn.yb.datawaiter.model.*;
+import cn.yb.datawaiter.model.entity.*;
 import cn.yb.datawaiter.service.impl.IDatabaseService;
 import cn.yb.datawaiter.service.impl.IMapperService;
 import cn.yb.datawaiter.tools.Tool;
@@ -27,75 +28,75 @@ public class MapperService implements IMapperService {
     private IDatabaseService databaseService;
 
     @Override
-    public List<Mapper> createMapper(String databaseId, Table table, List<AutoCreateMapper> autos) {
+    public List<MapperEntity> createMapper(String databaseId, Table table, List<AutoCreateMapper> autos) {
         if (Tool.isEmpty(databaseId) || table == null || Tool.isEmpty(autos)) {
             return null;
         }
-        List<Mapper> mappers = new ArrayList<>();
+        List<MapperEntity> mapperEntities = new ArrayList<>();
         for (AutoCreateMapper auto : autos) {
-            Mapper mapper = createMapper(databaseId, table, auto);
-            mappers.add(mapper);
+            MapperEntity mapperEntity = createMapper(databaseId, table, auto);
+            mapperEntities.add(mapperEntity);
         }
-        return mappers;
+        return mapperEntities;
     }
 
 
-    private Mapper createMapper(String databaseId, Table table, AutoCreateMapper auto) {
+    private MapperEntity createMapper(String databaseId, Table table, AutoCreateMapper auto) {
         DatabaseConnect databaseConnect = databaseService.findDatabaseConnect(databaseId);
-        Mapper mapper = new Mapper();
+        MapperEntity mapperEntity = new MapperEntity();
         String tableName = table.getName().toLowerCase();
-        mapper.setDatabaseId(databaseId);
-        mapper.setId(UUID.randomUUID().toString());
-        mapper.setTableName(tableName);
-        List<ResultColumn> resultColumns = new ArrayList<>();
+        mapperEntity.setDatabaseId(databaseId);
+        mapperEntity.setId(UUID.randomUUID().toString());
+        mapperEntity.setTableName(tableName);
+        List<ResultColumnEntity> resultColumnEntities = new ArrayList<>();
         String sql = "";
-        String mapperId = mapper.getId();
+        String mapperId = mapperEntity.getId();
         TableColumn pri = table.getColumns().get(table.getPrimaryIndex());
         List<ResultColumnCUD> cuds = new ArrayList<>();
-        cuds.add(new ResultColumnCUD(mapper));
-        mapper.setResultColumnCUDs(cuds);
+        cuds.add(new ResultColumnCUD(mapperEntity));
+        mapperEntity.setResultColumnCUDs(cuds);
         switch (auto) {
             case SelectById:
                 sql = "SELECT " + "*" + " FROM " + tableName + " WHERE " + pri.getColumnName() + " = [" + pri.getColumnName() + "]";
-                mapper.setCrud(MapperCreateEnum.SELECT);
-                resultColumns.add(new ResultColumn(mapperId, pri));
-                mapper.setLabel("查找根据ID");
+                mapperEntity.setCrud(MapperCreateEnum.SELECT);
+                resultColumnEntities.add(new ResultColumnEntity(mapperId, pri));
+                mapperEntity.setLabel("查找根据ID");
                 break;
             case SelectAll:
                 sql = "SELECT " + "*" + " FROM " + tableName;
-                mapper.setCrud(MapperCreateEnum.SELECT);
-                mapper.setLabel("查找所有");
+                mapperEntity.setCrud(MapperCreateEnum.SELECT);
+                mapperEntity.setLabel("查找所有");
                 break;
             case SelectCount:
                 sql = "SELECT COUNT(*) as count FROM " + tableName;
-                mapper.setCrud(MapperCreateEnum.SELECT);
-                mapper.setLabel("查找总条目数");
+                mapperEntity.setCrud(MapperCreateEnum.SELECT);
+                mapperEntity.setLabel("查找总条目数");
                 break;
             case SelectPagination:
 
                 sql = getSelectPaginationSQL(databaseConnect, tableName);
-                mapper.setCrud(MapperCreateEnum.SELECT);
-                resultColumns.add(new ResultColumn(mapperId,"START", "0"));
-                resultColumns.add(new ResultColumn(mapperId,"END", "10"));
-                mapper.setLabel("查找分页");
+                mapperEntity.setCrud(MapperCreateEnum.SELECT);
+                resultColumnEntities.add(new ResultColumnEntity(mapperId,"START", "0"));
+                resultColumnEntities.add(new ResultColumnEntity(mapperId,"END", "10"));
+                mapperEntity.setLabel("查找分页");
                 break;
             case DeleteByPo:
-                mapper.setCrud(MapperCreateEnum.EDIT);
+                mapperEntity.setCrud(MapperCreateEnum.EDIT);
 
-                mapper.setLabel("删除根据对象");
+                mapperEntity.setLabel("删除根据对象");
                 break;
             case SavePo:
-                mapper.setCrud(MapperCreateEnum.EDIT);
-                mapper.setLabel("添加对象");
+                mapperEntity.setCrud(MapperCreateEnum.EDIT);
+                mapperEntity.setLabel("添加对象");
                 break;
             case UpdatePo:
-                mapper.setCrud(MapperCreateEnum.EDIT);
-                mapper.setLabel("修改对象");
+                mapperEntity.setCrud(MapperCreateEnum.EDIT);
+                mapperEntity.setLabel("修改对象");
                 break;
         }
-        mapper.setResultColumns(resultColumns);
-        mapper.setSql_(sql);
-        return mapper;
+        mapperEntity.setResultColumnEntities(resultColumnEntities);
+        mapperEntity.setSql_(sql);
+        return mapperEntity;
     }
     public static String getSelectPaginationSQL(DatabaseConnect databaseConnect, String tableName) {
         DatabaseEnum databaseEnum = databaseConnect.getDatabaseEnum();
@@ -109,23 +110,23 @@ public class MapperService implements IMapperService {
         }
     }
     @Override
-    public int saveMappers(List<Mapper> mappers) {
+    public int saveMappers(List<MapperEntity> mapperEntities) {
         int count = 0;
         try {
             Connection conn = SystemConnect.getConn();
             conn.setAutoCommit(false);
-            List<ResultColumn> rcs = new ArrayList<>();
+            List<ResultColumnEntity> rcs = new ArrayList<>();
             List<ResultColumnCUD> cuds = new ArrayList<>();
 
-            for (Mapper mapper : mappers) {
-                if (!Tool.isEmpty(mapper.getResultColumns())) {
-                    rcs.addAll(mapper.getResultColumns());
+            for (MapperEntity mapperEntity : mapperEntities) {
+                if (!Tool.isEmpty(mapperEntity.getResultColumnEntities())) {
+                    rcs.addAll(mapperEntity.getResultColumnEntities());
                 }
-                if (!Tool.isEmpty(mapper.getResultColumnCUDs())) {
-                    cuds.addAll(mapper.getResultColumnCUDs());
+                if (!Tool.isEmpty(mapperEntity.getResultColumnCUDs())) {
+                    cuds.addAll(mapperEntity.getResultColumnCUDs());
                 }
             }
-            count = Insert.insertManyPos(conn, mappers);
+            count = Insert.insertManyPos(conn, mapperEntities);
             Insert.insertManyPos(conn, rcs);
             Insert.insertManyPos(conn, cuds);
             conn.commit();
@@ -146,63 +147,63 @@ public class MapperService implements IMapperService {
     }
 
     @Override
-    public List<Mapper> findMappersByDatabaseIdAndTableName(String databaseId, String tableName) {
+    public List<MapperEntity> findMappersByDatabaseIdAndTableName(String databaseId, String tableName) {
         String sql = "SELECT *  FROM mapper WHERE databaseConnectId = " + JDBCUtils.sqlStr(databaseId) +
                 " AND tableName=" + JDBCUtils.sqlStr(tableName);
-        List<Mapper> list = Select.findDataBySQL(SystemConnect.getConn(), sql, Mapper.class);
+        List<MapperEntity> list = Select.findDataBySQL(SystemConnect.getConn(), sql, MapperEntity.class);
         return list;
     }
 
     @Override
-    public Mapper findMapperById(String id) {
-        Mapper mapper = Select.findDataById2Po(SystemConnect.getConn(), Mapper.class, id);
-        if (mapper == null) {
+    public MapperEntity findMapperById(String id) {
+        MapperEntity mapperEntity = Select.findDataById2Po(SystemConnect.getConn(), MapperEntity.class, id);
+        if (mapperEntity == null) {
             return null;
         }
-        List<ResultColumn> list = findResultColumnByMapperId(id);
-        mapper.setResultColumns(list);
-        return mapper;
+        List<ResultColumnEntity> list = findResultColumnByMapperId(id);
+        mapperEntity.setResultColumnEntities(list);
+        return mapperEntity;
     }
 
-    private List<ResultColumn> findResultColumnByMapperId(String id) {
-        String selectResultColumnSQL = "SELECT * FROM " + ResultColumn.class.getSimpleName().toLowerCase() + " WHERE mapperId = " + JDBCUtils.sqlStr(id);
-        List<ResultColumn> list = Select.findDataBySQL(SystemConnect.getConn(), selectResultColumnSQL, ResultColumn.class);
+    private List<ResultColumnEntity> findResultColumnByMapperId(String id) {
+        String selectResultColumnSQL = "SELECT * FROM " + ResultColumnEntity.class.getSimpleName().toLowerCase() + " WHERE mapperId = " + JDBCUtils.sqlStr(id);
+        List<ResultColumnEntity> list = Select.findDataBySQL(SystemConnect.getConn(), selectResultColumnSQL, ResultColumnEntity.class);
         return list;
     }
 
     @Override
-    public int editMapper(Mapper mapper) {
+    public int editMapper(MapperEntity mapperEntity) {
         Connection conn = SystemConnect.getConn();
         try {
             conn.setAutoCommit(false);//开启事务
 
-            String tableName = Mapper.class.getSimpleName().toLowerCase();
-            String sql = mapper.getSql_().replace("\"", "'");
-            mapper.setSql_(sql);
-            JSONObject dbPo = Select.findDataById(conn, tableName, mapper.getId());
-            List<ResultColumn> resultColumns = mapper.getResultColumns();
-            List<ResultColumnCUD> resultColumnCUDs = mapper.getResultColumnCUDs();
+            String tableName = MapperEntity.class.getSimpleName().toLowerCase();
+            String sql = mapperEntity.getSql_().replace("\"", "'");
+            mapperEntity.setSql_(sql);
+            JSONObject dbPo = Select.findDataById(conn, tableName, mapperEntity.getId());
+            List<ResultColumnEntity> resultColumnEntities = mapperEntity.getResultColumnEntities();
+            List<ResultColumnCUD> resultColumnCUDs = mapperEntity.getResultColumnCUDs();
 
-            String mapperId = mapper.getId();
-            for (ResultColumn rc : resultColumns) {
+            String mapperId = mapperEntity.getId();
+            for (ResultColumnEntity rc : resultColumnEntities) {
                 rc.setMapperId(mapperId);
             }
-            clearNullData(resultColumns);
+            clearNullData(resultColumnEntities);
             int count;
             if (dbPo == null) {
                 //保存
-                count = Insert.insertPo(conn, mapper);
+                count = Insert.insertPo(conn, mapperEntity);
             } else {
                 //编辑
-                count = Update.updateDataPo(conn, mapper);
-                Delete.deleteByColoumnAndValues(conn, ResultColumn.class.getSimpleName().toLowerCase(), "mapperId", new String[]{mapper.getId()});
+                count = Update.updateDataPo(conn, mapperEntity);
+                Delete.deleteByColoumnAndValues(conn, ResultColumnEntity.class.getSimpleName().toLowerCase(), "mapperId", new String[]{mapperEntity.getId()});
             }
             if (resultColumnCUDs != null) {
-                Delete.deleteByColoumnAndValues(conn, ResultColumnCUD.class.getSimpleName().toLowerCase(), "mapperId", new String[]{mapper.getId()});
+                Delete.deleteByColoumnAndValues(conn, ResultColumnCUD.class.getSimpleName().toLowerCase(), "mapperId", new String[]{mapperEntity.getId()});
                 List<ResultColumnCUD> all = findResultColumnCUDAll(resultColumnCUDs);
                 Insert.insertManyPos(conn, all);
             }
-            int count2 = Insert.insertManyPos(conn, resultColumns);
+            int count2 = Insert.insertManyPos(conn, resultColumnEntities);
             conn.commit();
             return count;
         } catch (Exception e) {
@@ -233,25 +234,25 @@ public class MapperService implements IMapperService {
         }
     }
 
-    private void clearNullData(List<ResultColumn> resultColumns) {
-        for (int i = 0; i < resultColumns.size(); i++) {
-            ResultColumn rc = resultColumns.get(i);
+    private void clearNullData(List<ResultColumnEntity> resultColumnEntities) {
+        for (int i = 0; i < resultColumnEntities.size(); i++) {
+            ResultColumnEntity rc = resultColumnEntities.get(i);
             if (rc == null || rc.getProperty() == null || rc.getPoRelation() == null || rc.getMapperId() == null) {
-                resultColumns.remove(i);
+                resultColumnEntities.remove(i);
                 i--;
             }
         }
     }
 
     @Override
-    public int deleteMapper(Mapper mapper) {
+    public int deleteMapper(MapperEntity mapperEntity) {
         int count = 0;
         try {
             Connection conn = SystemConnect.getConn();
             conn.setAutoCommit(false);//开启事务
-            Delete.deleteDataByPri(conn, Mapper.class.getSimpleName().toLowerCase(), mapper.getId());
-            List<ResultColumn> resultColumns = mapper.getResultColumns();
-            count = Delete.deleteDataByPri(conn, resultColumns);
+            Delete.deleteDataByPri(conn, MapperEntity.class.getSimpleName().toLowerCase(), mapperEntity.getId());
+            List<ResultColumnEntity> resultColumnEntities = mapperEntity.getResultColumnEntities();
+            count = Delete.deleteDataByPri(conn, resultColumnEntities);
             conn.commit();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -260,11 +261,11 @@ public class MapperService implements IMapperService {
     }
 
     @Override
-    public List<Mapper> findMappersByDatabaseId(String databaseId) {
+    public List<MapperEntity> findMappersByDatabaseId(String databaseId) {
         String sql = "SELECT *  FROM mapper WHERE databaseId = " + JDBCUtils.sqlStr(databaseId);
-        List<Mapper> list = Select.findDataBySQL(SystemConnect.getConn(), sql, Mapper.class);
-        for (Mapper mapper : list) {
-            mapper.setResultColumns(findResultColumnByMapperId(mapper.getId()));
+        List<MapperEntity> list = Select.findDataBySQL(SystemConnect.getConn(), sql, MapperEntity.class);
+        for (MapperEntity mapperEntity : list) {
+            mapperEntity.setResultColumnEntities(findResultColumnByMapperId(mapperEntity.getId()));
         }
         return list;
     }
@@ -330,9 +331,9 @@ public class MapperService implements IMapperService {
     }
 
     @Override
-    public int handelData(CRUDEnum crud, Mapper mapper, Map<String, String> dataMap) {
+    public int handelData(CRUDEnum crud, MapperEntity mapperEntity, Map<String, String> dataMap) {
         JSONObject jsonObject =  JSONObject.parseObject(JSONObject.toJSONString(dataMap));
-        return   handelData(crud, mapper, jsonObject);
+        return   handelData(crud, mapperEntity, jsonObject);
        /* Map<String, List<JSONObject>> tableMap = new HashMap<>();
 
         List<ResultColumnCUD> resultColumns = findResultColumnCUDByMapperId(mapper.getId());
@@ -370,17 +371,17 @@ public class MapperService implements IMapperService {
     }
 
     @Override
-    public int handelData(CRUDEnum crud, Mapper mapper, JSONObject jsonObject) {
+    public int handelData(CRUDEnum crud, MapperEntity mapperEntity, JSONObject jsonObject) {
 
         Map<String, List<JSONObject>> tableMap = new HashMap<>();
 
-        List<ResultColumnCUD> resultColumns = findResultColumnCUDByMapperId(mapper.getId());
+        List<ResultColumnCUD> resultColumns = findResultColumnCUDByMapperId(mapperEntity.getId());
         if (resultColumns != null) {
             for (ResultColumnCUD resultColumn : resultColumns) {
                 handelData(tableMap, resultColumn, jsonObject);
             }
         }
-        Connection conn = Connect.getSQLConnection(mapper.getDatabaseId());
+        Connection conn = Connect.getSQLConnection(mapperEntity.getDatabaseId());
         try {
             conn.setAutoCommit(false);//开启事务
             int count = 0;

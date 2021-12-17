@@ -1,8 +1,7 @@
 package cn.yb.datawaiter.service.impl;
 
-import cn.yb.datawaiter.model.Api;
-import cn.yb.datawaiter.model.Mapper;
-import cn.yb.datawaiter.model.Param;
+import cn.yb.datawaiter.model.entity.ApiEntity;
+import cn.yb.datawaiter.model.entity.MapperEntity;
 import com.alibaba.fastjson.JSONObject;
 
 import java.util.List;
@@ -14,14 +13,14 @@ public interface IDatawaiterService {
 
     /**
      *通过mapper 查询数据
-     * @param mapper
+     * @param mapperEntity
      * @return
      */
-    List<JSONObject> findDataByMapper(Mapper mapper);
+    List<JSONObject> findDataByMapper(MapperEntity mapperEntity);
 
 
-    List<JSONObject> findDataByMapper(Api api, Map<String, String> paramMap);
+    List<JSONObject> findDataByMapper(ApiEntity apiEntity, Map<String, String> paramMap);
 
-    int handleData(Api api, Map<String, String> paramMap);
-    int handleData(Api api, JSONObject jsonObject);
+    int handleData(ApiEntity apiEntity, Map<String, String> paramMap);
+    int handleData(ApiEntity apiEntity, JSONObject jsonObject);
 }

@@ -1,4 +1,4 @@
-package cn.yb.datawaiter.model;
+package cn.yb.datawaiter.model.entity;
 
 import lombok.Data;
 
@@ -26,10 +26,10 @@ public class ResultColumnCUD {
 
     }
 
-    public ResultColumnCUD(Mapper mapper) {
+    public ResultColumnCUD(MapperEntity mapperEntity) {
         this.id = UUID.randomUUID().toString();
-        this.property = mapper.getTableName();
-        this.tableName =  mapper.getTableName();
-        this.mapperId = mapper.getId();
+        this.property = mapperEntity.getTableName();
+        this.tableName =  mapperEntity.getTableName();
+        this.mapperId = mapperEntity.getId();
     }
 }

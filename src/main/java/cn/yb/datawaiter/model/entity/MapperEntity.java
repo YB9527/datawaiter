@@ -1,12 +1,11 @@
-package cn.yb.datawaiter.model;
+package cn.yb.datawaiter.model.entity;
 
-import cn.yb.datawaiter.jdbc.model.CRUDEnum;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
-public class Mapper {
+public class MapperEntity {
     private String id;
     private  String apiId;
     private String label;
@@ -14,6 +13,6 @@ public class Mapper {
     private MapperCreateEnum crud;
     private String databaseId;
     private  String tableName;
-    private List<ResultColumn> resultColumns;
+    private List<ResultColumnEntity> resultColumnEntities;
     private List<ResultColumnCUD> resultColumnCUDs;
 }

@@ -1,7 +1,5 @@
 package cn.yb.autopage.model;
 
-import cn.yb.datawaiter.model.Api;
-
 import java.util.List;
 
 public class Table {

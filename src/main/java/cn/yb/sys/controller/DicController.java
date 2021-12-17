@@ -3,15 +3,10 @@ package cn.yb.sys.controller;
 import cn.yb.datawaiter.controller.BasicController;
 import cn.yb.datawaiter.jdbc.*;
 import cn.yb.datawaiter.jdbc.model.Field;
-import cn.yb.datawaiter.jdbc.model.FieldDic;
-import cn.yb.datawaiter.model.Respon;
-import cn.yb.datawaiter.tools.ReflectTool;
+import cn.yb.datawaiter.model.entity.Respon;
 import cn.yb.sys.model.Dic;
 import cn.yb.sys.model.ProjectDic;
 import cn.yb.sys.service.impl.IDicService;
-import cn.yb.sys.service.impl.IFieldService;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,10 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.sql.Connection;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static cn.yb.datawaiter.jdbc.Select.getSQL;

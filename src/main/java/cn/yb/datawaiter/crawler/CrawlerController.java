@@ -1,24 +1,11 @@
 package cn.yb.datawaiter.crawler;
 
 import cn.yb.datawaiter.controller.BasicController;
-import cn.yb.datawaiter.exception.GlobRuntimeException;
 import cn.yb.datawaiter.jdbc.*;
-import cn.yb.datawaiter.jdbc.model.Column;
-import cn.yb.datawaiter.jdbc.model.DatabaseConnect;
-import cn.yb.datawaiter.jdbc.model.TableColumn;
-import cn.yb.datawaiter.model.Api;
-import cn.yb.datawaiter.model.Param;
-import cn.yb.datawaiter.model.Respon;
-import cn.yb.datawaiter.service.impl.IDatawaiterService;
-import cn.yb.datawaiter.tools.FileTool;
-import cn.yb.datawaiter.tools.Tool;
-import com.alibaba.fastjson.JSONArray;
+import cn.yb.datawaiter.model.entity.Respon;
 import com.alibaba.fastjson.JSONObject;
 import okhttp3.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,7 +13,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.*;
 

@@ -2,33 +2,28 @@ package cn.yb.sys.controller;
 
 import cn.yb.datawaiter.controller.BasicController;
 import cn.yb.datawaiter.controller.IDataController;
-import cn.yb.datawaiter.controller.query.QueryBase;
-import cn.yb.datawaiter.jdbc.Connect;
-import cn.yb.datawaiter.jdbc.Select;
-import cn.yb.datawaiter.jdbc.Update;
-import cn.yb.datawaiter.jdbc.model.SelectBuild;
-import cn.yb.datawaiter.jdbc.model.Table;
-import cn.yb.datawaiter.model.Mapper;
-import cn.yb.datawaiter.model.Respon;
+import cn.yb.datawaiter.model.entity.Respon;
+import cn.yb.datawaiter.model.query.QueryBase;
 import cn.yb.datawaiter.tools.Tool;
 import cn.yb.sys.model.Project;
 import cn.yb.sys.model.ProjectVo;
-import cn.yb.sys.service.impl.IFieldService;
 import cn.yb.sys.service.impl.IProjectService;
 import com.alibaba.fastjson.JSONObject;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/* 类注解 */
+@Api(value = "desc of class")
 @Controller
 @RestController
 @RequestMapping(value = "/project")
-public class ProjectController extends BasicController  implements IDataController {
+public class ProjectController extends BasicController  implements IDataController<String,String,QueryBase> {
     @Autowired
     private IProjectService projectService;
 
@@ -54,8 +49,8 @@ public class ProjectController extends BasicController  implements IDataControll
         }
         return respon.responError("保存失败");
     }
-    @RequestMapping(value = "/findById")
-    public Respon findById(String id) {
+    @GetMapping(value = "/findById")
+    public Respon findById(@ApiParam(value = "根据ID查找" , required=true )String id) {
         return  findDataById(id);
     }
 
@@ -67,19 +62,21 @@ public class ProjectController extends BasicController  implements IDataControll
         return respon.ok(projectService.findById(id));
     }
 
-    @RequestMapping(value = "/findall")
-    public Respon findAll(@RequestBody QueryBase data) {
+
+
+    @ApiOperation(value = "desc of metho多少发多少d", notes = "实打实")
+    @PostMapping(value = "/findall")
+    public Respon findAll(@ApiParam(value = "QueryBase参数" , required=true )  @RequestBody QueryBase data) {
         Respon respon = startRespon();
 
-        return respon.ok(projectService.findAll(data.searchkey));
+        return respon.ok(projectService.findAll(data.getSearchkey()));
     }
-
 
     /**
      * 查询项目所有的表格
      * @return
      */
-    @RequestMapping(value = "/findalltablebyprojectid")
+    @GetMapping(value = "/findalltablebyprojectid")
     public Respon findalltablebyprojectid(String projectid) {
         Respon respon = startRespon();
         //List<Table> tables =  projectService.findAllTable(projectid);
@@ -91,11 +88,12 @@ public class ProjectController extends BasicController  implements IDataControll
 
     public Respon findTotal(@RequestBody QueryBase data){
         Respon respon = startRespon();
-        int count = projectService.findTotal(data.searchkey);
+        int count = projectService.findTotal(data.getSearchkey());
         return respon.ok(count);
     }
 
-    public Respon findPageData(@RequestBody QueryBase data){
+
+    public Respon findDataPage(@RequestBody QueryBase data){
         Respon respon = startRespon();
         List<ProjectVo> list = projectService.findPageData(data);
         return respon.ok(list);
@@ -105,6 +103,8 @@ public class ProjectController extends BasicController  implements IDataControll
     public Respon findDataAll(@RequestBody QueryBase data) {
         return findAll(data);
     }
+
+
 
     public  Respon updateData(@RequestBody String data) {
         Respon respon = startRespon();
@@ -123,7 +123,9 @@ public class ProjectController extends BasicController  implements IDataControll
     }
 
     @Override
-    public Respon deleteData(Object data) {
+    public Respon deleteData(String data) {
         return null;
     }
+
+
 }

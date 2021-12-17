@@ -1,7 +1,7 @@
 package cn.yb.sys.service.impl;
 
-import cn.yb.datawaiter.controller.query.QueryBase;
 import cn.yb.datawaiter.jdbc.model.Table;
+import cn.yb.datawaiter.model.query.QueryBase;
 import cn.yb.sys.model.Project;
 import cn.yb.sys.model.ProjectVo;
 import com.alibaba.fastjson.JSONObject;

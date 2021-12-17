@@ -1,6 +1,5 @@
-package cn.yb.datawaiter.model;
+package cn.yb.datawaiter.model.entity;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import lombok.Data;
 

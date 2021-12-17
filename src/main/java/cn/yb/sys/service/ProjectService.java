@@ -1,10 +1,10 @@
 package cn.yb.sys.service;
 
-import cn.yb.datawaiter.controller.query.QueryBase;
 import cn.yb.datawaiter.jdbc.*;
 import cn.yb.datawaiter.jdbc.model.DatabaseConnect;
 import cn.yb.datawaiter.jdbc.model.SelectBuild;
 import cn.yb.datawaiter.jdbc.model.Table;
+import cn.yb.datawaiter.model.query.QueryBase;
 import cn.yb.datawaiter.tools.Tool;
 import cn.yb.sys.model.Project;
 import cn.yb.sys.model.ProjectVo;
@@ -129,12 +129,12 @@ public class ProjectService implements IProjectService {
 
         SelectBuild selectBuild =SelectBuild
                 .newInstance(Project.class);
-        if(!Tool.isEmpty(data.searchkey)){
+        if(!Tool.isEmpty(data.getSearchkey())){
             selectBuild
-                    .setWhereFiled(" name LIKE ","%"+data.searchkey+"%");
+                    .setWhereFiled(" name LIKE ","%"+data.getSearchkey()+"%");
         }
 
-        return selectBuild.setLimit(data.pagenum,data.pagecount).build(getSysConnection(),ProjectVo.class);
+        return selectBuild.setLimit(data.getPagenum(),data.getPagecount()).build(getSysConnection(),ProjectVo.class);
     }
 
     @Override

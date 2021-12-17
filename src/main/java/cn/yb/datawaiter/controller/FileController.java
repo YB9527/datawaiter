@@ -1,21 +1,15 @@
 package cn.yb.datawaiter.controller;
 
-import cn.yb.datawaiter.exception.GlobRuntimeException;
 import cn.yb.datawaiter.jdbc.*;
 import cn.yb.datawaiter.jdbc.model.Column;
 import cn.yb.datawaiter.jdbc.model.DatabaseConnect;
 import cn.yb.datawaiter.jdbc.model.DatabaseEnum;
-import cn.yb.datawaiter.model.Api;
-import cn.yb.datawaiter.model.Respon;
-import cn.yb.datawaiter.model.UploadFile;
-import cn.yb.datawaiter.service.impl.IApiService;
-import cn.yb.datawaiter.service.impl.IDatawaiterService;
+import cn.yb.datawaiter.model.entity.Respon;
+import cn.yb.datawaiter.model.entity.UploadFileEntity;
 import cn.yb.datawaiter.tools.Tool;
 import com.alibaba.fastjson.JSONObject;
-import com.zaxxer.hikari.util.FastList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +19,6 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
-import java.net.*;
 import java.sql.*;
 import java.util.*;
 
@@ -95,8 +88,8 @@ public class FileController extends BasicController {
         List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("file");
         // List<String> dirs = null;
         //String dir = null;
-        List<UploadFile> uploadFiles = new ArrayList<>();
-        UploadFile uploadFile = null;
+        List<UploadFileEntity> uploadFileEntities = new ArrayList<>();
+        UploadFileEntity uploadFileEntity = null;
         if (files.isEmpty()) {
             return respon.responError("上传失败，请选择文件");
         }
@@ -122,13 +115,13 @@ public class FileController extends BasicController {
                 if(fileName.contains(".")){
                     suffix = fileName.substring(fileName.lastIndexOf(".")+1);
                 }
-                uploadFile = new UploadFile('/'+selfDir + fileName,suffix);
-                uploadFile.setId(uuid);
-                uploadFiles.add(uploadFile);
+                uploadFileEntity = new UploadFileEntity('/'+selfDir + fileName,suffix);
+                uploadFileEntity.setId(uuid);
+                uploadFileEntities.add(uploadFileEntity);
                 file.transferTo(dest);
                 //System.out.println("path:"+dest.getAbsolutePath());
             }
-            return respon.ok(uploadFiles);
+            return respon.ok(uploadFileEntities);
         } catch (IOException e) {
             LOGGER.error(e.toString(), e);
         }

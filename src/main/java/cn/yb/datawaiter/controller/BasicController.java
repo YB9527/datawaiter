@@ -1,29 +1,18 @@
 package cn.yb.datawaiter.controller;
 
-import cn.yb.datawaiter.controller.query.QueryBase;
-import cn.yb.datawaiter.exception.GlobRuntimeException;
-import cn.yb.datawaiter.jdbc.Connect;
 import cn.yb.datawaiter.jdbc.SystemConnect;
-import cn.yb.datawaiter.model.Respon;
-import cn.yb.datawaiter.model.ResponTotal;
+import cn.yb.datawaiter.model.entity.Respon;
+import cn.yb.datawaiter.model.entity.ResponTotal;
 import cn.yb.datawaiter.service.impl.ISysService;
-import cn.yb.datawaiter.tools.JSONTool;
 import cn.yb.datawaiter.tools.Tool;
-import cn.yb.sys.model.Project;
-import cn.yb.sys.model.ProjectVo;
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 
 import java.sql.Connection;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 public  class BasicController {
 

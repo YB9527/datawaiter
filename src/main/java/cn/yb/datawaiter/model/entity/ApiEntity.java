@@ -1,13 +1,12 @@
-package cn.yb.datawaiter.model;
+package cn.yb.datawaiter.model.entity;
 
 import cn.yb.datawaiter.jdbc.model.CRUDEnum;
 import lombok.Data;
 
 import java.util.Date;
-import java.util.List;
 
 @Data
-public class Api {
+public class ApiEntity {
     private String id;
     /**
      * 数据库连接的id
@@ -47,7 +46,7 @@ public class Api {
     private String projectid;
 
     private  String mapperId;
-    private  Mapper mapper;
+    private MapperEntity mapperEntity;
     private Date date;
 
 }

@@ -1,4 +1,4 @@
-package cn.yb.datawaiter.model;
+package cn.yb.datawaiter.model.entity;
 
 import lombok.Data;
 
@@ -6,7 +6,7 @@ import lombok.Data;
  * 层级管理
  */
 @Data
-public class Level {
+public class LevelEntity {
     public static String LEVEL_TYPENAME_API = "项目树";
     public static String LEVEL_TYPENAME_BEAN = "Bean配置树";
     private  String id;

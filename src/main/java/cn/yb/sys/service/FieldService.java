@@ -4,8 +4,6 @@ import cn.yb.datawaiter.jdbc.*;
 import cn.yb.datawaiter.jdbc.model.Field;
 import cn.yb.datawaiter.jdbc.model.FieldDic;
 import cn.yb.datawaiter.jdbc.model.SelectBuild;
-import cn.yb.datawaiter.model.UploadFile;
-import cn.yb.datawaiter.service.impl.IFileService;
 import cn.yb.datawaiter.tools.Tool;
 import cn.yb.sys.service.impl.IFieldService;
 import com.alibaba.fastjson.JSONObject;

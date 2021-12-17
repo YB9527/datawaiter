@@ -1,11 +1,8 @@
 package cn.yb.datawaiter.service.impl;
 
-import cn.yb.datawaiter.model.Api;
-import cn.yb.datawaiter.model.Param;
-
-import java.util.List;
+import cn.yb.datawaiter.model.entity.ApiEntity;
 
 public interface ISysService {
 
-    Api findApiByURLAndProjectid(String relative,String projectid);
+    ApiEntity findApiByURLAndProjectid(String relative, String projectid);
 }

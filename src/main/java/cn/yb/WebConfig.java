@@ -1,7 +1,7 @@
 package cn.yb;
 
 import cn.yb.datawaiter.tools.Tool;
-import cn.yb.interceptor.AuthInterceptor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -21,7 +21,7 @@ import java.util.Map;
  * 跨域配置
  */
 @Configuration
-public class CorsConfig implements WebMvcConfigurer {
+public class WebConfig implements WebMvcConfigurer {
 
 /*
     @Bean
@@ -49,21 +49,10 @@ public class CorsConfig implements WebMvcConfigurer {
         config.addAllowedHeader("*");
         UrlBasedCorsConfigurationSource configSource = new UrlBasedCorsConfigurationSource();
         configSource.registerCorsConfiguration("/**", config);
+//        configSource.r
         return new CorsFilter(configSource);
     }
-    @Bean
-    public AuthInterceptor initAuthInterceptor(){
-        return new AuthInterceptor();
-    }
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(initAuthInterceptor())
-                .excludePathPatterns("/database/**")
-                .excludePathPatterns("/sys/**")
-                .excludePathPatterns("/project/**")
-                .excludePathPatterns("/user/**")
-                .excludePathPatterns("/image/**");
-    }
+
 
 
     private String uploadDir;

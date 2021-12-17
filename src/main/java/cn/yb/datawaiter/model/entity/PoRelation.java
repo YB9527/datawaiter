@@ -1,19 +1,18 @@
-package cn.yb.datawaiter.model;
+package cn.yb.datawaiter.model.entity;
 
-import lombok.Data;
+/**
+ * 对象之间关系
+ */
+public enum PoRelation {
 
-
-public enum AccessState {
-    Normal("Normal","正常"),
-    NotStart("NotStart","未开始" ),
-
-    Stop("Stop","停止使用"),
-    Exception("Exception","异常");
+    no ("no","无"),
+    association ("association","一对一"),
+    collection ("collection","一对多" );
 
     public String label;
     public String id;
     // 构造方法
-     private AccessState(String id, String label) {
+    private PoRelation(String id, String label) {
         this.id = id;
         this.label = label;
     }

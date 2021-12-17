@@ -1,13 +1,19 @@
-package cn.yb.datawaiter.model;
+package cn.yb.datawaiter.model.entity;
 
-public enum MapperCreateEnum {
-    SELECT("SELECT","查询"),
-    EDIT("EDIT","编辑");
+import lombok.Data;
 
-    public String id;
+
+public enum AccessState {
+    Normal("Normal","正常"),
+    NotStart("NotStart","未开始" ),
+
+    Stop("Stop","停止使用"),
+    Exception("Exception","异常");
+
     public String label;
+    public String id;
     // 构造方法
-    private MapperCreateEnum(String id, String label) {
+     private AccessState(String id, String label) {
         this.id = id;
         this.label = label;
     }

@@ -1,20 +1,14 @@
 package cn.yb.datawaiter.jdbc;
 
-import cn.yb.auth.model.User;
 import cn.yb.datawaiter.exception.GlobRuntimeException;
 import cn.yb.datawaiter.jdbc.model.Column;
-import cn.yb.datawaiter.jdbc.model.DatabaseConnect;
-import cn.yb.datawaiter.jdbc.model.DatabaseEnum;
-import cn.yb.datawaiter.model.Mapper;
 import cn.yb.datawaiter.tools.Tool;
-import cn.yb.sys.model.Project;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 

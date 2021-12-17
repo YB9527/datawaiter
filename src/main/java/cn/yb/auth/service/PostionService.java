@@ -1,22 +1,18 @@
 package cn.yb.auth.service;
 
 import cn.yb.auth.model.Position;
-import cn.yb.auth.model.User;
 import cn.yb.auth.service.impl.IPositionService;
 import cn.yb.datawaiter.jdbc.Delete;
 import cn.yb.datawaiter.jdbc.JDBCUtils;
 import cn.yb.datawaiter.jdbc.Select;
 import cn.yb.datawaiter.jdbc.SystemConnect;
 import cn.yb.datawaiter.jdbc.model.SelectBuild;
-import cn.yb.datawaiter.model.Condition;
-import com.alibaba.fastjson.JSONObject;
-import org.omg.PortableInterceptor.USER_EXCEPTION;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
+
 @Service
 public class PostionService implements IPositionService {
     @Override

@@ -2,33 +2,30 @@ package cn.yb.datawaiter.service.impl;
 
 import cn.yb.datawaiter.jdbc.model.CRUDEnum;
 import cn.yb.datawaiter.jdbc.model.Table;
-import cn.yb.datawaiter.model.Api;
-import cn.yb.datawaiter.model.AutoCreateMapper;
-import cn.yb.datawaiter.model.Mapper;
-import cn.yb.datawaiter.model.ResultColumnCUD;
+import cn.yb.datawaiter.model.entity.AutoCreateMapper;
+import cn.yb.datawaiter.model.entity.MapperEntity;
+import cn.yb.datawaiter.model.entity.ResultColumnCUD;
 import com.alibaba.fastjson.JSONObject;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
 public interface IMapperService {
-    List<Mapper> createMapper(String databaseId, Table table, List<AutoCreateMapper> autos);
+    List<MapperEntity> createMapper(String databaseId, Table table, List<AutoCreateMapper> autos);
 
-    int saveMappers(List<Mapper> mappers);
+    int saveMappers(List<MapperEntity> mapperEntities);
 
-    List<Mapper> findMappersByDatabaseIdAndTableName(String databaseId, String tableName);
+    List<MapperEntity> findMappersByDatabaseIdAndTableName(String databaseId, String tableName);
     List<JSONObject> findMappersByDatabaseIdAndTableNameAndCount(String databaseId, String tableName);
 
-    Mapper findMapperById(String id);
+    MapperEntity findMapperById(String id);
 
 
-    int editMapper(Mapper mapper);
+    int editMapper(MapperEntity mapperEntity);
 
-    int deleteMapper(Mapper mapper) ;
+    int deleteMapper(MapperEntity mapperEntity) ;
 
-    List<Mapper> findMappersByDatabaseId(String databaseId);
+    List<MapperEntity> findMappersByDatabaseId(String databaseId);
 
     int editResultColumnCUD(ResultColumnCUD resultColumnCUD);
 
@@ -36,11 +33,11 @@ public interface IMapperService {
 
     /**
      * 处理数据
-     * @param mapper
+     * @param mapperEntity
      * @param paramMap
      * @return
      */
-    int handelData(CRUDEnum crud, Mapper mapper, Map<String, String> paramMap);
-    int handelData(CRUDEnum crud, Mapper mapper,JSONObject jsonObject);
+    int handelData(CRUDEnum crud, MapperEntity mapperEntity, Map<String, String> paramMap);
+    int handelData(CRUDEnum crud, MapperEntity mapperEntity, JSONObject jsonObject);
 
 }

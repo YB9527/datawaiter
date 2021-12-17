@@ -1,17 +1,13 @@
 package cn.yb.datawaiter.controller;
 
 import cn.yb.datawaiter.exception.GlobRuntimeException;
-import cn.yb.datawaiter.jdbc.Connect;
-import cn.yb.datawaiter.jdbc.Select;
 import cn.yb.datawaiter.jdbc.model.CRUDEnum;
-import cn.yb.datawaiter.jdbc.model.DatabaseConnect;
-import cn.yb.datawaiter.model.*;
+import cn.yb.datawaiter.model.entity.*;
 import cn.yb.datawaiter.service.impl.IDatawaiterService;
 
 import cn.yb.datawaiter.service.impl.IMapperService;
 import cn.yb.sys.model.Project;
 import cn.yb.sys.service.impl.IProjectService;
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
@@ -22,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
 
@@ -97,9 +92,9 @@ public class DatawaiterController extends BasicController {
             String  projecturl = url.substring(index+1,end);
             Project project = projectService.findByURL(projecturl);
             String relative = url.replace(baseURL+"/"+projecturl, "");
-            Api api = sysService.findApiByURLAndProjectid(relative,project.getId());
+            ApiEntity apiEntity = sysService.findApiByURLAndProjectid(relative,project.getId());
 
-            if (api != null) {
+            if (apiEntity != null) {
 
               /*  List<Param> params = new ArrayList<>();
                 for (String paramName : paramMap.keySet()) {
@@ -110,7 +105,7 @@ public class DatawaiterController extends BasicController {
                     }
                 }*/
                 //api.setParams(params);
-                if (api.getQuestMethod() == QuestMethod.GET) {
+                if (apiEntity.getQuestMethod() == QuestMethod.GET) {
                     Map<String, String> paramMap = getAllRequestParam(request);
                     JSONObject jsonObject = getJSONParam(request);
                     if(jsonObject != null){
@@ -119,7 +114,7 @@ public class DatawaiterController extends BasicController {
                         }
                     }
 
-                    List<JSONObject> jsons = datawaiterService.findDataByMapper(api,paramMap);
+                    List<JSONObject> jsons = datawaiterService.findDataByMapper(apiEntity,paramMap);
                     if (jsons != null) {
                         return respon.ok(jsons);
                     }
@@ -127,7 +122,7 @@ public class DatawaiterController extends BasicController {
 
                     JSONObject jsonObject = getJSONParam(request);
                     System.out.println(jsonObject);
-                    return respon.ok(datawaiterService.handleData(api,jsonObject));
+                    return respon.ok(datawaiterService.handleData(apiEntity,jsonObject));
                 }
             }
             return respon.responError("URL地址有问题：" + url);
@@ -169,11 +164,11 @@ public class DatawaiterController extends BasicController {
         Respon respon = startRespon();
         try {
             Map<String, String> paramMap = getAllRequestParam(request);
-            Mapper mapper = mapperService.findMapperById(paramMap.get("mapperId"));
+            MapperEntity mapperEntity = mapperService.findMapperById(paramMap.get("mapperId"));
             paramMap.remove("mapperId");
-            if(mapper != null){
-                if(mapper.getCrud() != MapperCreateEnum.SELECT){
-                    int count =  mapperService.handelData(CRUDEnum.SELECT ,mapper,paramMap);
+            if(mapperEntity != null){
+                if(mapperEntity.getCrud() != MapperCreateEnum.SELECT){
+                    int count =  mapperService.handelData(CRUDEnum.SELECT , mapperEntity,paramMap);
                     return respon.ok(count);
                 }
             }

@@ -4,13 +4,10 @@ import cn.yb.datawaiter.exception.GlobRuntimeException;
 import cn.yb.datawaiter.jdbc.*;
 import cn.yb.datawaiter.jdbc.model.CRUDEnum;
 import cn.yb.datawaiter.jdbc.model.Table;
-import cn.yb.datawaiter.model.*;
-import cn.yb.datawaiter.service.MapperService;
+import cn.yb.datawaiter.model.entity.*;
 import cn.yb.datawaiter.service.impl.IDatawaiterService;
 import cn.yb.datawaiter.service.impl.IMapperService;
 import cn.yb.datawaiter.tools.Tool;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -35,7 +32,7 @@ public class MapperController extends BasicController {
     @RequestMapping(value = "/findAll")
     public Respon findAll() {
         Respon respon = startRespon();
-        return respon.ok(Select.findDataAllByPoName(SysConn, Mapper.class));
+        return respon.ok(Select.findDataAllByPoName(SysConn, MapperEntity.class));
     }
 
     @RequestMapping(value = "/findMappersByDatabaseIdAndTableName")
@@ -47,8 +44,8 @@ public class MapperController extends BasicController {
     @RequestMapping(value = "/findMappersByDatabaseId")
     public Respon findMappersByDatabaseId(String databaseId) {
         Respon respon = startRespon();
-        List<Mapper> mappers = mapperService.findMappersByDatabaseId(databaseId);
-        return  respon.ok(mappers);
+        List<MapperEntity> mapperEntities = mapperService.findMappersByDatabaseId(databaseId);
+        return  respon.ok(mapperEntities);
     }
 
 
@@ -62,8 +59,8 @@ public class MapperController extends BasicController {
     @RequestMapping(value = "/findMapperById")
     public Respon findMapperById(String id) {
         Respon respon = startRespon();
-       Mapper mapper = mapperService.findMapperById(id);
-       return respon.ok(mapper);
+       MapperEntity mapperEntity = mapperService.findMapperById(id);
+       return respon.ok(mapperEntity);
     }
 
     @PostMapping("/autoCreateMapper")
@@ -74,27 +71,27 @@ public class MapperController extends BasicController {
         coon.setAutoCommit(false);
         Table table = Connect.getTable(coon, tableName);
         List<AutoCreateMapper> autos = JSONObject.parseArray(autoCreateMapperArray, AutoCreateMapper.class);
-        List<Mapper> mappers = mapperService.createMapper(databaseId, table, autos);
+        List<MapperEntity> mapperEntities = mapperService.createMapper(databaseId, table, autos);
         coon.commit();
-        if (!Tool.isEmpty(mappers)) {
-            return respon.ok(mappers);
+        if (!Tool.isEmpty(mapperEntities)) {
+            return respon.ok(mapperEntities);
         }
         return respon.responError("创建失败");
     }
     @PostMapping("/saveMappers")
-    public Respon saveMappers(@RequestBody List<Mapper> mappers) {
+    public Respon saveMappers(@RequestBody List<MapperEntity> mapperEntities) {
         Respon respon = startRespon();
-        if (!Tool.isEmpty(mappers)) {
-            int count = mapperService.saveMappers(mappers);
+        if (!Tool.isEmpty(mapperEntities)) {
+            int count = mapperService.saveMappers(mapperEntities);
             return  respon.ok(count);
         }
         return respon.responError("保存失败");
     }
     @PostMapping("/editMapper")
-    public Respon editMapper(@RequestBody Mapper mapper) {
+    public Respon editMapper(@RequestBody MapperEntity mapperEntity) {
         Respon respon = startRespon();
-        if (mapper != null) {
-            int count = mapperService.editMapper(mapper);
+        if (mapperEntity != null) {
+            int count = mapperService.editMapper(mapperEntity);
             return respon.ok(count);
         }
         return respon.responError("保存失败");
@@ -112,10 +109,10 @@ public class MapperController extends BasicController {
     @PostMapping("/mapperTest")
     public Respon mapperTest(@RequestBody JSONObject josn) {
         Respon respon = startRespon();
-        Mapper mapper = josn.toJavaObject(Mapper.class);
-        if (mapper != null) {
-            if(mapper.getCrud() == MapperCreateEnum.SELECT){
-                respon.ok(datawaiterService.findDataByMapper(mapper));
+        MapperEntity mapperEntity = josn.toJavaObject(MapperEntity.class);
+        if (mapperEntity != null) {
+            if(mapperEntity.getCrud() == MapperCreateEnum.SELECT){
+                respon.ok(datawaiterService.findDataByMapper(mapperEntity));
             }else{
                 // int count = datawaiterService.mapperTest(mapper);
                 //responOk(respon,count);
@@ -125,11 +122,11 @@ public class MapperController extends BasicController {
         return respon.responError("测试失败");
     }
     @PostMapping("/mapperTest1")
-    public Respon mapperTest1(@RequestBody Mapper mapper) {
+    public Respon mapperTest1(@RequestBody MapperEntity mapperEntity) {
         Respon respon = startRespon();
-        if (mapper != null) {
-            if(mapper.getCrud() == MapperCreateEnum.SELECT){
-                respon.ok(datawaiterService.findDataByMapper(mapper));
+        if (mapperEntity != null) {
+            if(mapperEntity.getCrud() == MapperCreateEnum.SELECT){
+                respon.ok(datawaiterService.findDataByMapper(mapperEntity));
             }else{
                // int count = datawaiterService.mapperTest(mapper);
                  //responOk(respon,count);
@@ -142,11 +139,11 @@ public class MapperController extends BasicController {
 
 
     @PostMapping("/deleteMapper")
-    public Respon deleteMapper(@RequestBody Mapper mapper) {
+    public Respon deleteMapper(@RequestBody MapperEntity mapperEntity) {
         Respon respon = startRespon();
-        if (mapper != null) {
+        if (mapperEntity != null) {
             Respon res =  startRespon();
-            int count = mapperService.deleteMapper(mapper);
+            int count = mapperService.deleteMapper(mapperEntity);
             return res.ok(count);
         }
         return  respon.responError("删除失败");
@@ -157,11 +154,11 @@ public class MapperController extends BasicController {
         Respon respon = startRespon();
         try {
             Map<String, String> paramMap = getAllRequestParam(request);
-            Mapper mapper = mapperService.findMapperById(paramMap.get("mapperId"));
+            MapperEntity mapperEntity = mapperService.findMapperById(paramMap.get("mapperId"));
             paramMap.remove("mapperId");
-            if(mapper != null){
-                if(mapper.getCrud() != MapperCreateEnum.SELECT){
-                    int count =  mapperService.handelData(CRUDEnum.SELECT, mapper,paramMap);
+            if(mapperEntity != null){
+                if(mapperEntity.getCrud() != MapperCreateEnum.SELECT){
+                    int count =  mapperService.handelData(CRUDEnum.SELECT, mapperEntity,paramMap);
                     return respon.ok(count);
                 }
             }

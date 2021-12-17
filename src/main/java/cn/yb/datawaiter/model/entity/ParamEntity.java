@@ -1,9 +1,9 @@
-package cn.yb.datawaiter.model;
+package cn.yb.datawaiter.model.entity;
 
 import lombok.Data;
 
 @Data
-public class Param {
+public class ParamEntity {
     private String id;
     /**
      * api 的 id 号
@@ -19,11 +19,11 @@ public class Param {
      */
     private String testValue;
 
-    public Param(){
+    public ParamEntity(){
 
     }
 
-    public Param(String paramName, String testValue) {
+    public ParamEntity(String paramName, String testValue) {
         this.paramName = paramName;
         this.testValue = testValue;
     }

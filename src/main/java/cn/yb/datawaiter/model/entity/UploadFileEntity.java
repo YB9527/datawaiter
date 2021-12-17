@@ -1,4 +1,4 @@
-package cn.yb.datawaiter.model;
+package cn.yb.datawaiter.model.entity;
 
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
@@ -6,16 +6,16 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.UUID;
 
 @Data
-public class UploadFile {
+public class UploadFileEntity {
     private String id;
     private String path;
     private String extension;
     private Integer size;
-    public UploadFile() {
+    public UploadFileEntity() {
 
     }
 
-    public UploadFile(String path, String extension) {
+    public UploadFileEntity(String path, String extension) {
         this.path = path.substring(1);
         this.extension = extension;
     }

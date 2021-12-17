@@ -2,15 +2,11 @@ package cn.yb.sys.controller;
 
 
 import cn.yb.datawaiter.controller.BasicController;
-import cn.yb.datawaiter.jdbc.Select;
-import cn.yb.datawaiter.model.Respon;
-import cn.yb.datawaiter.model.UploadFile;
+import cn.yb.datawaiter.model.entity.Respon;
 import cn.yb.datawaiter.tools.Tool;
 import cn.yb.sys.model.FJ;
-import cn.yb.sys.model.Project;
 import cn.yb.sys.service.impl.IFJService;
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -19,8 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.IOException;
 import java.util.*;
 
 

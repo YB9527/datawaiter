@@ -1,18 +1,13 @@
-package cn.yb.datawaiter.model;
+package cn.yb.datawaiter.model.entity;
 
-/**
- * 对象之间关系
- */
-public enum PoRelation {
+public enum MapperCreateEnum {
+    SELECT("SELECT","查询"),
+    EDIT("EDIT","编辑");
 
-    no ("no","无"),
-    association ("association","一对一"),
-    collection ("collection","一对多" );
-
-    public String label;
     public String id;
+    public String label;
     // 构造方法
-    private PoRelation(String id, String label) {
+    private MapperCreateEnum(String id, String label) {
         this.id = id;
         this.label = label;
     }

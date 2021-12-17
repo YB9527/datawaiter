@@ -1,4 +1,4 @@
-package cn.yb.datawaiter.model;
+package cn.yb.datawaiter.model.entity;
 
 import java.util.stream.Stream;
 

@@ -2,8 +2,8 @@ package cn.yb.datawaiter.controller;
 
 import cn.yb.datawaiter.exception.GlobRuntimeException;
 import cn.yb.datawaiter.jdbc.*;
-import cn.yb.datawaiter.model.Api;
-import cn.yb.datawaiter.model.Respon;
+import cn.yb.datawaiter.model.entity.ApiEntity;
+import cn.yb.datawaiter.model.entity.Respon;
 import cn.yb.datawaiter.service.impl.IApiService;
 import cn.yb.datawaiter.service.impl.IDatawaiterService;
 import cn.yb.datawaiter.tools.Tool;
@@ -29,7 +29,7 @@ public class ApiController extends BasicController {
     private IApiService apiService;
 
     @PostMapping("/testPostApi")
-    public Respon testPostApi(@RequestBody Api api) {
+    public Respon testPostApi(@RequestBody ApiEntity apiEntity) {
         Respon respon = startRespon();
         try {
 
@@ -47,7 +47,7 @@ public class ApiController extends BasicController {
         if(Tool.isEmpty(id)){
             return respon.responError("无id");
         }
-        return respon.ok( Select.findPoById(SysConn,Api.class, id));
+        return respon.ok( Select.findPoById(SysConn, ApiEntity.class, id));
     }
 
     @RequestMapping(value = "/findbylevelid")
@@ -90,25 +90,25 @@ public class ApiController extends BasicController {
     }*/
 
     @PostMapping("/saveApi")
-    public Respon saveApi(@RequestBody Api api) {
+    public Respon saveApi(@RequestBody ApiEntity apiEntity) {
 
-        api.setDate(new Date());
-      return  editApi(api);
+        apiEntity.setDate(new Date());
+      return  editApi(apiEntity);
     }
     /**
      * 修改 或者 保存 api
      *
-     * @param api
+     * @param apiEntity
      * @return
      */
     @PostMapping("/editApi")
-    public Respon editApi(@RequestBody Api api) {
+    public Respon editApi(@RequestBody ApiEntity apiEntity) {
         Respon respon = startRespon();
-        api.setDate(new Date());
+        apiEntity.setDate(new Date());
         int count =0;
         try {
             SysConn.setAutoCommit(false);
-             count = JDBCUtils.editPo(SysConn,api);
+             count = JDBCUtils.editPo(SysConn, apiEntity);
             SysConn.commit();
         } catch (SQLException e) {
             e.printStackTrace();
