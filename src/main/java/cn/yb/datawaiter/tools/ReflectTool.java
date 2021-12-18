@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ReflectTool {
-
+    private static Map<String, Method> methodMap = new HashMap<>();
     /**
      * @param methodName map 的主键值
      * @param list
@@ -253,7 +253,20 @@ public class ReflectTool {
         }
     }
 
-
+    public static Method getMethod(String methodName,Class aClass )  {
+        String name = aClass.getName()+"_"+methodName;
+        Method res =  methodMap.get(name);
+        if(res != null ){
+            return  res;
+        }
+        for(Method m : aClass.getMethods()){
+            if(m.getName().equals(methodName)){
+                methodMap.put(name,m);
+                return  m;
+            }
+        }
+        return  null;
+    }
     /**
      * 得到 泛型类的 方法名为主键 的方法
      *

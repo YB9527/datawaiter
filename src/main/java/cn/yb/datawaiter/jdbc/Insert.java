@@ -4,6 +4,7 @@ import cn.yb.datawaiter.exception.GlobRuntimeException;
 import cn.yb.datawaiter.jdbc.model.CRUDEnum;
 import cn.yb.datawaiter.jdbc.model.FiledEnum;
 import cn.yb.datawaiter.jdbc.model.TableColumn;
+import cn.yb.datawaiter.tools.AnnotationTool;
 import cn.yb.datawaiter.tools.JSONTool;
 import cn.yb.datawaiter.tools.Tool;
 import cn.yb.sys.model.FJ;
@@ -65,7 +66,7 @@ public class Insert {
             return 0;
         }
         Class aClass = list.get(0).getClass();
-        String className = aClass.getSimpleName();
+        String className = AnnotationTool.getTableName(aClass);
         return  insertManyPos(conn,className,list);
     }
 

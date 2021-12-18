@@ -2,7 +2,10 @@ package cn.yb.datawaiter.model.entity;
 
 import lombok.Data;
 
+import javax.persistence.Table;
+
 @Data
+@Table(name = "param")
 public class ParamEntity {
     private String id;
     /**

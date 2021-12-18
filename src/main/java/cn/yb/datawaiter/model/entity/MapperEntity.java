@@ -2,9 +2,11 @@ package cn.yb.datawaiter.model.entity;
 
 import lombok.Data;
 
+import javax.persistence.Table;
 import java.util.List;
 
 @Data
+@Table(name = "mapper")
 public class MapperEntity {
     private String id;
     private  String apiId;

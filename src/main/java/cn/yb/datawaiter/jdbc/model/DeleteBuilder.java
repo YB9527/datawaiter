@@ -1,5 +1,7 @@
 package cn.yb.datawaiter.jdbc.model;
 
+import cn.yb.datawaiter.tools.AnnotationTool;
+
 import java.util.LinkedHashMap;
 
 public class DeleteBuilder extends  SQLBuilder{
@@ -19,7 +21,7 @@ public class DeleteBuilder extends  SQLBuilder{
     }
 
     public   static<T> DeleteBuilder newInstance(Class<T> tClass ){
-        String tableName = tClass.getSimpleName().toLowerCase();
+        String tableName = AnnotationTool.getTableName(tClass);
         return new DeleteBuilder(tableName);
     }
 

@@ -1,6 +1,7 @@
 package cn.yb.datawaiter.jdbc.model;
 
 import cn.yb.datawaiter.jdbc.Select;
+import cn.yb.datawaiter.tools.AnnotationTool;
 import cn.yb.datawaiter.tools.Tool;
 import com.alibaba.fastjson.JSONObject;
 
@@ -24,7 +25,7 @@ import java.util.Map;
         return new SelectBuild(tableName);
     }
     public  static<T> SelectBuild newInstance(Class<T> tClass){
-        String tableName = tClass.getSimpleName().toLowerCase();
+        String tableName = AnnotationTool.getTableName(tClass);
         return newInstance(tableName);
     }
 

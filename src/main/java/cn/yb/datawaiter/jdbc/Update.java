@@ -4,6 +4,7 @@ import cn.yb.datawaiter.exception.GlobRuntimeException;
 import cn.yb.datawaiter.jdbc.model.CRUDEnum;
 import cn.yb.datawaiter.jdbc.model.FiledEnum;
 import cn.yb.datawaiter.jdbc.model.TableColumn;
+import cn.yb.datawaiter.tools.AnnotationTool;
 import cn.yb.datawaiter.tools.JSONTool;
 import cn.yb.datawaiter.tools.ReflectTool;
 import cn.yb.datawaiter.tools.Tool;
@@ -12,6 +13,7 @@ import cn.yb.sys.model.FJ;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
+import java.lang.annotation.Annotation;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -112,7 +114,7 @@ public class Update {
             return 0;
         }
         Class aClass = list.get(0).getClass();
-        String className = aClass.getSimpleName().toLowerCase();
+        String className = AnnotationTool.getTableName(aClass);
         return  updateManyDataPos(conn,className,list);
     }
 

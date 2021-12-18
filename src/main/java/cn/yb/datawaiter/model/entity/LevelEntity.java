@@ -2,10 +2,13 @@ package cn.yb.datawaiter.model.entity;
 
 import lombok.Data;
 
+import javax.persistence.Table;
+
 /**
  * 层级管理
  */
 @Data
+@Table(name = "level")
 public class LevelEntity {
     public static String LEVEL_TYPENAME_API = "项目树";
     public static String LEVEL_TYPENAME_BEAN = "Bean配置树";

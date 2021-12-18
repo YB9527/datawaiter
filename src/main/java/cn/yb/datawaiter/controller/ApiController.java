@@ -81,13 +81,6 @@ public class ApiController extends BasicController {
         return respon.ok(count);
     }
 
-   /* @PostMapping("/saveApi")
-    public Respon saveApi(@RequestBody JSONObject json) {
-        int count = Insert.insertJSON(SysConn, Api.class.getSimpleName(), json);
-        List<Param> params = json.getJSONArray("params").toJavaList(Param.class);
-        int count2 = Insert.insertManyPos(SysConn, params);
-        return responOk(count);
-    }*/
 
     @PostMapping("/saveApi")
     public Respon saveApi(@RequestBody ApiEntity apiEntity) {

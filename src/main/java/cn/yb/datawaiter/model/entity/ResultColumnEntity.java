@@ -3,9 +3,11 @@ package cn.yb.datawaiter.model.entity;
 import cn.yb.datawaiter.jdbc.model.TableColumn;
 import lombok.Data;
 
+import javax.persistence.Table;
 import java.util.UUID;
 
 @Data
+@Table(name = "resultcolumn")
 public class ResultColumnEntity {
     private String id;
     private String property;

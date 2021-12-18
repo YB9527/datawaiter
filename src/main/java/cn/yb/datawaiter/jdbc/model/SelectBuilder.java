@@ -1,5 +1,7 @@
 package cn.yb.datawaiter.jdbc.model;
 
+import cn.yb.datawaiter.model.entity.ApiEntity;
+import cn.yb.datawaiter.tools.AnnotationTool;
 import cn.yb.datawaiter.tools.Tool;
 
 
@@ -21,8 +23,8 @@ public class SelectBuilder extends  SQLBuilder{
         return new SelectBuilder(tableName);
     }
 
-    public   static<T> SelectBuilder newInstance(Class<T> tClass ){
-        String tableName = tClass.getSimpleName().toLowerCase();
+    public   static<T> SelectBuilder newInstance(Class<T>  tClass){
+        String tableName = AnnotationTool.getTableName(tClass);
         return new SelectBuilder(tableName);
     }
 

@@ -2,6 +2,7 @@ package cn.yb.datawaiter.jdbc;
 
 import cn.yb.datawaiter.exception.GlobRuntimeException;
 import cn.yb.datawaiter.jdbc.model.TableColumn;
+import cn.yb.datawaiter.tools.AnnotationTool;
 import cn.yb.datawaiter.tools.JSONTool;
 import cn.yb.datawaiter.tools.Tool;
 import com.alibaba.fastjson.JSON;
@@ -32,7 +33,7 @@ public class Delete {
                 for (int j = i * max; j < formax; j++) {
                     Object value = values[j];
                     //执行添加 到 dept 表的数据的 sql 语句
-                        String typename = value.getClass().getSimpleName();
+                        String typename = AnnotationTool.getTableName(value.getClass());
                         switch (typename) {
                             case "String":
                                 stringBuilder.append("'" + value + "',");
@@ -100,7 +101,7 @@ public class Delete {
         if(Tool.isEmpty(deleteList)){
             return  0;
         }
-        return  deleteDataByPri(conn,deleteList.get(0).getClass().getSimpleName(), JSONTool.objectToJSON(deleteList));
+        return  deleteDataByPri(conn,AnnotationTool.getTableName(deleteList.get(0).getClass()) , JSONTool.objectToJSON(deleteList));
     }
 
     public static int deleteDataByPri(Connection connection, Map<String, List<JSONObject>> tableMap) {

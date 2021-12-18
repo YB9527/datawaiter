@@ -2,10 +2,12 @@ package cn.yb.datawaiter.model.entity;
 
 import lombok.Data;
 
+import javax.persistence.Table;
 import java.util.List;
 import java.util.UUID;
 
 @Data
+@Table(name = "resultcolumncud")
 public class ResultColumnCUD {
     private String id;
     private String property;

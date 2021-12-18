@@ -2,11 +2,13 @@ package cn.yb.datawaiter.jdbc;
 
 import cn.yb.datawaiter.exception.GlobRuntimeException;
 import cn.yb.datawaiter.jdbc.model.Column;
+import cn.yb.datawaiter.tools.AnnotationTool;
 import cn.yb.datawaiter.tools.Tool;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 import java.sql.*;
+import java.text.Annotation;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +62,7 @@ public class Select {
      */
     public static List<JSONObject> findDataAllByPoName(Connection sysConn, Class clazz) {
 
-        String className = clazz.getSimpleName().toLowerCase();
+        String className = AnnotationTool.getTableName(clazz);
         return findDataBySQL(sysConn, "select * from " + className);
     }
 
@@ -70,12 +72,12 @@ public class Select {
 
 
     public static JSONObject findDataById(Connection conn, Class clazz, String id) {
-        String className = clazz.getSimpleName().toLowerCase();;
+        String className = AnnotationTool.getTableName(clazz) ;
         return findDataById(conn, className, id);
     }
 
     public static <T> T findDataById2Po(Connection conn, Class<T> clazz, String id) {
-        String className = clazz.getSimpleName().toLowerCase();;
+        String className = AnnotationTool.getTableName(clazz);
         JSONObject json = findDataById(conn, className, id);
         if (json != null) {
             return json.toJavaObject(clazz);
@@ -106,7 +108,8 @@ public class Select {
     }
 
     public static <T> T findPoById(Connection conn, Class<T> clazz, String id) {
-        JSON json = findDataById(conn, clazz.getSimpleName().toLowerCase(), id);
+
+        JSON json = findDataById(conn, AnnotationTool.getTableName(clazz) , id);
         if (json != null) {
             return json.toJavaObject(clazz);
         }
@@ -120,7 +123,7 @@ public class Select {
 
 
     public static<T> String getSQL(Class<T> tClass, Map<String, Object> map) {
-        String tableName = tClass.getSimpleName().toLowerCase();
+        String tableName = AnnotationTool.getTableName(tClass);
         return  getSQL(tableName,  map);
     }
     public static<T> String getSQL(String tablename, Map<String, Object> map) {

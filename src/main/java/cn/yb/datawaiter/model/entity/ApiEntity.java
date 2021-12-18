@@ -4,9 +4,14 @@ import cn.yb.datawaiter.jdbc.model.CRUDEnum;
 import lombok.Data;
 
 import java.util.Date;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 
 @Data
+@Table(name = "api")
 public class ApiEntity {
+    @Id
     private String id;
     /**
      * 数据库连接的id

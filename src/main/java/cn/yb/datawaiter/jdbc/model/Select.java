@@ -1,5 +1,7 @@
 package cn.yb.datawaiter.jdbc.model;
 
+import cn.yb.datawaiter.model.entity.ResultColumnCUD;
+import cn.yb.datawaiter.tools.AnnotationTool;
 import cn.yb.datawaiter.tools.Tool;
 
 
@@ -10,7 +12,7 @@ public class Select {
 
 
     public static<T> String getSQL(Class<T> tClass, Map<String, Object> map) {
-        String tableName = tClass.getSimpleName().toLowerCase();
+        String tableName = AnnotationTool.getTableName(tClass);
         return  getSQL(tableName,  map);
     }
     public static<T> String getSQL(String tablename, Map<String, Object> map) {

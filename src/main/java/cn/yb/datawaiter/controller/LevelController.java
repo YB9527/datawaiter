@@ -4,6 +4,7 @@ import cn.yb.datawaiter.jdbc.*;
 import cn.yb.datawaiter.model.entity.LevelEntity;
 import cn.yb.datawaiter.model.entity.Respon;
 import cn.yb.datawaiter.service.impl.ILevelService;
+import cn.yb.datawaiter.tools.AnnotationTool;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -91,7 +92,7 @@ public class LevelController extends  BasicController {
     public Respon deleteLevelById(String id) throws SQLException {
         Respon respon = startRespon();
         SysConn.setAutoCommit(false);
-        int count = Delete.deleteDataByPri(SysConn, LevelEntity.class.getSimpleName(), id);
+        int count = Delete.deleteDataByPri(SysConn, AnnotationTool.getTableName(LevelEntity.class), id);
         SysConn.commit();
         return  count == 0 ? respon.responBasicError():respon.ok(count);
     }

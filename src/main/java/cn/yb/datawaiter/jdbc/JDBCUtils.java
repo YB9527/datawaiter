@@ -5,6 +5,7 @@ import cn.yb.datawaiter.jdbc.model.CRUDEnum;
 import cn.yb.datawaiter.jdbc.model.FiledEnum;
 import cn.yb.datawaiter.jdbc.model.TableColumn;
 import cn.yb.datawaiter.model.entity.ResultColumnEntity;
+import cn.yb.datawaiter.tools.AnnotationTool;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
@@ -237,7 +238,7 @@ public class JDBCUtils {
         if (obj == null) {
             return 0;
         }
-        String tableName = obj.getClass().getSimpleName();
+        String tableName = AnnotationTool.getTableName(obj.getClass());
         JSONObject jsonObject = (JSONObject) JSON.toJSON(obj);
 
         int count = editJSON(conn, tableName, jsonObject);

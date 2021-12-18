@@ -8,6 +8,7 @@ import cn.yb.datawaiter.jdbc.model.*;
 import cn.yb.datawaiter.model.entity.*;
 import cn.yb.datawaiter.service.impl.IDatabaseService;
 import cn.yb.datawaiter.service.impl.IMapperService;
+import cn.yb.datawaiter.tools.AnnotationTool;
 import cn.yb.datawaiter.tools.Tool;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -166,7 +167,7 @@ public class MapperService implements IMapperService {
     }
 
     private List<ResultColumnEntity> findResultColumnByMapperId(String id) {
-        String selectResultColumnSQL = "SELECT * FROM " + ResultColumnEntity.class.getSimpleName().toLowerCase() + " WHERE mapperId = " + JDBCUtils.sqlStr(id);
+        String selectResultColumnSQL = "SELECT * FROM " + AnnotationTool.getTableName(ResultColumnEntity.class)  + " WHERE mapperId = " + JDBCUtils.sqlStr(id);
         List<ResultColumnEntity> list = Select.findDataBySQL(SystemConnect.getConn(), selectResultColumnSQL, ResultColumnEntity.class);
         return list;
     }
@@ -177,7 +178,7 @@ public class MapperService implements IMapperService {
         try {
             conn.setAutoCommit(false);//开启事务
 
-            String tableName = MapperEntity.class.getSimpleName().toLowerCase();
+            String tableName = AnnotationTool.getTableName(MapperEntity.class);
             String sql = mapperEntity.getSql_().replace("\"", "'");
             mapperEntity.setSql_(sql);
             JSONObject dbPo = Select.findDataById(conn, tableName, mapperEntity.getId());
@@ -196,10 +197,10 @@ public class MapperService implements IMapperService {
             } else {
                 //编辑
                 count = Update.updateDataPo(conn, mapperEntity);
-                Delete.deleteByColoumnAndValues(conn, ResultColumnEntity.class.getSimpleName().toLowerCase(), "mapperId", new String[]{mapperEntity.getId()});
+                Delete.deleteByColoumnAndValues(conn,AnnotationTool.getTableName(ResultColumnEntity.class), "mapperId", new String[]{mapperEntity.getId()});
             }
             if (resultColumnCUDs != null) {
-                Delete.deleteByColoumnAndValues(conn, ResultColumnCUD.class.getSimpleName().toLowerCase(), "mapperId", new String[]{mapperEntity.getId()});
+                Delete.deleteByColoumnAndValues(conn,AnnotationTool.getTableName(ResultColumnCUD.class)  , "mapperId", new String[]{mapperEntity.getId()});
                 List<ResultColumnCUD> all = findResultColumnCUDAll(resultColumnCUDs);
                 Insert.insertManyPos(conn, all);
             }
@@ -250,7 +251,7 @@ public class MapperService implements IMapperService {
         try {
             Connection conn = SystemConnect.getConn();
             conn.setAutoCommit(false);//开启事务
-            Delete.deleteDataByPri(conn, MapperEntity.class.getSimpleName().toLowerCase(), mapperEntity.getId());
+            Delete.deleteDataByPri(conn,AnnotationTool.getTableName(MapperEntity.class)  , mapperEntity.getId());
             List<ResultColumnEntity> resultColumnEntities = mapperEntity.getResultColumnEntities();
             count = Delete.deleteDataByPri(conn, resultColumnEntities);
             conn.commit();
@@ -285,7 +286,7 @@ public class MapperService implements IMapperService {
 
     @Override
     public List<ResultColumnCUD> findResultColumnCUDByMapperId(String mapperId) {
-        String sql = "SELECT *  FROM " + ResultColumnCUD.class.getSimpleName().toLowerCase()
+        String sql = "SELECT *  FROM " + AnnotationTool.getTableName(ResultColumnCUD.class)
                 + " WHERE mapperId = " + JDBCUtils.sqlStr(mapperId);
         List<ResultColumnCUD> cuds = Select.findDataBySQL(SystemConnect.getConn(), sql, ResultColumnCUD.class);
         List<ResultColumnCUD> roots = findResultColumnRoots(cuds);
