@@ -83,6 +83,7 @@ public class Connect {
             List<Table> tables = new ArrayList();
             Statement stmt = conn.createStatement();
             String sql;
+
             String databasename = ((ConnectionImpl) conn).getDatabase();
            if(conn.getClientInfo().size() > 0 && conn.getClientInfo().getProperty("ApplicationName").equals("PostgreSQL JDBC Driver")){
                sql = " select tablename from pg_tables where schemaname='public'";

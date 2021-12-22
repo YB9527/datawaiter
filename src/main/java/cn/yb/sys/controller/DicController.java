@@ -3,6 +3,7 @@ package cn.yb.sys.controller;
 import cn.yb.datawaiter.controller.BasicController;
 import cn.yb.datawaiter.jdbc.*;
 import cn.yb.datawaiter.jdbc.model.Field;
+import cn.yb.datawaiter.mapper.ApiMapper;
 import cn.yb.datawaiter.model.entity.Respon;
 import cn.yb.sys.model.Dic;
 import cn.yb.sys.model.ProjectDic;
@@ -27,6 +28,7 @@ import static cn.yb.datawaiter.jdbc.Select.getSQL;
 public class DicController extends BasicController {
     @Autowired
     private IDicService dicService;
+
 
 
 

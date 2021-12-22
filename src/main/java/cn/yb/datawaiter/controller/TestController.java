@@ -1,7 +1,11 @@
 package cn.yb.datawaiter.controller;
 
+import cn.yb.datawaiter.mapper.ApiMapper;
 import cn.yb.datawaiter.model.entity.Respon;
+import cn.yb.datawaiter.service.TestService;
 import com.alibaba.fastjson.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,12 +24,15 @@ import java.util.Map;
 @RequestMapping(value = "/test")
 public class TestController extends BasicController {
 
-
+    @Autowired
+    private TestService testService;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     @RequestMapping(value = "/t")
     public Respon findApiById(String id) throws SQLException, ClassNotFoundException {
         Respon respon = startRespon();
-
+        testService.fun();
        /* DatabaseConnect dc = new DatabaseConnect("127.0.0.1", DatabaseEnum.mysql,"restaurant","root","1234");
         dc.setLabel("系统数据库");
 

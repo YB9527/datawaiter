@@ -8,15 +8,17 @@ import com.alibaba.fastjson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import tk.mybatis.mapper.common.BaseMapper;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
-public abstract class BaseService<ID,Mapper extends tk.mybatis.mapper.common.Mapper> {
+public abstract class BaseService<ID,Mapper extends BaseMapper> {
     @Autowired
     protected JdbcTemplate jdbcTemplate;
+
     protected Mapper mapper;
     public abstract  void setMapper(Mapper  mappper);
 

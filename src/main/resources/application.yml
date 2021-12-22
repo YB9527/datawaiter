@@ -3,6 +3,17 @@ spring:
     multipart:
       max-file-size: 64000MB
       max-request-size: 6400MB
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://127.0.0.1:3306/datawaitersystem?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8
+    username: root
+    password: Yanbo@123
+SystemDatabase:
+  ip: 127.0.0.1
+  databaseEnum: mysql
+  databaseName: datawaitersystem
+  name: root
+  password: Yanbo@123
 server:
   max-http-header-size: 4048576
   tomcat:
@@ -11,11 +22,10 @@ server:
     threads:
       max: 200
   port: 3333
-SystemDatabase:
-  ip: 127.0.0.1
-  databaseEnum: mysql
-  databaseName: datawaitersystem
-  name: root
-  password: Yanbo@123
+
+
+
+
+
 uploadconfig:
   dir: '{"in": "D:\datawaiter\upload\", "out": "/uploadfile/"}'

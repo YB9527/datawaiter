@@ -117,7 +117,7 @@ public  class AnnotationTool {
             Table table = (Table) clazz.getAnnotation(Table.class);
             name = table.name();
         }else{
-            name =AnnotationTool.getTableName(clazz);
+            name = clazz.getSimpleName().toLowerCase();
         }
         return name;
     }

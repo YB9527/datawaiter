@@ -2,6 +2,7 @@ package cn.yb.datawaiter.model.entity;
 
 import cn.yb.datawaiter.jdbc.model.CRUDEnum;
 import lombok.Data;
+import tk.mybatis.mapper.common.BaseMapper;
 
 import java.util.Date;
 import javax.persistence.Id;
@@ -10,7 +11,7 @@ import javax.persistence.Table;
 
 @Data
 @Table(name = "api")
-public class ApiEntity {
+public class ApiEntity  {
     @Id
     private String id;
     /**

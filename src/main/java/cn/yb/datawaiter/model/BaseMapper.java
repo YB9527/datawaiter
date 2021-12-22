@@ -1,4 +1,4 @@
-package cn.yb.datawaiter.mapper;
+package cn.yb.datawaiter.model;
 
 import tk.mybatis.mapper.common.Mapper;
 
