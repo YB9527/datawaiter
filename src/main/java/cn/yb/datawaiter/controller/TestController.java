@@ -32,7 +32,7 @@ public class TestController extends BasicController {
     @RequestMapping(value = "/t")
     public Respon findApiById(String id) throws SQLException, ClassNotFoundException {
         Respon respon = startRespon();
-        testService.fun();
+
        /* DatabaseConnect dc = new DatabaseConnect("127.0.0.1", DatabaseEnum.mysql,"restaurant","root","1234");
         dc.setLabel("系统数据库");
 

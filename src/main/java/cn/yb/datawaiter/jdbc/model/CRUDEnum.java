@@ -5,7 +5,8 @@ public enum CRUDEnum {
     SELECT("SELECT","查询"),
     INSERT("INSERT","增加"),
     DELETE("DELETE","删除" ),
-    UPDATE("UPDATE","修改");
+    UPDATE("UPDATE","修改"),
+    EDIT("EDIT","编辑");
 
     public String id;
     public String label;

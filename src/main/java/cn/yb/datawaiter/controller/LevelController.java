@@ -78,12 +78,19 @@ public class LevelController extends  BasicController {
         return  insertCount == 0 ? respon.responBasicError():respon.ok(insertCount);
     }
     @PostMapping("/editApiLevel")
-    public Respon editApiLevel(@RequestBody LevelEntity levelEntity) {
+    public Respon editApiLevel(@RequestBody LevelEntity levelEntity) throws SQLException {
         int count = 0;
         Respon respon = startRespon();
         if(levelEntity.getId() != null){
             levelEntity.setTypeName(LevelEntity.LEVEL_TYPENAME_API);
-            count = Update.updateManyDataPosInService(SysConn, levelEntity);
+            JSONObject jsonObject = Select.findDataById(SysConn, LevelEntity.class, levelEntity.getId());
+            if(jsonObject != null){
+                count = Update.updateManyDataPosInService(SysConn, levelEntity);
+            }else{
+                return  addBeanLevel(levelEntity);
+            }
+
+
         }
         return  count == 0 ? respon.responBasicError():respon.ok(count);
     }

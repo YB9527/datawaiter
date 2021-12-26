@@ -9,14 +9,10 @@ import org.springframework.stereotype.Service;
 public class TestService extends  BaseService<String,ApiMapper>{
 
 
-    public void fun() {
-        
-    }
-
-
     @Autowired
     @Override
     public void setMapper(ApiMapper mappper) {
         this.mapper = mappper;
+
     }
 }
